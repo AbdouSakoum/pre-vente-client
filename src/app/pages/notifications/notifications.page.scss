@@ -1,0 +1,13 @@
+/* Nouveautés : cartes .st-card avec pastille de statut (src/theme/stradi.scss). */
+.loading { display: flex; justify-content: center; padding: 40px 0; }
+
+.item { width: 100%; display: flex; align-items: center; gap: 12px; padding: 12px 14px; margin-bottom: 8px;
+  border: 0; text-align: start; font: inherit; color: inherit; cursor: pointer;
+  &.unread { box-shadow: inset 3px 0 0 var(--sc-accent), var(--sc-shadow); } }
+.item__text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px;
+  strong { font-size: 14.5px; font-weight: 700; line-height: 1.25; color: var(--sc-primary); }
+  small { font-size: 12.5px; color: var(--sc-muted); }
+  em { font-size: 12.5px; font-style: normal; color: var(--sc-danger-text); } }
+.item.unread strong { font-weight: 800; }
+.dot { flex: none; width: 9px; height: 9px; border-radius: 50%; background: var(--sc-accent); }
+.chevron { flex: none; font-size: 18px; color: var(--sc-muted); }

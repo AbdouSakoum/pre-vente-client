@@ -1,0 +1,41 @@
+<!-- REPRENDRE LA DERNIÈRE COMMANDE -->
+<section class="st-card reorder" *ngIf="usuals.last_order as last">
+  <span class="st-eyebrow reorder__eyebrow"><ion-icon name="repeat-outline"></ion-icon> {{ 'usuals.oneTap' | translate }}</span>
+  <strong class="reorder__title">{{ 'usuals.reorderTitle' | translate:{ date: (last.created_at | date:'dd/MM') } }}</strong>
+  <span class="reorder__meta" dir="ltr">{{ 'usuals.reorderMeta' | translate:{ n: lastCount, total: money(last.total_ttc) } }}</span>
+  <button type="button" class="st-btn st-btn--accent" (click)="addLastOrder()"><ion-icon name="add"></ion-icon> {{ 'usuals.addAll' | translate }}</button>
+  <p class="reorder__result" *ngIf="result as r">
+    <ion-icon name="checkmark-circle"></ion-icon>
+    {{ 'usuals.added' | translate:{ n: r.added } }}<ng-container *ngIf="r.skipped"> · {{ 'usuals.skipped' | translate:{ n: r.skipped } }}</ng-container>
+  </p>
+</section>
+
+<h2 class="st-section" *ngIf="rows.length">{{ 'usuals.title' | translate }} <small>{{ 'usuals.count' | translate:{ n: rows.length } }}</small></h2>
+
+<div class="st-empty" *ngIf="!rows.length && !usuals.last_order">
+  <div class="st-empty__icon"><ion-icon name="star-outline"></ion-icon></div>
+  <h2>{{ 'usuals.emptyTitle' | translate }}</h2>
+  <p>{{ 'usuals.emptyText' | translate }}</p>
+</div>
+
+<article class="st-card usual" *ngFor="let r of rows" [class.out]="!r.variant.available">
+  <span class="st-thumb">
+    <img *ngIf="r.variant.image_url || r.product.image_url; else icon" [src]="media(r.variant.image_url || r.product.image_url)" [alt]="r.product.name" loading="lazy" />
+    <ng-template #icon><ion-icon name="cube-outline"></ion-icon></ng-template>
+  </span>
+  <span class="usual__info">
+    <strong>{{ r.product.name }}</strong>
+    <small>{{ r.variant.name }} · {{ 'usuals.usualQty' | translate:{ n: r.usualQty } }}</small>
+    <span class="usual__prices">
+      <ng-container *ngIf="promo(r.variant) !== null; else plainPrice">
+        <s class="st-strike" dir="ltr">{{ money(r.variant.price) }}</s>
+        <b class="st-price-promo" dir="ltr">{{ money(promo(r.variant)) }}</b>
+      </ng-container>
+      <ng-template #plainPrice><b dir="ltr">{{ money(r.variant.price) }}</b></ng-template>
+      <span class="st-stock out" *ngIf="!r.variant.available">{{ 'catalog.outOfStock' | translate }}</span>
+      <span class="bulk" *ngIf="r.variant.available && r.variant.bulk_price !== null">{{ 'catalog.bulk' | translate:{ price: money(r.variant.bulk_price), n: r.variant.bulk_min_qty } }}</span>
+    </span>
+    <app-promo-tags *ngIf="r.variant.available" [variant]="r.variant"></app-promo-tags>
+  </span>
+  <app-qty-control [linkId]="linkId" [product]="r.product" [variant]="r.variant" [step]="r.usualQty" (keypad)="qty.emit($event)"></app-qty-control>
+</article>

@@ -1,0 +1,49 @@
+/* Panier : composants .st-* de src/theme/stradi.scss. */
+.cart { display: flex; flex-direction: column; gap: 10px; padding-bottom: 210px; }
+
+.line { padding: 12px; }
+.line.out { box-shadow: inset 0 0 0 1.5px var(--sc-danger); }
+.line__top { display: flex; gap: 12px; }
+.line__id { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px;
+  strong { font-size: 15px; font-weight: 700; color: var(--sc-primary); }
+  small { font-size: 12.5px; color: var(--sc-muted); } }
+.line.out .line__id strong, .line.out .st-thumb { opacity: .5; }
+.bulk { align-self: flex-start; display: inline-flex; align-items: center; gap: 4px; margin-top: 2px; padding: 2px 7px; border-radius: 6px;
+  background: var(--sc-accent-soft); color: var(--sc-accent-text); font-size: 12px; font-weight: 700; ion-icon { font-size: 13px; } }
+.line__remove { flex: none; align-self: flex-start; width: 40px; height: 40px; margin: -6px -6px 0 0; border: 0; background: transparent;
+  color: var(--sc-muted); font-size: 20px; }
+.line__bottom { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; padding-inline-start: 68px; }
+.value { display: inline-flex; align-items: center; justify-content: center; }
+.line__total { font-size: 16px; font-weight: 800; color: var(--sc-primary); }
+.line.out .line__total { color: var(--sc-muted); text-decoration: line-through; }
+.line__out { display: flex; align-items: center; gap: 8px; margin-top: 10px; padding: 6px 6px 6px 10px; border-radius: 12px;
+  background: var(--sc-danger-soft); color: var(--sc-danger-text); font-size: 13px; font-weight: 700;
+  span { flex: 1; } ion-icon { font-size: 17px; }
+  button { height: 34px; padding: 0 12px; border: 0; border-radius: 10px; background: #fff; font: inherit; font-size: 13px; font-weight: 800; color: var(--sc-danger-text); } }
+
+.block { padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+.block__title { margin: 0; display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 800; color: var(--sc-primary);
+  ion-icon { font-size: 19px; } em { font-style: normal; font-size: 12.5px; font-weight: 600; color: var(--sc-muted); } }
+.days { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px;
+  button { height: 60px; padding: 0 4px; border: 1.5px solid var(--sc-soft-line); border-radius: 14px; background: #fff; font: inherit;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: var(--sc-ink);
+    small { font-size: 11.5px; font-weight: 600; color: var(--sc-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+    strong { font-size: 14px; font-weight: 800; }
+    &.on { background: var(--sc-primary-soft); border-color: var(--sc-primary); color: var(--sc-primary); }
+    &.other { color: var(--sc-primary); ion-icon { font-size: 18px; } strong { font-size: 12.5px; } } } }
+.picker { position: absolute; right: 0; bottom: 0; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+textarea { width: 100%; min-height: 76px; padding: 12px 14px; border: 1.5px solid var(--sc-soft-line); border-radius: 12px; background: var(--sc-bg);
+  font: inherit; font-size: 16px; color: var(--sc-ink); resize: none; outline: 0; &:focus { border-color: var(--sc-primary); } }
+
+ion-footer.cart-footer { position: fixed; left: 0; right: 0; bottom: 0; background: transparent; box-shadow: none; }
+.total { justify-content: space-between; padding-inline-end: 4px;
+  span { font-size: 14px; font-weight: 600; color: var(--sc-on-dark-muted); }
+  strong { font-size: 24px; font-weight: 800; letter-spacing: -.03em; } }
+
+/* Promotions : étiquettes sous la ligne, remise de seuil et économies dans le pied. */
+.line__id .st-promo-tags { margin-top: 4px; }
+/* Pied navy : lignes sous-total et remise, texte clair ; remise et économies en vert vif. */
+.st-checkout__row:not(.total) { justify-content: space-between; padding-inline-end: 4px; font-size: 13px; color: var(--sc-on-dark-muted); }
+.st-checkout__row.discount span:last-child { font-weight: 700; color: var(--sc-accent); }
+.savings { display: flex; align-items: center; gap: 6px; margin: 2px 0 6px; font-size: 13px; font-weight: 700; color: var(--sc-accent);
+  ion-icon { font-size: 16px; } }

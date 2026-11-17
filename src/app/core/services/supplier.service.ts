@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
 import { BrandService } from '../../brand/brand.service';
-import { LinkPreview, Supplier } from '../../shared/models/supplier.model';
+import { LinkPreview, MyCode, Supplier } from '../../shared/models/supplier.model';
 
 /** Fournisseurs du compte et rattachement par QR code. */
 @Injectable({ providedIn: 'root' })
@@ -22,6 +22,11 @@ export class SupplierService {
 
   link(code: string): Observable<unknown> {
     return this.api.post('/links', { token: code });
+  }
+
+  /** Nouveau QR code du compte ; remplace le précédent. */
+  myCode(): Observable<MyCode> {
+    return this.api.post<MyCode>('/my-code', {});
   }
 
   remove(linkId: string): Observable<unknown> {

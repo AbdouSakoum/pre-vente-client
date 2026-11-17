@@ -1,0 +1,35 @@
+<div class="page sent">
+  <section class="hero">
+    <span class="hero__check"><ion-icon name="checkmark"></ion-icon></span>
+    <h1>{{ 'sent.title' | translate }}</h1>
+    <p dir="auto">{{ order.order_ref }}<ng-container *ngIf="supplier"> · {{ supplier.name }}</ng-container></p>
+  </section>
+
+  <div class="kpis">
+    <div class="st-card kpi">
+      <small>{{ 'cart.total' | translate }}</small>
+      <strong dir="ltr">{{ total }}</strong>
+      <span>{{ 'sent.units' | translate:{ n: count } }}</span>
+    </div>
+    <div class="st-card kpi">
+      <small>{{ 'cart.date' | translate }}</small>
+      <strong>{{ date ? (date | date:'dd/MM') : '—' }}</strong>
+      <span>{{ 'sent.payOnDelivery' | translate }}</span>
+    </div>
+  </div>
+
+  <section class="st-card next">
+    <div class="next__head">
+      <h2>{{ 'sent.nextTitle' | translate }}</h2>
+      <span class="st-status" data-step="waiting"><ion-icon name="time-outline"></ion-icon>{{ 'orderStep.waiting' | translate }}</span>
+    </div>
+    <ol>
+      <li><span>1</span>{{ 'sent.step1' | translate }}</li>
+      <li><span>2</span>{{ 'sent.step2' | translate }}</li>
+      <li><span>3</span>{{ 'sent.step3' | translate }}</li>
+    </ol>
+  </section>
+
+  <button type="button" class="st-btn st-btn--primary" (click)="orders.emit()">{{ 'cart.seeOrders' | translate }}</button>
+  <button type="button" class="st-btn st-btn--outline" (click)="more.emit()">{{ 'cart.continue' | translate }}</button>
+</div>

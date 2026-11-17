@@ -1,0 +1,27 @@
+/* « Mes commandes » : composants .st-* de src/theme/stradi.scss. */
+.st-title.big { font-size: 24px; letter-spacing: -.03em; }
+.list-page { padding-bottom: 120px; }
+
+.kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-bottom: 14px; }
+.kpi { padding: 12px; display: flex; flex-direction: column; gap: 2px;
+  strong { font-size: 24px; font-weight: 800; letter-spacing: -.03em; color: var(--sc-primary); line-height: 1.1; }
+  small { font-size: 12px; color: var(--sc-muted); } }
+.kpi--accent { background: var(--sc-primary); strong { color: #fff; } small { color: var(--sc-on-dark-muted); } }
+
+.filters { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
+
+.skel { padding: 16px; margin-bottom: 10px; ion-skeleton-text { height: 13px; border-radius: 6px; } ion-skeleton-text:first-child { width: 55%; } }
+.none { padding: 30px 10px; text-align: center; font-size: 14px; color: var(--sc-muted); }
+
+.order { padding: 14px; margin-bottom: 10px; transition: transform .18s var(--sc-ease); &:active { transform: scale(.985); } }
+.order__main { display: flex; gap: 12px; }
+.order__body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px;
+  small { font-size: 12.5px; color: var(--sc-muted); } }
+.order__line { display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+  strong { font-size: 15px; font-weight: 800; color: var(--sc-primary); } }
+.order__total { white-space: nowrap; }
+.order__step { font-size: 13px; font-weight: 700;
+  @each $s in waiting, validated, delivering, delivered, refused, cancelled { &[data-step='#{$s}'] { color: var(--sc-st-#{$s}); } } }
+.order__reason { display: flex; align-items: center; gap: 6px; margin: 10px 0 0; padding: 8px 10px; border-radius: 12px;
+  background: var(--sc-danger-soft); color: var(--sc-danger-text); font-size: 13px; font-weight: 600;
+  ion-icon { flex: none; font-size: 16px; } }

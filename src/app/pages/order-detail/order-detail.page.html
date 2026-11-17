@@ -1,0 +1,93 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="st-toolbar">
+    <div class="st-head">
+      <div class="st-head__left">
+        <ion-back-button class="st-back" defaultHref="/tabs/orders" text="" icon="arrow-back-outline"></ion-back-button>
+        <div class="st-head__text">
+          <span class="st-title">{{ detail ? ('detail.title' | translate:{ ref: detail.order.order_ref }) : ('supplier.loading' | translate) }}</span>
+          <span class="st-sub" *ngIf="detail">{{ detail.supplier.name }}</span>
+        </div>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="page detail">
+    <div class="st-banner" *ngIf="errorMsg"><ion-icon name="alert-circle-outline"></ion-icon><div><strong>{{ errorMsg }}</strong></div></div>
+    <div class="loading" *ngIf="loading && !detail"><ion-spinner name="crescent"></ion-spinner></div>
+
+    <ng-container *ngIf="detail as d">
+      <span class="st-status big" [attr.data-step]="step"><ion-icon [name]="stepIcons[step!]"></ion-icon>{{ 'orderStep.' + step | translate }}</span>
+
+      <!-- MOTIF DU REFUS -->
+      <section class="reason" *ngIf="step === 'refused' && d.order.reject_reason">
+        <span class="st-eyebrow"><ion-icon name="information-circle-outline"></ion-icon> {{ 'detail.reason' | translate }}</span>
+        <p>« {{ d.order.reject_reason }} »</p>
+      </section>
+
+      <!-- ÉTAPES -->
+      <section class="st-card timeline">
+        <div class="tl" *ngFor="let s of timeline; let last = last" [attr.data-state]="s.state">
+          <div class="tl__rail">
+            <span class="tl__dot"><ion-icon *ngIf="s.state !== 'todo'" [name]="s.icon"></ion-icon></span>
+            <span class="tl__line" *ngIf="!last"></span>
+          </div>
+          <div class="tl__text">
+            <strong>{{ 'detail.step.' + s.key | translate }}</strong>
+            <small *ngIf="s.at">{{ s.at | date:'dd/MM/yyyy · HH:mm' }}</small>
+            <small *ngIf="!s.at && s.key === 'delivered'">{{ 'detail.payOnDelivery' | translate:{ total: money(d.order.total_ttc) } }}</small>
+          </div>
+        </div>
+      </section>
+
+      <!-- INFORMATIONS -->
+      <section class="st-card infos">
+        <div class="info"><span>{{ 'cart.date' | translate }}</span><strong>{{ d.order.desired_delivery_date ? (d.order.desired_delivery_date | date:'dd/MM/yyyy') : '—' }}</strong></div>
+        <div class="info"><span>{{ 'detail.payment' | translate }}</span><strong>{{ 'detail.onDelivery' | translate }}</strong></div>
+        <div class="info" *ngIf="d.order.note"><span>{{ 'cart.note' | translate }}</span><strong>{{ d.order.note }}</strong></div>
+      </section>
+
+      <!-- ARTICLES -->
+      <section class="st-card items">
+        <h2>{{ 'detail.items' | translate:{ n: d.lines.length, units: units } }}</h2>
+        <div class="item" *ngFor="let l of lines">
+          <span class="st-thumb st-thumb--sm">
+            <img *ngIf="l.image_url; else icon" [src]="media(l.image_url)" [alt]="l.product_name" />
+            <ng-template #icon><ion-icon name="cube-outline"></ion-icon></ng-template>
+          </span>
+          <span class="item__id">
+            <strong><bdi dir="ltr">{{ l.quantity }} ×</bdi> {{ l.product_name }}</strong>
+            <small *ngIf="!l.is_free">
+              {{ l.variant_name }} ·
+              <s class="st-strike" dir="ltr" *ngIf="l.list_price !== null && +l.list_price > +l.unit_price">{{ money(l.list_price) }}</s>
+              <bdi dir="ltr" [class.st-price-promo]="l.list_price !== null && +l.list_price > +l.unit_price">{{ money(l.unit_price) }}</bdi>
+            </small>
+            <small *ngIf="l.is_free">{{ l.variant_name }}</small>
+            <span class="st-promo-tags" *ngIf="l.is_free || l.promotion_name">
+              <span class="st-promo-tag free" *ngIf="l.is_free"><ion-icon name="gift-outline"></ion-icon> {{ 'detail.free' | translate }}</span>
+              <span class="st-promo-tag" *ngIf="!l.is_free && l.promotion_name"><ion-icon name="pricetag"></ion-icon> {{ l.promotion_name }}</span>
+            </span>
+          </span>
+          <b dir="ltr">{{ l.is_free ? ('detail.free' | translate) : money(l.line_total) }}</b>
+        </div>
+        <button type="button" class="more" *ngIf="!showAll && d.lines.length > visibleLines" (click)="showAll = true">
+          {{ 'detail.showAll' | translate:{ n: d.lines.length - visibleLines } }}
+        </button>
+        <p class="threshold" *ngIf="d.order.threshold_promotion_name">
+          <ion-icon name="pricetag-outline"></ion-icon>
+          {{ 'detail.threshold' | translate:{ name: d.order.threshold_promotion_name, pct: +(d.order.threshold_discount_pct || 0) } }}
+        </p>
+        <div class="items__total"><span>{{ 'cart.total' | translate }}</span><strong dir="ltr">{{ money(d.order.total_ttc) }}</strong></div>
+      </section>
+
+      <button type="button" class="st-btn st-btn--accent" [disabled]="busy" (click)="reorder()">
+        <ion-spinner *ngIf="busy" name="crescent"></ion-spinner><ion-icon *ngIf="!busy" name="repeat-outline"></ion-icon>
+        {{ (step === 'refused' ? 'detail.resend' : 'detail.reorder') | translate }}
+      </button>
+      <button type="button" class="st-btn st-btn--outline" *ngIf="d.supplier.phone" (click)="call()">
+        <ion-icon name="call-outline"></ion-icon> {{ 'supplier.call' | translate }}
+      </button>
+    </ng-container>
+  </div>
+</ion-content>

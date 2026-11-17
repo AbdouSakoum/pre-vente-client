@@ -1,0 +1,55 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="st-toolbar">
+    <div class="st-head">
+      <div class="st-head__left">
+        <ion-back-button class="st-back" defaultHref="/tabs/suppliers" text="" icon="arrow-back-outline"></ion-back-button>
+        <div class="st-head__text">
+          <span class="st-title">{{ 'myCode.title' | translate }}</span>
+          <span class="st-sub">{{ 'myCode.sub' | translate }}</span>
+        </div>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="page mycode">
+    <div class="st-banner" *ngIf="errorMsg"><ion-icon name="alert-circle-outline"></ion-icon><div><strong>{{ errorMsg }}</strong></div></div>
+
+    <!-- RATTACHEMENT DÉTECTÉ -->
+    <div class="st-empty" *ngIf="added as a">
+      <div class="st-empty__icon ok"><ion-icon name="checkmark-circle"></ion-icon></div>
+      <h2>{{ 'link.doneTitle' | translate:{ name: a.name } }}</h2>
+      <p>{{ 'link.doneText' | translate }}</p>
+      <button type="button" class="st-btn st-btn--accent" (click)="done()">{{ 'link.seeSuppliers' | translate }}</button>
+    </div>
+
+    <!-- QR CODE -->
+    <ng-container *ngIf="!added">
+      <p class="lead">{{ 'myCode.lead' | translate }}</p>
+
+      <section class="st-card qr">
+        <img *ngIf="code; else wait" [src]="code.qr" [alt]="'myCode.title' | translate" />
+        <ng-template #wait><div class="qr__wait"><ion-spinner name="crescent"></ion-spinner></div></ng-template>
+        <span class="st-eyebrow qr__label">{{ 'myCode.manual' | translate }}</span>
+        <strong class="qr__code" dir="ltr">{{ pretty || '•••• ••••' }}</strong>
+        <span class="qr__timer" *ngIf="code">
+          <ion-icon name="time-outline"></ion-icon> {{ 'myCode.validFor' | translate:{ time: remaining } }}
+        </span>
+      </section>
+
+      <p class="waiting"><ion-spinner name="dots"></ion-spinner> {{ 'myCode.waiting' | translate }}</p>
+
+      <button type="button" class="st-btn st-btn--outline" (click)="renew()">
+        <ion-icon name="refresh-outline"></ion-icon> {{ 'myCode.renew' | translate }}
+      </button>
+
+      <!-- Sens inverse : le client scanne le code du fournisseur -->
+      <a class="other" routerLink="/link">
+        <ion-icon name="scan-outline"></ion-icon>
+        <span><strong>{{ 'myCode.otherWayTitle' | translate }}</strong><small>{{ 'myCode.otherWayText' | translate }}</small></span>
+        <ion-icon name="chevron-forward" class="chev"></ion-icon>
+      </a>
+    </ng-container>
+  </div>
+</ion-content>

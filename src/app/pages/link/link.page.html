@@ -1,48 +1,58 @@
 <ion-header class="ion-no-border">
-  <ion-toolbar>
-    <ion-buttons slot="start"><ion-back-button defaultHref="/suppliers" text=""></ion-back-button></ion-buttons>
-    <ion-title>{{ 'link.title' | translate }}</ion-title>
+  <ion-toolbar class="st-toolbar">
+    <div class="st-head">
+      <div class="st-head__left">
+        <ion-back-button class="st-back" defaultHref="/tabs/suppliers" text="" icon="arrow-back-outline"></ion-back-button>
+        <div class="st-head__text">
+          <span class="st-title">{{ 'link.title' | translate }}</span>
+          <span class="st-sub">{{ 'link.sub' | translate }}</span>
+        </div>
+      </div>
+    </div>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <div class="page">
-    <div class="alert" *ngIf="errorMsg"><ion-icon name="alert-circle-outline"></ion-icon><span>{{ errorMsg }}</span></div>
+  <div class="page link">
+    <div class="st-banner" *ngIf="errorMsg"><ion-icon name="alert-circle-outline"></ion-icon><div><strong>{{ errorMsg }}</strong></div></div>
 
     <!-- RATTACHEMENT FAIT -->
-    <div class="card empty" *ngIf="linked && preview as p">
-      <ion-icon class="ok" name="checkmark-circle"></ion-icon>
+    <div class="st-empty" *ngIf="linked && preview as p">
+      <div class="st-empty__icon ok"><ion-icon name="checkmark-circle"></ion-icon></div>
       <h2>{{ 'link.doneTitle' | translate:{ name: p.supplier.name } }}</h2>
       <p>{{ 'link.doneText' | translate }}</p>
-      <button type="button" class="btn btn--primary" (click)="done()">{{ 'link.seeSuppliers' | translate }}</button>
+      <button type="button" class="st-btn st-btn--accent" (click)="done()">{{ 'link.seeSuppliers' | translate }}</button>
     </div>
 
-    <!-- CONFIRMATION -->
-    <div class="card confirm" *ngIf="!linked && preview as p">
-      <span class="confirm__label">{{ 'link.supplier' | translate }}</span>
+    <!-- CONFIRMATION : le client vérifie le fournisseur et sa fiche avant de se rattacher -->
+    <section class="st-card confirm" *ngIf="!linked && preview as p">
+      <span class="st-thumb confirm__logo">{{ initials(p.supplier.name) }}</span>
+      <span class="st-eyebrow">{{ 'link.supplier' | translate }}</span>
       <strong class="confirm__name">{{ p.supplier.name }}</strong>
-      <span class="confirm__label">{{ 'link.yourFile' | translate }}</span>
-      <strong class="confirm__file">{{ p.client_name }}</strong>
+      <div class="confirm__file">
+        <span class="st-eyebrow">{{ 'link.yourFile' | translate }}</span>
+        <strong>{{ p.client_name }}</strong>
+      </div>
       <p class="confirm__hint">{{ (p.already_linked ? 'link.already' : 'link.confirmHint') | translate }}</p>
-      <button type="button" class="btn btn--accent" [disabled]="loading" (click)="confirm()">
+      <button type="button" class="st-btn st-btn--accent" [disabled]="loading" (click)="confirm()">
         <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
         {{ (loading ? 'common.loading' : 'link.confirm') | translate }}
       </button>
-      <button type="button" class="btn btn--ghost" [disabled]="loading" (click)="cancel()">{{ 'common.cancel' | translate }}</button>
-    </div>
+      <button type="button" class="st-btn st-btn--text" [disabled]="loading" (click)="cancel()">{{ 'common.cancel' | translate }}</button>
+    </section>
 
-    <!-- SCAN OU SAISIE DU LIEN -->
+    <!-- SCAN, LIEN COLLÉ, OU QR CODE DU CLIENT -->
     <ng-container *ngIf="!preview">
-      <div class="card empty" *ngIf="scanner.native && !cameraUnavailable">
-        <ion-icon name="qr-code-outline"></ion-icon>
+      <section class="st-card scan" *ngIf="scanner.native && !cameraUnavailable">
+        <span class="scan__icon"><ion-icon name="qr-code-outline"></ion-icon></span>
         <h2>{{ 'link.scanTitle' | translate }}</h2>
         <p>{{ 'link.scanText' | translate }}</p>
-        <button type="button" class="btn btn--primary" [disabled]="loading" (click)="scan()">
+        <button type="button" class="st-btn st-btn--accent" [disabled]="loading" (click)="scan()">
           <ion-icon name="scan-outline"></ion-icon> {{ 'link.scan' | translate }}
         </button>
-      </div>
+      </section>
 
-      <form class="card manual" (ngSubmit)="check()" novalidate>
+      <form class="st-card manual" (ngSubmit)="check()" novalidate>
         <h2>{{ 'link.manualTitle' | translate }}</h2>
         <p>{{ (cameraUnavailable ? 'link.cameraUnavailable' : 'link.manualText') | translate }}</p>
         <label class="field">
@@ -51,10 +61,17 @@
                    [placeholder]="'link.manualPlaceholder' | translate" />
           </span>
         </label>
-        <button type="submit" class="btn btn--ghost" [disabled]="loading">
+        <button type="submit" class="st-btn st-btn--outline" [disabled]="loading || !code.trim()">
           {{ (loading ? 'common.loading' : 'link.check') | translate }}
         </button>
       </form>
+
+      <!-- Sens inverse : le commercial scanne le code du client -->
+      <a class="other" routerLink="/my-code">
+        <ion-icon name="phone-portrait-outline"></ion-icon>
+        <span><strong>{{ 'link.otherWayTitle' | translate }}</strong><small>{{ 'link.otherWayText' | translate }}</small></span>
+        <ion-icon name="chevron-forward" class="chev"></ion-icon>
+      </a>
     </ng-container>
   </div>
 </ion-content>

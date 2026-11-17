@@ -1,0 +1,143 @@
+<ion-header class="ion-no-border" *ngIf="!sent">
+  <ion-toolbar class="st-toolbar">
+    <div class="st-head">
+      <div class="st-head__left">
+        <ion-back-button class="st-back" [defaultHref]="'/supplier/' + linkId" text="" icon="arrow-back-outline"></ion-back-button>
+        <div class="st-head__text">
+          <span class="st-title">{{ 'cart.title' | translate }}</span>
+          <span class="st-sub" *ngIf="supplier">{{ supplier.name }} · {{ 'supplier.cartItems' | translate:{ n: cart.count(linkId) } }}</span>
+        </div>
+      </div>
+      <button type="button" class="st-text-action" *ngIf="lines.length" (click)="empty()">{{ 'cart.empty' | translate }}</button>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- COMMANDE ENVOYÉE -->
+  <app-order-sent *ngIf="sent as s" [order]="s.order" [supplier]="supplier" [count]="s.count" [date]="s.date"
+                  (orders)="seeOrders()" (more)="backToCatalog()"></app-order-sent>
+
+  <div class="page cart" *ngIf="!sent">
+    <!-- PANIER VIDE -->
+    <div class="st-empty" *ngIf="!lines.length">
+      <div class="st-empty__icon"><ion-icon name="bag-handle-outline"></ion-icon></div>
+      <h2>{{ 'cart.emptyTitle' | translate }}</h2>
+      <p>{{ 'cart.emptyText' | translate }}</p>
+      <button type="button" class="st-btn st-btn--accent" (click)="backToCatalog()">{{ 'cart.browse' | translate }}</button>
+    </div>
+
+    <ng-container *ngIf="lines.length">
+      <div class="st-banner st-banner--info" *ngIf="skipped">
+        <ion-icon name="information-circle-outline"></ion-icon>
+        <div><strong>{{ 'cart.skippedTitle' | translate:{ n: skipped } }}</strong><span>{{ 'cart.skippedText' | translate }}</span></div>
+      </div>
+      <!-- REMISE DE SEUIL : atteinte, ou montant qui manque pour la suivante -->
+      <div class="st-banner st-banner--success" *ngIf="pricing?.threshold as t">
+        <ion-icon name="checkmark-circle-outline"></ion-icon>
+        <div><strong>{{ 'cart.thresholdReached' | translate:{ pct: t.discount_pct } }}</strong><span>{{ t.name }}</span></div>
+      </div>
+      <div class="st-banner st-banner--promo" *ngIf="pricing?.next_threshold as n">
+        <ion-icon name="pricetag-outline"></ion-icon>
+        <div><strong>{{ 'cart.nextThreshold' | translate:{ missing: money(n.missing), pct: n.discount_pct } }}</strong><span>{{ n.name }}</span></div>
+      </div>
+      <div class="st-banner" *ngIf="outOfStock.length">
+        <ion-icon name="warning-outline"></ion-icon>
+        <div><strong>{{ 'cart.outTitle' | translate:{ n: outOfStock.length } }}</strong><span>{{ 'cart.outText' | translate }}</span></div>
+      </div>
+
+      <article class="st-card line" *ngFor="let l of lines" [class.out]="!l.available">
+        <div class="line__top">
+          <span class="st-thumb">
+            <img *ngIf="l.image_url; else icon" [src]="media(l.image_url)" [alt]="l.product_name" />
+            <ng-template #icon><ion-icon name="cube-outline"></ion-icon></ng-template>
+          </span>
+          <span class="line__id">
+            <strong>{{ l.product_name }}</strong>
+            <small>
+              {{ l.variant_name }} ·
+              <s class="st-strike" dir="ltr" *ngIf="l.available && cart.unitPrice(l) < cart.listPrice(l)">{{ money(cart.listPrice(l)) }}</s>
+              <bdi dir="ltr" [class.st-price-promo]="l.available && cart.unitPrice(l) < cart.listPrice(l)">{{ money(cart.unitPrice(l)) }}</bdi> / {{ 'cart.unit' | translate }}
+            </small>
+            <span class="st-promo-tags" *ngIf="l.available && (l.promotion || freeFor(l))">
+              <span class="st-promo-tag" *ngIf="l.promotion as p"><ion-icon name="pricetag"></ion-icon> {{ p.name }}</span>
+              <span class="st-promo-tag free" *ngIf="freeFor(l) as f">
+                <ion-icon name="gift-outline"></ion-icon> {{ (f.quantity ? 'cart.freeLine' : 'cart.freeLimited') | translate:{ n: f.quantity } }}
+              </span>
+            </span>
+            <span class="bulk" *ngIf="l.available && l.bulk_price !== null && l.bulk_min_qty !== null && l.quantity >= l.bulk_min_qty">
+              <ion-icon name="pricetag-outline"></ion-icon> {{ 'cart.bulkApplied' | translate:{ n: l.bulk_min_qty } }}
+            </span>
+          </span>
+          <button type="button" class="line__remove" (click)="remove(l)" [attr.aria-label]="'cart.remove' | translate"><ion-icon name="trash-outline"></ion-icon></button>
+        </div>
+        <div class="line__bottom">
+          <span class="st-stepper st-stepper--sm" dir="ltr">
+            <button type="button" (click)="change(l, -1)" [disabled]="!l.available" [attr.aria-label]="'catalog.less' | translate"><ion-icon name="remove"></ion-icon></button>
+            <span class="st-stepper__value value">{{ l.quantity }}</span>
+            <button type="button" (click)="change(l, 1)" [disabled]="!l.available" [attr.aria-label]="'catalog.more' | translate"><ion-icon name="add"></ion-icon></button>
+          </span>
+          <strong class="line__total" dir="ltr">{{ money(cart.lineTotal(l)) }}</strong>
+        </div>
+        <div class="line__out" *ngIf="!l.available">
+          <ion-icon name="warning-outline"></ion-icon><span>{{ 'cart.lineOut' | translate }}</span>
+          <button type="button" (click)="remove(l)">{{ 'cart.remove' | translate }}</button>
+        </div>
+      </article>
+
+      <!-- LIVRAISON SOUHAITÉE -->
+      <section class="st-card block">
+        <h2 class="block__title"><ion-icon name="calendar-outline"></ion-icon> {{ 'cart.date' | translate }} <em>{{ 'cart.optional' | translate }}</em></h2>
+        <div class="days">
+          <button type="button" *ngFor="let d of days" [class.on]="desiredDate === d.value" (click)="pickDate(d.value)">
+            <small>{{ d.label }}</small><strong>{{ d.day }}</strong>
+          </button>
+          <button type="button" class="other" [class.on]="otherDate" (click)="openPicker(picker)">
+            <ion-icon name="calendar-number-outline"></ion-icon>
+            <strong>{{ otherDate ? (desiredDate | date:'dd/MM') : ('cart.otherDate' | translate) }}</strong>
+          </button>
+          <input #picker class="picker" type="date" [min]="today" [(ngModel)]="desiredDate" tabindex="-1" aria-hidden="true" />
+        </div>
+      </section>
+
+      <!-- NOTE -->
+      <section class="st-card block">
+        <label class="block__title" for="cartNote"><ion-icon name="chatbox-ellipses-outline"></ion-icon> {{ 'cart.note' | translate }} <em>{{ 'cart.optional' | translate }}</em></label>
+        <textarea id="cartNote" rows="2" maxlength="500" [(ngModel)]="note" [placeholder]="'cart.notePlaceholder' | translate"></textarea>
+      </section>
+
+      <div class="st-banner" *ngIf="networkFailed">
+        <ion-icon name="cloud-offline-outline"></ion-icon>
+        <div><strong>{{ 'cart.notSentTitle' | translate }}</strong><span>{{ 'cart.networkError' | translate }}</span></div>
+      </div>
+      <div class="st-banner" *ngIf="errorMsg"><ion-icon name="alert-circle-outline"></ion-icon><div><strong>{{ errorMsg }}</strong></div></div>
+    </ng-container>
+  </div>
+</ion-content>
+
+<!-- VALIDATION -->
+<ion-footer class="ion-no-border cart-footer" *ngIf="!sent && lines.length">
+  <div class="st-checkout">
+    <ng-container *ngIf="pricing?.threshold as t">
+      <div class="st-checkout__row">
+        <span>{{ 'cart.subtotal' | translate }}</span>
+        <span dir="ltr">{{ money(pricing!.subtotal) }}</span>
+      </div>
+      <div class="st-checkout__row discount">
+        <span>{{ 'cart.thresholdLine' | translate:{ name: t.name, pct: t.discount_pct } }}</span>
+        <span dir="ltr">−{{ money(t.discount) }}</span>
+      </div>
+    </ng-container>
+    <div class="st-checkout__row total">
+      <span>{{ 'cart.total' | translate }}</span>
+      <strong dir="ltr">{{ total }}</strong>
+    </div>
+    <p class="savings" *ngIf="pricing && +pricing.savings > 0"><ion-icon name="sparkles-outline"></ion-icon> {{ 'cart.savings' | translate:{ amount: money(pricing.savings) } }}</p>
+    <p class="st-checkout__note"><ion-icon name="cash-outline"></ion-icon> {{ 'cart.hint' | translate }}</p>
+    <button type="button" class="st-pay st-pay--block" [disabled]="sending || !sendable.length" (click)="send()">
+      <ion-spinner *ngIf="sending" name="crescent"></ion-spinner>
+      <ion-icon *ngIf="!sending" [name]="networkFailed ? 'refresh-outline' : 'paper-plane-outline'"></ion-icon>
+      {{ (sending ? 'cart.sending' : networkFailed ? 'cart.retry' : outOfStock.length ? 'cart.sendWithout' : 'cart.send') | translate }}
+    </button>
+  </div>
+</ion-footer>

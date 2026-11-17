@@ -1,0 +1,6 @@
+/* Cloche : bouton .st-icon-btn (src/theme/stradi.scss) avec pastille, comme le panier. */
+:host { display: block; flex: none; }
+.bell { position: relative; }
+.bell__badge { position: absolute; top: -5px; right: -5px; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 10px;
+  background: var(--sc-danger); color: #fff; font-size: 11px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 2px var(--sc-bg); }

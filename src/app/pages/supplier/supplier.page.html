@@ -1,0 +1,85 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="st-toolbar">
+    <div class="st-head">
+      <div class="st-head__left">
+        <ion-back-button class="st-back" defaultHref="/tabs/suppliers" text="" icon="arrow-back-outline"></ion-back-button>
+        <span class="st-thumb st-thumb--sm head-logo">
+          <img *ngIf="supplier?.logo_url; else letters" [src]="media(supplier?.logo_url)" [alt]="supplier?.name" />
+          <ng-template #letters>{{ initials(supplier?.name) }}</ng-template>
+        </span>
+        <div class="st-head__text">
+          <span class="st-title">{{ supplier?.name || ('supplier.loading' | translate) }}</span>
+          <span class="st-sub" *ngIf="supplier">{{ 'suppliers.knownAs' | translate:{ name: supplier.client_name } }}</span>
+        </div>
+      </div>
+      <div class="head-actions">
+        <a class="st-icon-btn" [routerLink]="['/supplier', linkId, 'balance']" [attr.aria-label]="'balance.title' | translate">
+          <ion-icon name="wallet-outline"></ion-icon>
+        </a>
+        <button type="button" class="st-icon-btn" (click)="openOrders()" [attr.aria-label]="'tabs.orders' | translate">
+          <ion-icon name="receipt-outline"></ion-icon>
+        </button>
+      </div>
+    </div>
+  </ion-toolbar>
+
+  <ng-container *ngIf="!closed">
+    <div class="st-search-band">
+      <ion-searchbar class="st-search" [value]="query" (ionInput)="onSearch($any($event).detail.value)" [debounce]="150"
+                     [placeholder]="'catalog.search' | translate"></ion-searchbar>
+    </div>
+    <ion-toolbar class="st-toolbar seg-bar" *ngIf="hasUsuals">
+      <div class="st-segment">
+        <button type="button" [class.active]="tab === 'usuals'" (click)="tab = 'usuals'"><ion-icon name="star-outline"></ion-icon> {{ 'catalog.usuals' | translate }}</button>
+        <button type="button" [class.active]="tab === 'all'" (click)="tab = 'all'"><ion-icon name="grid-outline"></ion-icon> {{ 'catalog.allProducts' | translate }}</button>
+      </div>
+    </ion-toolbar>
+  </ng-container>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="load($any($event))"><ion-refresher-content></ion-refresher-content></ion-refresher>
+
+  <div class="page shop">
+    <div class="st-banner" *ngIf="errorMsg"><ion-icon name="cloud-offline-outline"></ion-icon><div><strong>{{ errorMsg }}</strong></div></div>
+
+    <!-- FOURNISSEUR FERMÉ -->
+    <div class="st-empty" *ngIf="closed">
+      <div class="st-empty__icon closed"><ion-icon name="lock-closed-outline"></ion-icon></div>
+      <h2>{{ 'supplier.closedTitle' | translate }}</h2>
+      <p>{{ 'supplier.closedText' | translate }}</p>
+      <button type="button" class="st-btn st-btn--outline" *ngIf="supplier?.phone" (click)="call()"><ion-icon name="call-outline"></ion-icon> {{ 'supplier.call' | translate }}</button>
+      <button type="button" class="st-btn st-btn--text" (click)="openOrders()">{{ 'supplier.pastOrders' | translate }}</button>
+    </div>
+
+    <!-- CHARGEMENT -->
+    <ng-container *ngIf="loading && !catalog && !closed">
+      <div class="st-card skel" *ngFor="let i of [1, 2, 3]">
+        <ion-skeleton-text animated class="skel__thumb"></ion-skeleton-text>
+        <div class="skel__text"><ion-skeleton-text animated></ion-skeleton-text><ion-skeleton-text animated></ion-skeleton-text></div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="catalog && !closed">
+      <app-usuals *ngIf="tab === 'usuals' && usuals" [linkId]="linkId" [catalog]="catalog" [usuals]="usuals" (qty)="openQty($event)"></app-usuals>
+      <app-catalog *ngIf="tab === 'all'" [linkId]="linkId" [catalog]="catalog" [query]="query" (qty)="openQty($event)"></app-catalog>
+    </ng-container>
+  </div>
+
+  <app-qty-sheet *ngIf="qtyTarget as t" [target]="t" [current]="cart.quantity(linkId, t.variant.id)"
+                 [currency]="cart.currency(linkId)" (done)="setQty($event)" (cancel)="qtyTarget = null"></app-qty-sheet>
+</ion-content>
+
+<!-- BARRE PANIER -->
+<ion-footer class="ion-no-border cart-footer" *ngIf="!closed && !qtyTarget && cart.count(linkId)">
+  <div class="st-checkout">
+    <div class="st-checkout__row">
+      <span class="st-cart-icon"><ion-icon name="bag-handle-outline"></ion-icon><span class="st-cart-badge">{{ cart.lines(linkId).length }}</span></span>
+      <span class="st-cart-text">
+        <small>{{ 'supplier.cartItems' | translate:{ n: cart.count(linkId) } }}</small>
+        <strong dir="ltr">{{ total }}</strong>
+      </span>
+      <button type="button" class="st-pay" (click)="openCart()">{{ 'supplier.seeCart' | translate }} <ion-icon name="chevron-forward"></ion-icon></button>
+    </div>
+  </div>
+</ion-footer>

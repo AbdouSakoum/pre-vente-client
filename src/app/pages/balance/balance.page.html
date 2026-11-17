@@ -1,0 +1,84 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="st-toolbar">
+    <div class="st-head">
+      <div class="st-head__left">
+        <ion-back-button class="st-back" [defaultHref]="'/supplier/' + linkId" text="" icon="arrow-back-outline"></ion-back-button>
+        <div class="st-head__text">
+          <span class="st-title">{{ 'balance.title' | translate }}</span>
+          <span class="st-sub" *ngIf="data">{{ data.supplier.name }}</span>
+        </div>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="load($any($event))"><ion-refresher-content></ion-refresher-content></ion-refresher>
+
+  <div class="page balance">
+    <div class="st-banner" *ngIf="errorMsg"><ion-icon name="alert-circle-outline"></ion-icon><div><strong>{{ errorMsg }}</strong></div></div>
+    <div class="loading" *ngIf="loading"><ion-spinner name="crescent"></ion-spinner></div>
+
+    <ng-container *ngIf="data as d">
+      <!-- RESTE DÛ -->
+      <section class="due" [class.due--zero]="!d.total_due">
+        <span class="due__label">{{ (d.total_due ? 'balance.dueLabel' : 'balance.settledLabel') | translate }}</span>
+        <strong class="due__amount" dir="ltr">{{ money(d.total_due) }}</strong>
+        <span class="due__hint">
+          <ng-container *ngIf="d.total_due; else allPaid">{{ 'balance.dueHint' | translate:{ n: d.unpaid.length } }}</ng-container>
+          <ng-template #allPaid>{{ 'balance.settledHint' | translate }}</ng-template>
+        </span>
+        <button type="button" class="due__call" *ngIf="d.supplier.phone" (click)="call()">
+          <ion-icon name="call-outline"></ion-icon> {{ 'balance.call' | translate }}
+        </button>
+      </section>
+
+      <div class="st-segment tabs">
+        <button type="button" [class.active]="section === 'unpaid'" (click)="section = 'unpaid'">{{ 'balance.tabUnpaid' | translate }} <small *ngIf="d.unpaid.length">{{ d.unpaid.length }}</small></button>
+        <button type="button" [class.active]="section === 'payments'" (click)="section = 'payments'">{{ 'balance.tabPayments' | translate }}</button>
+        <button type="button" [class.active]="section === 'invoices'" (click)="section = 'invoices'">{{ 'balance.tabInvoices' | translate }}</button>
+      </div>
+
+      <!-- À PAYER -->
+      <ng-container *ngIf="section === 'unpaid'">
+        <p class="none" *ngIf="!d.unpaid.length">{{ 'balance.noUnpaid' | translate }}</p>
+        <article class="st-card row" *ngFor="let u of d.unpaid">
+          <span class="row__icon row__icon--due"><ion-icon name="receipt-outline"></ion-icon></span>
+          <span class="row__text">
+            <strong>{{ 'balance.order' | translate:{ ref: u.order_ref } }}</strong>
+            <small>{{ 'balance.deliveredOn' | translate:{ date: ((u.delivered_at || u.created_at) | date:'dd/MM/yyyy') } }}</small>
+            <small *ngIf="u.paid_amount">{{ 'balance.partPaid' | translate:{ paid: money(u.paid_amount), total: money(u.total_ttc) } }}</small>
+          </span>
+          <b class="row__amount row__amount--due" dir="ltr">{{ money(u.due) }}</b>
+        </article>
+      </ng-container>
+
+      <!-- PAIEMENTS -->
+      <ng-container *ngIf="section === 'payments'">
+        <p class="none" *ngIf="!d.payments.length">{{ 'balance.noPayments' | translate }}</p>
+        <article class="st-card row" *ngFor="let p of d.payments">
+          <span class="row__icon row__icon--paid"><ion-icon [name]="payIcons[p.payment_method || ''] || 'cash-outline'"></ion-icon></span>
+          <span class="row__text">
+            <strong>{{ ('balance.method.' + (p.payment_method || 'other')) | translate }}</strong>
+            <small>{{ p.collected_at | date:'dd/MM/yyyy' }}<ng-container *ngIf="p.order_ref"> · {{ p.order_ref }}</ng-container></small>
+          </span>
+          <b class="row__amount row__amount--paid" dir="ltr">−{{ money(p.amount) }}</b>
+        </article>
+      </ng-container>
+
+      <!-- FACTURES -->
+      <ng-container *ngIf="section === 'invoices'">
+        <p class="none" *ngIf="!d.invoices.length">{{ 'balance.noInvoices' | translate }}</p>
+        <article class="st-card row" *ngFor="let i of d.invoices">
+          <span class="row__icon"><ion-icon name="document-outline"></ion-icon></span>
+          <span class="row__text">
+            <strong>{{ 'balance.invoice' | translate:{ number: i.number } }}</strong>
+            <small>{{ i.issue_date | date:'dd/MM/yyyy' }}<ng-container *ngIf="i.order_ref"> · {{ i.order_ref }}</ng-container></small>
+          </span>
+          <b class="row__amount" dir="ltr">{{ money(i.total_ttc) }}</b>
+        </article>
+        <p class="hint" *ngIf="d.invoices.length">{{ 'balance.invoiceHint' | translate }}</p>
+      </ng-container>
+    </ng-container>
+  </div>
+</ion-content>

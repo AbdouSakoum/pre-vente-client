@@ -1,0 +1,38 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="st-toolbar">
+    <div class="st-head">
+      <div class="st-head__left">
+        <ion-back-button class="st-back" defaultHref="/tabs/suppliers" text="" icon="arrow-back-outline"></ion-back-button>
+        <div class="st-head__text">
+          <span class="st-title">{{ 'notifications.title' | translate }}</span>
+          <span class="st-sub">{{ 'notifications.sub' | translate }}</span>
+        </div>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="reload($any($event))"><ion-refresher-content></ion-refresher-content></ion-refresher>
+
+  <div class="page">
+    <div class="loading" *ngIf="loading"><ion-spinner name="crescent"></ion-spinner></div>
+
+    <div class="st-empty" *ngIf="!loading && !events().length">
+      <div class="st-empty__icon"><ion-icon name="notifications-outline"></ion-icon></div>
+      <h2>{{ 'notifications.emptyTitle' | translate }}</h2>
+      <p>{{ 'notifications.emptyText' | translate }}</p>
+    </div>
+
+    <button type="button" class="st-card item" *ngFor="let e of events(); trackBy: trackById" [class.unread]="e.unread" (click)="open(e)">
+      <span class="st-status-tile icon" [attr.data-step]="kindStep[e.kind]"><ion-icon [name]="stepIcons[kindStep[e.kind]]"></ion-icon></span>
+      <span class="item__text">
+        <strong>{{ 'notifications.kind.' + e.kind | translate:{ ref: e.order_ref } }}</strong>
+        <small>{{ e.supplier_name }} · {{ e.at | date:'dd/MM HH:mm' }}</small>
+        <em *ngIf="e.kind === 'refused' && e.reject_reason">« {{ e.reject_reason }} »</em>
+      </span>
+      <span class="dot" *ngIf="e.unread" [attr.aria-label]="'notifications.new' | translate"></span>
+      <ion-icon name="chevron-forward" class="chevron"></ion-icon>
+    </button>
+  </div>
+</ion-content>

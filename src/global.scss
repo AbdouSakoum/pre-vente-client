@@ -7,6 +7,7 @@
 @import "@ionic/angular/css/padding.css";
 @import "@ionic/angular/css/text-alignment.css";
 @import "@ionic/angular/css/flex-utils.css";
+@import "theme/stradi";
 
 :root {
   --ion-font-family: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
@@ -55,7 +56,8 @@ ion-title { font-weight: 700; }
 /* ── Carte et état vide ── */
 .card { background: var(--sc-surface); border-radius: var(--sc-radius-lg); box-shadow: var(--sc-shadow); }
 .empty { padding: 36px 24px; text-align: center; }
-.empty ion-icon { font-size: 56px; color: var(--sc-primary); opacity: .25; }
+/* Seule la grande icône de l'état vide : pas celles des boutons qu'il contient. */
+.empty > ion-icon { font-size: 56px; color: var(--sc-primary); opacity: .25; }
 .empty h2 { margin: 12px 0 6px; font-size: 18px; font-weight: 800; color: var(--sc-primary); }
 .empty p { margin: 0 0 20px; font-size: 14px; line-height: 1.5; color: var(--sc-muted); }
 .page { padding: 8px 18px 28px; max-width: 560px; margin: 0 auto; }

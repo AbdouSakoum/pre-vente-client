@@ -1,0 +1,4 @@
+<a class="st-icon-btn bell" routerLink="/notifications" [attr.aria-label]="'notifications.open' | translate">
+  <ion-icon name="notifications-outline"></ion-icon>
+  <span class="bell__badge" *ngIf="notifications.unread() > 0">{{ badge }}</span>
+</a>

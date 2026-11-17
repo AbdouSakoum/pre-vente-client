@@ -3,19 +3,21 @@ import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { ApiService } from './api.service';
 import { SessionService } from './session.service';
-import { Account, AuthResponse, ForgotPasswordResponse } from '../../shared/models/account.model';
+import { CartService } from './cart.service';
+import { NotificationService } from './notification.service';
+import { Account, AuthResponse, ForgotPasswordResponse, RegisterPayload } from '../../shared/models/account.model';
 
 /** Compte du client : inscription, connexion, mot de passe oublié, déconnexion. */
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   readonly account = signal<Account | null>(this.stored());
 
-  constructor(private api: ApiService, private session: SessionService, private router: Router) {}
+  constructor(private api: ApiService, private session: SessionService, private cart: CartService, private notifications: NotificationService, private router: Router) {}
 
   get isLoggedIn(): boolean { return !!this.session.token && !!this.account(); }
 
-  register(name: string, identifier: string, password: string): Observable<AuthResponse> {
-    return this.api.post<AuthResponse>('/auth/register', { name, identifier, password }).pipe(tap(r => this.open(r)));
+  register(payload: RegisterPayload): Observable<AuthResponse> {
+    return this.api.post<AuthResponse>('/auth/register', payload).pipe(tap(r => this.open(r)));
   }
 
   login(identifier: string, password: string): Observable<AuthResponse> {
@@ -37,6 +39,8 @@ export class AuthService {
     const refreshToken = this.session.refreshToken;
     if (refreshToken) this.api.post('/auth/logout', { refresh_token: refreshToken }).subscribe({ error: () => {} });
     this.session.clear();
+    this.cart.reset();
+    this.notifications.reset();
     this.account.set(null);
     this.router.navigateByUrl('/login', { replaceUrl: true });
   }

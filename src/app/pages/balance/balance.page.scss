@@ -1,0 +1,29 @@
+/* « Mon solde » : carte navy du reste dû (comme « Reprendre la dernière commande »), segment et lignes .st-card. */
+.loading { display: flex; justify-content: center; padding: 40px 0; }
+
+.due { display: flex; flex-direction: column; gap: 4px; padding: 18px; margin-bottom: 14px; border-radius: var(--sc-radius-lg);
+  background: var(--sc-primary); color: #fff; box-shadow: var(--sc-shadow); }
+.due__label { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--sc-on-dark-muted); }
+.due__amount { font-size: 32px; font-weight: 800; letter-spacing: -.02em; line-height: 1.1; }
+.due__hint { font-size: 13px; color: var(--sc-on-dark-muted); }
+.due--zero .due__amount { color: var(--sc-accent); }
+.due__call { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; height: 38px; padding: 0 14px;
+  border: 0; border-radius: 12px; background: rgba(255, 255, 255, .12); color: #fff; font: inherit; font-size: 13.5px; font-weight: 700;
+  ion-icon { font-size: 17px; } }
+
+.tabs { margin-bottom: 12px; button small { font-size: 11px; font-weight: 800; } }
+
+.row { display: flex; align-items: center; gap: 12px; padding: 12px 14px; margin-bottom: 8px; }
+.row__icon { flex: none; width: 42px; height: 42px; border-radius: 13px; background: var(--sc-primary-soft); color: var(--sc-primary);
+  display: flex; align-items: center; justify-content: center; font-size: 20px;
+  &--due { background: var(--sc-danger-soft); color: var(--sc-danger-text); }
+  &--paid { background: var(--sc-accent-soft); color: var(--sc-accent-text); } }
+.row__text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px;
+  strong { font-size: 14.5px; font-weight: 700; color: var(--sc-primary); }
+  small { font-size: 12.5px; color: var(--sc-muted); } }
+.row__amount { flex: none; font-size: 15px; font-weight: 800; color: var(--sc-primary);
+  &--due { color: var(--sc-danger-text); }
+  &--paid { color: var(--sc-accent-text); } }
+
+.none { padding: 26px 10px; text-align: center; font-size: 14px; color: var(--sc-muted); }
+.hint { margin: 6px 4px 0; font-size: 12.5px; color: var(--sc-muted); }

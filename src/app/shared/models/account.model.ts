@@ -1,9 +1,29 @@
+/** Types de commerce : ceux de la fiche client du distributeur, plus le particulier. */
+export const CLIENT_CATEGORIES = [
+  'grossiste', 'semi_grossiste', 'hanout', 'epicerie', 'supermarche', 'laiterie', 'cafe', 'snack', 'consommateur', 'autre',
+] as const;
+export type ClientCategory = typeof CLIENT_CATEGORIES[number];
+
 /** Compte du client dans l'application. */
 export interface Account {
   id: string;
   name: string;
   email: string | null;
   phone: string | null;
+  category: ClientCategory | null;
+  city: string | null;
+  address: string | null;
+}
+
+/** Données saisies à l'inscription. */
+export interface RegisterPayload {
+  name: string;
+  category: ClientCategory;
+  city: string;
+  latitude: number | null;
+  longitude: number | null;
+  identifier: string;
+  password: string;
 }
 
 export interface TokenPair {

@@ -1,0 +1,48 @@
+<div class="overlay" (click)="cancel.emit()">
+  <div class="panel st-sheet" role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
+    <div class="st-handle"></div>
+    <div class="head">
+      <div>
+        <h2 class="st-sheet__title">{{ target.product.name }}</h2>
+        <p class="st-sheet__sub">
+          {{ target.variant.name }} ·
+          <ng-container *ngIf="target.variant.promo_price !== null && target.variant.promo_price !== undefined && +target.variant.promo_price < +target.variant.price; else plainPrice">
+            <s class="st-strike" dir="ltr">{{ money(target.variant.price) }}</s> <bdi class="st-price-promo" dir="ltr">{{ money(target.variant.promo_price) }}</bdi>
+          </ng-container>
+          <ng-template #plainPrice><bdi dir="ltr">{{ money(target.variant.price) }}</bdi></ng-template>
+          <ng-container *ngIf="target.variant.bulk_price !== null"> · {{ 'catalog.bulk' | translate:{ price: money(target.variant.bulk_price), n: target.variant.bulk_min_qty } }}</ng-container>
+        </p>
+      </div>
+      <button type="button" class="close" (click)="cancel.emit()" [attr.aria-label]="'common.close' | translate"><ion-icon name="close"></ion-icon></button>
+    </div>
+
+    <div class="display" dir="ltr">
+      <span class="display__label">{{ 'catalog.quantity' | translate }}</span>
+      <strong>{{ value || '0' }}<i class="caret"></i></strong>
+    </div>
+
+    <div class="presets">
+      <button type="button" *ngFor="let n of presets" [class.on]="qty === n" (click)="preset(n)">{{ n }}</button>
+    </div>
+
+    <div class="keys" dir="ltr">
+      <button type="button" *ngFor="let k of keys" (click)="press(k)">{{ k }}</button>
+      <button type="button" class="soft" (click)="clear()">{{ 'qtySheet.clear' | translate }}</button>
+      <button type="button" (click)="press('0')">0</button>
+      <button type="button" class="soft" (click)="back()" [attr.aria-label]="'qtySheet.back' | translate"><ion-icon name="backspace-outline"></ion-icon></button>
+    </div>
+
+    <div class="summary">
+      <span>
+        <bdi dir="ltr">{{ qty }} × {{ money(unitPrice) }}</bdi>
+        <ng-container *ngIf="bulkApplies"> · {{ 'qtySheet.bulkApplied' | translate }}</ng-container>
+        <span class="free" *ngIf="freeUnits"><ion-icon name="gift-outline"></ion-icon> {{ 'cart.freeLine' | translate:{ n: freeUnits } }}</span>
+      </span>
+      <strong dir="ltr">{{ total }}</strong>
+    </div>
+
+    <button type="button" class="st-btn st-btn--accent" (click)="confirm()">
+      {{ (qty ? 'qtySheet.confirm' : 'qtySheet.remove') | translate:{ n: qty } }}
+    </button>
+  </div>
+</div>

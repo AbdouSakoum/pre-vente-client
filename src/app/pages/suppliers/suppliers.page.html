@@ -1,68 +1,112 @@
 <ion-header class="ion-no-border">
-  <ion-toolbar>
-    <img class="logo" slot="start" [src]="brand.logo" [alt]="brand.appName" />
-    <ion-buttons slot="end">
-      <ion-button (click)="profile()" [attr.aria-label]="'profile.title' | translate">
-        <ion-icon slot="icon-only" name="person-circle-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
+  <ion-toolbar class="st-toolbar">
+    <div class="st-head">
+      <div class="st-head__left">
+        <img class="st-head__logo" [src]="brand.logo" [alt]="brand.appName" />
+      </div>
+      <app-notif-button></app-notif-button>
+    </div>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <ion-refresher slot="fixed" (ionRefresh)="load($any($event))"><ion-refresher-content></ion-refresher-content></ion-refresher>
 
-  <div class="page">
-    <p class="hello">{{ 'suppliers.hello' | translate:{ name: auth.account()?.name || '' } }}</p>
-    <h1 class="title">{{ (brand.single ? 'suppliers.titleSingle' : 'suppliers.title') | translate }}</h1>
+  <div class="page home">
+    <h1 class="hello">{{ 'suppliers.hello' | translate:{ name: firstName } }}</h1>
+    <p class="hello-sub">{{ 'suppliers.helloSub' | translate }}</p>
 
-    <div class="alert" *ngIf="errorMsg"><ion-icon name="alert-circle-outline"></ion-icon><span>{{ errorMsg }}</span></div>
+    <!-- RÉSUMÉ -->
+    <div class="kpis" *ngIf="suppliers.length">
+      <div class="st-card kpi">
+        <span class="kpi__icon kpi__icon--cart"><ion-icon name="bag-handle-outline"></ion-icon></span>
+        <strong>{{ openCarts }}</strong><small>{{ 'suppliers.kpiCarts' | translate }}</small>
+      </div>
+      <div class="st-card kpi">
+        <span class="kpi__icon kpi__icon--orders"><ion-icon name="receipt-outline"></ion-icon></span>
+        <strong>{{ openOrders }}</strong><small>{{ 'suppliers.kpiOrders' | translate }}</small>
+      </div>
+    </div>
 
-    <div class="loading" *ngIf="loading && !loaded"><ion-spinner name="crescent"></ion-spinner></div>
+    <div class="st-banner" *ngIf="errorMsg"><ion-icon name="cloud-offline-outline"></ion-icon><div><strong>{{ errorMsg }}</strong></div></div>
+
+    <!-- CHARGEMENT -->
+    <ng-container *ngIf="loading && !loaded">
+      <div class="st-card skel" *ngFor="let i of [1, 2]">
+        <ion-skeleton-text animated class="skel__thumb"></ion-skeleton-text>
+        <div class="skel__text"><ion-skeleton-text animated></ion-skeleton-text><ion-skeleton-text animated></ion-skeleton-text></div>
+      </div>
+    </ng-container>
 
     <!-- AUCUN FOURNISSEUR -->
-    <div class="card empty" *ngIf="loaded && !suppliers.length && !errorMsg">
-      <ion-icon name="qr-code-outline"></ion-icon>
+    <div class="st-empty" *ngIf="loaded && !suppliers.length && !errorMsg">
+      <div class="st-empty__icon"><ion-icon name="qr-code-outline"></ion-icon></div>
       <h2>{{ (brand.single ? 'suppliers.emptySingleTitle' : 'suppliers.emptyTitle') | translate }}</h2>
       <p>{{ (brand.single ? 'suppliers.emptySingleText' : 'suppliers.emptyText') | translate:{ app: brand.appName } }}</p>
-      <button type="button" class="btn btn--primary" (click)="add()">
-        <ion-icon name="scan-outline"></ion-icon> {{ 'suppliers.scan' | translate }}
-      </button>
+      <button type="button" class="st-btn st-btn--accent" (click)="scan()"><ion-icon name="scan-outline"></ion-icon> {{ 'suppliers.scan' | translate }}</button>
+      <button type="button" class="st-btn st-btn--outline" (click)="myCode()"><ion-icon name="qr-code-outline"></ion-icon> {{ 'suppliers.showMyCode' | translate }}</button>
     </div>
 
     <!-- LISTE -->
-    <div class="list" [class.is-loading]="loading" *ngIf="suppliers.length">
-      <article class="card supplier" *ngFor="let s of suppliers">
-        <span class="supplier__logo">
-          <img *ngIf="s.logo_url; else letters" [src]="s.logo_url" [alt]="s.name" />
-          <ng-template #letters>{{ initials(s.name) }}</ng-template>
-        </span>
-        <span class="supplier__body">
-          <strong>{{ s.name }}</strong>
-          <small>{{ 'suppliers.knownAs' | translate:{ name: s.client_name } }}</small>
-        </span>
-        <button type="button" class="supplier__more" (click)="removing = s" [attr.aria-label]="'suppliers.remove' | translate">
-          <ion-icon name="ellipsis-vertical"></ion-icon>
+    <ng-container *ngIf="suppliers.length">
+      <h2 class="st-section">{{ (brand.single ? 'suppliers.titleSingle' : 'suppliers.title') | translate }} <small>{{ suppliers.length }}</small></h2>
+
+      <article class="st-card supplier" *ngFor="let s of suppliers" [class.is-loading]="loading"
+               (click)="open(s)" role="button" tabindex="0" (keyup.enter)="open(s)">
+        <div class="supplier__top">
+          <span class="st-thumb supplier__logo">
+            <img *ngIf="s.logo_url; else letters" [src]="media(s.logo_url)" [alt]="s.name" />
+            <ng-template #letters>{{ initials(s.name) }}</ng-template>
+          </span>
+          <span class="supplier__body">
+            <strong>{{ s.name }}</strong>
+            <small>{{ 'suppliers.knownAs' | translate:{ name: s.client_name } }}</small>
+          </span>
+          <button type="button" class="supplier__more" (click)="askRemove(s, $event)" [attr.aria-label]="'suppliers.remove' | translate">
+            <ion-icon name="ellipsis-vertical"></ion-icon>
+          </button>
+          <span class="supplier__go"><ion-icon name="chevron-forward"></ion-icon></span>
+        </div>
+
+        <div class="supplier__foot supplier__foot--closed" *ngIf="!s.ordering_open; else openFoot">
+          <ion-icon name="lock-closed-outline"></ion-icon><span>{{ 'suppliers.closed' | translate }}</span>
+        </div>
+        <ng-template #openFoot>
+          <div class="supplier__foot supplier__foot--cart" *ngIf="cart.count(s.link_id); else lastOrder">
+            <ion-icon name="bag-handle-outline"></ion-icon><span>{{ 'suppliers.cartOpen' | translate }}</span>
+            <b dir="ltr">{{ 'suppliers.cartSummary' | translate:{ n: cart.count(s.link_id), total: cartTotal(s) } }}</b>
+          </div>
+          <ng-template #lastOrder>
+            <div class="supplier__foot" *ngIf="lastStep(s) as step">
+              <span>{{ 'suppliers.lastOrder' | translate:{ ref: s.last_order_ref } }}</span>
+              <span class="st-status" [attr.data-step]="step"><ion-icon [name]="stepIcons[step]"></ion-icon>{{ 'orderStep.' + step | translate }}</span>
+            </div>
+          </ng-template>
+        </ng-template>
+
+        <!-- Reste dû chez ce fournisseur : ouvre « Mon solde ». -->
+        <button type="button" class="supplier__due" *ngIf="+(s.total_due || 0) > 0" (click)="openBalance(s, $event)">
+          <ion-icon name="wallet-outline"></ion-icon><span>{{ 'suppliers.due' | translate }}</span>
+          <b dir="ltr">{{ due(s) }}</b><ion-icon name="chevron-forward" class="chev"></ion-icon>
         </button>
       </article>
-
-      <p class="soon">{{ 'suppliers.soon' | translate }}</p>
-
-      <button type="button" class="btn btn--ghost" *ngIf="canAdd" (click)="add()">
-        <ion-icon name="add-outline"></ion-icon> {{ 'suppliers.add' | translate }}
-      </button>
-    </div>
+    </ng-container>
   </div>
+
+  <ion-fab class="st-fab" *ngIf="canAdd && suppliers.length">
+    <ion-fab-button (click)="add()" [attr.aria-label]="'suppliers.add' | translate"><ion-icon name="add"></ion-icon></ion-fab-button>
+  </ion-fab>
 
   <!-- RETRAIT D'UN FOURNISSEUR -->
   <div class="sheet" *ngIf="removing as r" (click)="removing = null">
-    <div class="sheet__panel" (click)="$event.stopPropagation()">
-      <h2>{{ 'suppliers.removeTitle' | translate:{ name: r.name } }}</h2>
-      <p>{{ 'suppliers.removeText' | translate }}</p>
-      <button type="button" class="btn btn--danger" [disabled]="busy" (click)="confirmRemove()">
+    <div class="sheet__panel st-sheet" (click)="$event.stopPropagation()">
+      <div class="st-handle"></div>
+      <h2 class="st-sheet__title">{{ 'suppliers.removeTitle' | translate:{ name: r.name } }}</h2>
+      <p class="st-sheet__sub">{{ 'suppliers.removeText' | translate }}</p>
+      <button type="button" class="st-btn danger" [disabled]="busy" (click)="confirmRemove()">
         {{ (busy ? 'common.loading' : 'suppliers.remove') | translate }}
       </button>
-      <button type="button" class="btn btn--ghost" [disabled]="busy" (click)="removing = null">{{ 'common.cancel' | translate }}</button>
+      <button type="button" class="st-btn st-btn--text" [disabled]="busy" (click)="removing = null">{{ 'common.cancel' | translate }}</button>
     </div>
   </div>
 </ion-content>

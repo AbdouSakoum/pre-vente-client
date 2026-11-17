@@ -1,0 +1,23 @@
+/* Confirmation d'envoi : composants .st-* de src/theme/stradi.scss. */
+.sent { display: flex; flex-direction: column; gap: 12px; padding-top: 16px; padding-bottom: 32px; }
+
+.hero { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 30px 20px 26px; border-radius: 24px;
+  background: var(--sc-primary); color: #fff; text-align: center;
+  h1 { margin: 12px 0 0; font-size: 26px; font-weight: 800; letter-spacing: -.03em; }
+  p { margin: 0; font-size: 14px; font-weight: 600; color: var(--sc-on-dark-muted); } }
+.hero__check { width: 76px; height: 76px; border-radius: 24px; background: var(--sc-accent); color: var(--sc-primary);
+  display: flex; align-items: center; justify-content: center; font-size: 42px; box-shadow: 0 10px 24px rgba(var(--sc-accent-rgb), .35); }
+
+.kpis { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.kpi { padding: 14px; display: flex; flex-direction: column; gap: 2px;
+  small { font-size: 12px; font-weight: 600; color: var(--sc-muted); }
+  strong { font-size: 22px; font-weight: 800; letter-spacing: -.02em; color: var(--sc-primary); }
+  span { font-size: 12px; color: var(--sc-muted); } }
+
+.next { padding: 16px; }
+.next__head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px;
+  h2 { margin: 0; font-size: 15px; font-weight: 800; color: var(--sc-primary); } }
+ol { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+li { display: flex; align-items: flex-start; gap: 12px; font-size: 14px; line-height: 1.4; color: var(--sc-ink);
+  span { flex: none; width: 26px; height: 26px; border-radius: 13px; background: var(--sc-primary-soft); color: var(--sc-primary);
+    font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center; } }

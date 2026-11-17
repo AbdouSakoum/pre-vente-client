@@ -14,9 +14,36 @@
   --sc-line: #E4E8EF;
   --sc-danger: #E5484D;
   --sc-danger-soft: #FDECEC;
+  --sc-danger-text: #B42318;
   --sc-radius-lg: 24px;
   --sc-radius-md: 16px;
   --sc-shadow: 0 8px 24px rgba(11, 31, 68, .06);
+
+  // ── Système de design de l'application terrain Stradi (theme/variables.scss de keepon/mobile) ──
+  // Mêmes valeurs que les jetons --ko-*, dérivées des deux couleurs de marque pour qu'une version
+  // personnalisée garde un ensemble cohérent.
+  --sc-primary-soft: rgba(var(--sc-primary-rgb), .09);    // --ko-primary-soft #E8EDF6
+  --sc-primary-border: rgba(var(--sc-primary-rgb), .22);  // --ko-primary-border #C9D4E8
+  --sc-accent-soft: rgba(var(--sc-accent-rgb), .13);      // --ko-accent-soft #E4F7EE
+  --sc-accent-text: #0F8A58;                              // --ko-accent-text
+  --sc-soft-line: #EEF1F6;                                // --ko-line
+  --sc-card-radius: 18px;                                 // --ko-radius-md
+  --sc-segment-bg: #E6EAF1;
+  --sc-placeholder: #8A93A6;
+  --sc-on-dark-muted: #B8C2D9;
+  --sc-ease: cubic-bezier(.2, .8, .2, 1);
+  --sc-float-shadow: 0 12px 32px rgba(11, 31, 68, .16);
+  --sc-btn-shadow: 0 1px 2px rgba(11, 31, 68, .08);
+
+  // Statuts de commande : mêmes couleurs que les badges Ionic de l'application terrain.
+  --sc-st-waiting-bg: #FFF4DB;  --sc-st-waiting: #8A4B00;
+  --sc-st-validated-bg: var(--sc-primary-soft);  --sc-st-validated: var(--sc-primary);
+  --sc-st-delivering-bg: #EFE9FF;  --sc-st-delivering: #5530B8;
+  --sc-st-delivered-bg: #E2F6EC;  --sc-st-delivered: #0B6B45;
+  --sc-st-refused-bg: var(--sc-danger-soft);  --sc-st-refused: var(--sc-danger-text);
+  --sc-st-cancelled-bg: #EEF0F4;  --sc-st-cancelled: #4A5263;
+  // Promotions : ton chaud, distinct du vert « disponible » et du rouge « rupture ».
+  --sc-promo-bg: #FFEDD5;  --sc-promo: #B4410B;
 
   --ion-color-primary: var(--sc-primary);
   --ion-color-primary-rgb: var(--sc-primary-rgb);
@@ -38,4 +65,9 @@
   --ion-color-danger-contrast-rgb: 255, 255, 255;
   --ion-color-danger-shade: #ca3f44;
   --ion-color-danger-tint: #e85a5f;
+}
+
+// Texte accent lisible sur fond clair : dérivé de l'accent de la version quand le navigateur le permet.
+@supports (color: color-mix(in srgb, red 50%, black)) {
+  :root { --sc-accent-text: color-mix(in srgb, var(--sc-accent) 62%, #000); }
 }

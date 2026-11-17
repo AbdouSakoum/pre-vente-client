@@ -1,7 +1,8 @@
 <ion-header class="ion-no-border">
-  <ion-toolbar>
-    <ion-buttons slot="start"><ion-back-button defaultHref="/suppliers" text=""></ion-back-button></ion-buttons>
-    <ion-title>{{ 'profile.title' | translate }}</ion-title>
+  <ion-toolbar class="st-toolbar">
+    <div class="st-head">
+      <div class="st-head__text"><span class="st-title big">{{ 'profile.title' | translate }}</span></div>
+    </div>
   </ion-toolbar>
 </ion-header>
 
@@ -10,6 +11,9 @@
     <section class="card account">
       <ion-icon name="storefront-outline"></ion-icon>
       <strong>{{ auth.account()?.name }}</strong>
+      <span class="account__meta" *ngIf="auth.account()?.category as cat">
+        {{ 'category.' + cat | translate }}<ng-container *ngIf="auth.account()?.city as city"> · {{ city }}</ng-container>
+      </span>
       <span dir="ltr">{{ identifier }}</span>
     </section>
 
@@ -17,6 +21,11 @@
       <span>{{ 'profile.language' | translate }}</span>
       <app-lang-switch></app-lang-switch>
     </section>
+
+    <button type="button" class="card row link" routerLink="/my-code">
+      <span><ion-icon name="qr-code-outline"></ion-icon> {{ 'suppliers.showMyCode' | translate }}</span>
+      <ion-icon name="chevron-forward"></ion-icon>
+    </button>
 
     <button type="button" class="btn btn--danger" (click)="logout()">
       <ion-icon name="log-out-outline"></ion-icon> {{ 'profile.logout' | translate }}

@@ -1,0 +1,213 @@
+/*
+ * Système de design Stradi, repris de l'application terrain (keepon/mobile : global.scss,
+ * shared/shell, shared/app-header, écran de prise de commande de visits). Mêmes formes, mêmes
+ * tailles ; les couleurs passent par les jetons --sc-* pour suivre la version du distributeur.
+ */
+
+/* ── En-tête clair : marque sur les écrans racine, retour + titre ailleurs ── */
+ion-header ion-toolbar.st-toolbar {
+  --background: var(--sc-bg); --color: var(--sc-primary); --border-width: 0; --min-height: 0;
+  --padding-start: 16px; --padding-end: 16px; --padding-top: 10px; --padding-bottom: 6px;
+}
+.st-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 0; }
+.st-head__left { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.st-head__logo { height: 32px; max-width: 150px; object-fit: contain; object-position: left center; }
+.st-head__text { display: flex; flex-direction: column; min-width: 0; }
+.st-title { font-size: 18px; font-weight: 800; letter-spacing: -.3px; line-height: 1.15; color: var(--sc-primary);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.st-sub { font-size: 12px; font-weight: 500; color: var(--sc-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.st-icon-btn {
+  flex: none; width: 44px; height: 44px; border: 0; border-radius: 14px; background: var(--sc-surface);
+  color: var(--sc-primary); box-shadow: var(--sc-btn-shadow); display: flex; align-items: center; justify-content: center;
+  font-size: 22px; text-decoration: none;
+  &.danger { color: var(--sc-danger); }
+  &:active { transform: scale(.96); }
+}
+ion-back-button.st-back {
+  flex: none; width: 44px; height: 44px; border-radius: 14px; background: var(--sc-surface); box-shadow: var(--sc-btn-shadow);
+  --color: var(--sc-primary); --icon-font-size: 22px; --border-radius: 14px; --padding-start: 0; --padding-end: 0;
+}
+.st-text-action { flex: none; height: 44px; padding: 0 10px; border: 0; background: transparent; font: inherit;
+  font-size: 14px; font-weight: 700; color: var(--sc-danger-text); }
+
+/* ── Barre d'onglets flottante (shared/shell de l'application terrain) ── */
+ion-tab-bar.st-tabbar {
+  --background: var(--sc-surface); --border: 0; border: 0; height: 68px;
+  width: calc(100% - 32px); max-width: 528px; margin: 0 auto calc(16px + var(--ion-safe-area-bottom, 0px));
+  padding: 0 10px; border-radius: 24px; box-shadow: var(--sc-float-shadow);
+}
+ion-tab-bar.st-tabbar ion-tab-button {
+  flex: 1; min-width: 52px; height: 48px; align-self: center; border-radius: 16px;
+  --color: var(--sc-muted); --color-selected: #fff; --background: transparent; --padding-start: 0; --padding-end: 0;
+  font-size: 13px; font-weight: 700;
+  transition: flex .25s var(--sc-ease), background-color .25s var(--sc-ease), color .25s var(--sc-ease);
+  ion-icon { font-size: 22px; }
+  ion-label { display: none; margin: 0 0 0 8px; }
+  &.tab-selected { flex: 2; flex-direction: row; margin: 0 4px; background: var(--sc-primary); --color: #fff;
+    ion-icon { font-size: 20px; color: var(--sc-accent); }
+    ion-label { display: block; } }
+}
+
+/* ── Bandeau de recherche navy (prise de commande) ── */
+.st-search-band { padding: 12px 16px; background: var(--sc-primary); }
+.st-search-band ion-searchbar, ion-searchbar.st-search {
+  --background: #fff; --color: var(--sc-primary); --placeholder-color: var(--sc-placeholder);
+  --icon-color: var(--sc-muted); --clear-button-color: var(--sc-muted); --border-radius: 12px; --box-shadow: none;
+  padding: 0; height: 48px; min-height: 48px; font-size: 15px;
+}
+
+/* ── Segment (onglets internes) : gris clair, actif en blanc ── */
+.st-segment { display: flex; gap: 2px; padding: 3px; border-radius: 12px; background: var(--sc-segment-bg); }
+.st-segment button {
+  flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 36px; padding: 0 12px;
+  border: 0; border-radius: 9px; background: transparent; font: inherit; font-size: 13px; font-weight: 600;
+  color: var(--sc-muted); white-space: nowrap;
+  ion-icon { font-size: 16px; }
+  &.active { background: #fff; color: var(--sc-primary); font-weight: 700; box-shadow: 0 1px 2px rgba(11, 31, 68, .1); }
+}
+
+/* ── Filtres en pastilles (filter-btn) ── */
+.st-pills { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; &::-webkit-scrollbar { display: none; } }
+.st-pill {
+  flex: none; height: 36px; padding: 0 14px; border: 1.5px solid var(--sc-soft-line); border-radius: 20px;
+  background: var(--sc-surface); font: inherit; font-size: 13px; font-weight: 600; color: var(--sc-muted); white-space: nowrap;
+  &.active { background: var(--sc-primary); border-color: var(--sc-primary); color: #fff;
+    box-shadow: 0 3px 8px rgba(var(--sc-primary-rgb), .3); }
+}
+
+/* ── Cartes (style récent de l'application terrain) ── */
+.st-card { background: var(--sc-surface); border-radius: var(--sc-card-radius); box-shadow: var(--sc-shadow); }
+.st-card--prod { border-radius: 22px; padding: 14px; }
+.st-thumb {
+  flex: none; width: 56px; height: 56px; border-radius: 14px; overflow: hidden; background: var(--sc-bg);
+  color: var(--sc-placeholder); display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800;
+  img { width: 100%; height: 100%; object-fit: cover; }
+}
+.st-thumb--sm { width: 44px; height: 44px; border-radius: 12px; font-size: 18px; }
+.st-section { margin: 18px 4px 10px; display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+  font-size: 15px; font-weight: 800; color: var(--sc-primary);
+  small { font-size: 12.5px; font-weight: 600; color: var(--sc-muted); } }
+.st-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--sc-muted); }
+
+/* ── Disponibilité ── */
+.st-stock { font-size: 11px; font-weight: 700; &.ok { color: #15803D; } &.out { color: #B91C1C; } }
+
+/* ── Compteur de quantité (p-stepper) ── */
+.st-stepper {
+  flex: none; display: flex; align-items: center; height: 52px; padding: 4px; border-radius: 16px; background: var(--sc-bg);
+  button { width: 44px; height: 44px; border: 0; border-radius: 12px; background: #fff; color: var(--sc-primary);
+    font-size: 20px; box-shadow: var(--sc-btn-shadow); display: flex; align-items: center; justify-content: center;
+    &:disabled { opacity: .35; } }
+  .st-stepper__value { min-width: 48px; height: 44px; padding: 0 4px; border: 0; background: transparent; font: inherit;
+    font-size: 17px; font-weight: 800; color: var(--sc-primary); text-align: center; }
+}
+.st-stepper--sm { height: 46px; button { width: 38px; height: 38px; } .st-stepper__value { min-width: 42px; height: 38px; font-size: 16px; } }
+
+/* ── Boutons ── */
+.st-add {
+  flex: none; min-width: 52px; height: 52px; padding: 0 16px; border: 0; border-radius: 16px; background: var(--sc-primary);
+  color: #fff; font: inherit; font-size: 15px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  ion-icon { font-size: 20px; color: var(--sc-accent); }
+  &:disabled { background: #EEF0F4; color: #9AA1B1; ion-icon { color: inherit; } }
+}
+.st-add--sm { min-width: 46px; height: 46px; padding: 0 12px; border-radius: 14px; }
+.st-btn {
+  width: 100%; min-height: 52px; padding: 0 18px; border: 0; border-radius: 16px; font: inherit; font-size: 15px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none;
+  transition: transform .12s var(--sc-ease);
+  &:active { transform: scale(.98); }
+  &:disabled { opacity: .6; }
+  ion-icon { font-size: 20px; }
+  ion-spinner { width: 20px; height: 20px; }
+}
+.st-btn--accent { background: var(--sc-accent); color: var(--sc-primary); box-shadow: 0 8px 22px rgba(var(--sc-accent-rgb), .3); }
+.st-btn--primary { background: var(--sc-primary); color: #fff; }
+.st-btn--outline { background: var(--sc-surface); color: var(--sc-primary); box-shadow: inset 0 0 0 1.5px var(--sc-line); }
+.st-btn--text { min-height: 44px; background: transparent; color: var(--sc-primary); }
+.st-btn + .st-btn { margin-top: 10px; }
+
+/* ── Barre panier / validation flottante (checkout) ── */
+.st-checkout {
+  width: calc(100% - 24px); max-width: 536px; margin: 0 auto calc(12px + var(--ion-safe-area-bottom, 0px));
+  padding: 12px 12px 12px 16px; border-radius: 24px; background: var(--sc-primary); color: #fff;
+  display: flex; flex-direction: column; gap: 10px; box-shadow: 0 16px 36px rgba(11, 31, 68, .28);
+}
+.st-checkout__row { display: flex; align-items: center; gap: 12px; }
+.st-cart-icon { position: relative; flex: none; width: 40px; height: 40px; border-radius: 12px; background: rgba(255, 255, 255, .1);
+  display: flex; align-items: center; justify-content: center; font-size: 20px; }
+.st-cart-badge { position: absolute; top: -5px; right: -5px; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 10px;
+  background: var(--sc-accent); color: var(--sc-primary); font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+.st-cart-text { flex: 1; min-width: 0; display: flex; flex-direction: column;
+  small { font-size: 11px; color: var(--sc-on-dark-muted); }
+  strong { font-size: 18px; font-weight: 800; letter-spacing: -.3px; } }
+.st-pay {
+  height: 52px; padding: 0 16px; border: 0; border-radius: 16px; background: var(--sc-accent); color: var(--sc-primary);
+  font: inherit; font-size: 15px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  ion-icon { font-size: 18px; } ion-spinner { width: 18px; height: 18px; color: var(--sc-primary); }
+  &:disabled { background: rgba(255, 255, 255, .14); color: var(--sc-on-dark-muted); }
+}
+.st-pay--block { width: 100%; }
+.st-checkout__note { margin: 0; display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--sc-on-dark-muted);
+  ion-icon { flex: none; font-size: 16px; } }
+
+/* ── Statuts de commande ── */
+.st-status {
+  flex: none; display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 10px; border-radius: 999px;
+  font-size: 12px; font-weight: 800; white-space: nowrap;
+  ion-icon { font-size: 14px; }
+  @each $s in waiting, validated, delivering, delivered, refused, cancelled {
+    &[data-step='#{$s}'] { background: var(--sc-st-#{$s}-bg); color: var(--sc-st-#{$s}); }
+  }
+}
+.st-status-tile { flex: none; width: 46px; height: 46px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px;
+  @each $s in waiting, validated, delivering, delivered, refused, cancelled {
+    &[data-step='#{$s}'] { background: var(--sc-st-#{$s}-bg); color: var(--sc-st-#{$s}); }
+  }
+}
+
+/* ── Bandeaux ── */
+.st-banner { display: flex; gap: 10px; padding: 12px 14px; border-radius: 14px; font-size: 13.5px; line-height: 1.4;
+  background: var(--sc-danger-soft); color: var(--sc-danger-text);
+  > ion-icon { flex: none; font-size: 20px; margin-top: 1px; }
+  strong { display: block; font-size: 14px; } span { color: var(--sc-ink); } }
+.st-banner--info { background: var(--sc-primary-soft); color: var(--sc-primary); }
+
+/* ── États vides ── */
+.st-empty { padding: 48px 24px; text-align: center; color: var(--sc-muted);
+  .st-empty__icon { width: 84px; height: 84px; margin: 0 auto 16px; border-radius: 26px; background: var(--sc-primary-soft);
+    color: var(--sc-primary); display: flex; align-items: center; justify-content: center; font-size: 40px; }
+  h2 { margin: 0 0 6px; font-size: 19px; font-weight: 800; color: var(--sc-primary); }
+  p { margin: 0 0 20px; font-size: 14px; line-height: 1.5; } }
+
+/* ── Bouton flottant (app-fab) ── */
+ion-fab.st-fab { position: fixed; right: 20px; bottom: calc(100px + var(--ion-safe-area-bottom, 0px)); }
+ion-fab.st-fab ion-fab-button {
+  --background: linear-gradient(135deg, var(--sc-primary) 0%, rgba(var(--sc-primary-rgb), .82) 100%);
+  --background-activated: var(--sc-primary); --box-shadow: 0 6px 20px rgba(var(--sc-primary-rgb), .45);
+  width: 56px; height: 56px; ion-icon { font-size: 26px; }
+}
+
+/* ── Feuilles d'actions et fenêtres en bas d'écran ── */
+ion-action-sheet {
+  --background: #fff; --button-color: var(--sc-primary); --button-background-selected: var(--sc-primary-soft); --color: var(--sc-muted);
+  .action-sheet-group { border-radius: 20px 20px 0 0; }
+  .action-sheet-title { font-weight: 700; color: var(--sc-primary); }
+  .action-sheet-cancel { color: var(--sc-danger); font-weight: 700; }
+}
+.st-sheet { padding: 10px 18px calc(22px + var(--ion-safe-area-bottom, 0px)); }
+.st-handle { width: 40px; height: 5px; margin: 0 auto 16px; border-radius: 99px; background: #DCE0E7; }
+.st-sheet__title { margin: 0; font-size: 19px; font-weight: 800; color: var(--sc-primary); }
+.st-sheet__sub { margin: 2px 0 0; font-size: 13px; color: var(--sc-muted); }
+
+/* ── Promotions (prix barré, étiquettes, bandeaux) ── */
+.st-promo-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.st-promo-tag { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 999px;
+  font-size: 11px; font-weight: 700; line-height: 1.3; background: var(--sc-promo-bg); color: var(--sc-promo);
+  ion-icon { font-size: 13px; }
+  small { font-weight: 600; opacity: .85; }
+  &.free { background: var(--sc-accent-soft); color: var(--sc-accent-text); } }
+/* Marge : Angular retire l'espace entre deux balises, le prix barré collerait au prix promo. */
+.st-strike { margin-inline-end: 4px; color: var(--sc-muted); font-weight: 500; font-size: .86em; text-decoration: line-through; }
+.st-price-promo { color: var(--sc-promo); }
+.st-banner--promo { background: var(--sc-promo-bg); color: var(--sc-promo); }
+.st-banner--success { background: var(--sc-accent-soft); color: var(--sc-accent-text); }

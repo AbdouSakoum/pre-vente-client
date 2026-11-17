@@ -1,0 +1,9 @@
+<ion-tabs>
+  <ion-tab-bar slot="bottom" class="st-tabbar">
+    <ion-tab-button *ngFor="let t of tabs" [tab]="t.tab">
+      <ion-icon [name]="t.icon"></ion-icon>
+      <ion-label>{{ t.label | translate }}</ion-label>
+      <ion-badge class="tab-badge" *ngIf="t.tab === 'orders' && notifications.unread() > 0">{{ notifications.unread() > 9 ? '9+' : notifications.unread() }}</ion-badge>
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>

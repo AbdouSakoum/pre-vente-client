@@ -19,11 +19,28 @@ import { ForgotPasswordPage } from './pages/forgot-password/forgot-password.page
 import { SuppliersPage } from './pages/suppliers/suppliers.page';
 import { LinkPage } from './pages/link/link.page';
 import { ProfilePage } from './pages/profile/profile.page';
+import { MyCodePage } from './pages/my-code/my-code.page';
+import { TabsPage } from './pages/tabs/tabs.page';
+import { OrdersPage } from './pages/orders/orders.page';
+import { SupplierPage } from './pages/supplier/supplier.page';
+import { CatalogComponent } from './pages/supplier/components/catalog/catalog.component';
+import { UsualsComponent } from './pages/supplier/components/usuals/usuals.component';
+import { QtyControlComponent } from './pages/supplier/components/qty-control/qty-control.component';
+import { QtySheetComponent } from './pages/supplier/components/qty-sheet/qty-sheet.component';
+import { PromoTagsComponent } from './pages/supplier/components/promo-tags/promo-tags.component';
+import { CartPage } from './pages/cart/cart.page';
+import { OrderSentComponent } from './pages/cart/components/order-sent/order-sent.component';
+import { NotificationsPage } from './pages/notifications/notifications.page';
+import { BalancePage } from './pages/balance/balance.page';
+import { NotifButtonComponent } from './shared/components/notif-button/notif-button.component';
+import { OrderDetailPage } from './pages/order-detail/order-detail.page';
 
 @NgModule({
   declarations: [
     AppComponent, LangSwitchComponent,
-    LoginPage, RegisterPage, ForgotPasswordPage, SuppliersPage, LinkPage, ProfilePage,
+    LoginPage, RegisterPage, ForgotPasswordPage, TabsPage, SuppliersPage, OrdersPage, LinkPage, ProfilePage, MyCodePage,
+    SupplierPage, CatalogComponent, UsualsComponent, QtyControlComponent, QtySheetComponent, PromoTagsComponent,
+    CartPage, OrderSentComponent, OrderDetailPage, NotificationsPage, NotifButtonComponent, BalancePage,
   ],
   imports: [
     BrowserModule, CommonModule, FormsModule,

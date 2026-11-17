@@ -1,0 +1,57 @@
+<div class="st-pills cats" *ngIf="categories.length > 1">
+  <button type="button" class="st-pill" [class.active]="!category" (click)="category = null">{{ 'catalog.all' | translate }}</button>
+  <button type="button" class="st-pill" *ngFor="let c of categories" [class.active]="category === c" (click)="category = c">{{ c }}</button>
+</div>
+
+<p class="price-note">{{ (catalog.price_type === 'retail' ? 'catalog.priceRetail' : 'catalog.priceWholesale') | translate }}</p>
+
+<!-- Remises de seuil en cours : « −5 % sur toute la commande dès 1 000 DH ». -->
+<div class="st-banner st-banner--promo threshold" *ngFor="let t of catalog.order_promotions || []">
+  <ion-icon name="pricetag-outline"></ion-icon>
+  <div>
+    <strong>{{ 'promo.threshold' | translate:{ pct: t.discount_pct, min: money(t.min_order_ttc) } }}</strong>
+    <span>{{ t.name }} · {{ 'promo.until' | translate:{ date: date(t.ends_on) } }}</span>
+  </div>
+</div>
+
+<div class="st-empty" *ngIf="!catalog.products.length">
+  <div class="st-empty__icon"><ion-icon name="cube-outline"></ion-icon></div>
+  <h2>{{ 'catalog.emptyTitle' | translate }}</h2>
+  <p>{{ 'catalog.emptyText' | translate }}</p>
+</div>
+<p class="none" *ngIf="catalog.products.length && !products.length">{{ 'catalog.noResult' | translate }}</p>
+
+<article class="st-card st-card--prod prod" *ngFor="let p of products; trackBy: trackProduct">
+  <header class="prod__head">
+    <span class="st-thumb">
+      <img *ngIf="p.image_url; else icon" [src]="media(p.image_url)" [alt]="p.name" loading="lazy" />
+      <ng-template #icon><ion-icon name="cube-outline"></ion-icon></ng-template>
+    </span>
+    <span class="prod__id">
+      <strong>{{ p.name }}</strong>
+      <small>{{ p.category_name || '' }}<ng-container *ngIf="p.variants.length > 1"> · {{ 'catalog.formats' | translate:{ n: p.variants.length } }}</ng-container></small>
+    </span>
+    <span class="prod__incart" *ngIf="inCart(p) as n"><ion-icon name="checkmark-circle"></ion-icon> {{ n }}</span>
+  </header>
+
+  <div class="variant" *ngFor="let v of p.variants; trackBy: trackVariant" [class.out]="!v.available">
+    <span class="variant__info">
+      <span class="variant__top">
+        <span class="variant__name">{{ v.name }}</span>
+        <span class="st-stock" [class.ok]="v.available" [class.out]="!v.available">
+          {{ (v.available ? 'catalog.available' : 'catalog.outOfStock') | translate }}
+        </span>
+      </span>
+      <span class="variant__prices">
+        <ng-container *ngIf="promo(v) !== null; else plainPrice">
+          <s class="st-strike" dir="ltr">{{ money(v.price) }}</s>
+          <strong class="st-price-promo" dir="ltr">{{ money(promo(v)) }}</strong>
+        </ng-container>
+        <ng-template #plainPrice><strong dir="ltr">{{ money(v.price) }}</strong></ng-template>
+        <span class="bulk" *ngIf="v.bulk_price !== null"><ion-icon name="pricetag-outline"></ion-icon> {{ 'catalog.bulk' | translate:{ price: money(v.bulk_price), n: v.bulk_min_qty } }}</span>
+      </span>
+      <app-promo-tags [variant]="v"></app-promo-tags>
+    </span>
+    <app-qty-control [linkId]="linkId" [product]="p" [variant]="v" (keypad)="qty.emit($event)"></app-qty-control>
+  </div>
+</article>

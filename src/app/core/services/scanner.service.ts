@@ -20,6 +20,16 @@ export class ScannerService {
       if (!supported) return { status: 'unavailable' };
       const { camera } = await BarcodeScanner.requestPermissions();
       if (camera !== 'granted' && camera !== 'limited') return { status: 'unavailable' };
+      // Android : le scanner vient d'un module des services Google, normalement installé avec
+      // l'application (AndroidManifest, à déclarer à la création du projet Android). S'il manque
+      // encore, on lance son installation et on propose de coller le lien en attendant.
+      if (Capacitor.getPlatform() === 'android') {
+        const { available } = await BarcodeScanner.isGoogleBarcodeScannerModuleAvailable();
+        if (!available) {
+          BarcodeScanner.installGoogleBarcodeScannerModule().catch(() => {});
+          return { status: 'unavailable' };
+        }
+      }
 
       const { barcodes } = await BarcodeScanner.scan({ formats: [BarcodeFormat.QrCode] });
       const value = barcodes[0]?.rawValue;

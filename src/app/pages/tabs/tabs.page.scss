@@ -1,0 +1,4 @@
+/* Barre d'onglets : classe .st-tabbar de src/theme/stradi.scss. */
+ion-tabs { background: var(--sc-bg); }
+/* Pastille « nouveautés » sur l'onglet Commandes. */
+.tab-badge { --background: var(--sc-danger); --color: #fff; font-size: 10px; min-width: 18px; }

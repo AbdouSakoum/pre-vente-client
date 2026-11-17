@@ -1,0 +1,73 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="st-toolbar">
+    <div class="st-head">
+      <div class="st-head__text">
+        <span class="st-title big">{{ 'orders.title' | translate }}</span>
+        <span class="st-sub">{{ 'orders.sub' | translate }}</span>
+      </div>
+      <app-notif-button></app-notif-button>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="load($any($event))"><ion-refresher-content></ion-refresher-content></ion-refresher>
+
+  <div class="page list-page">
+    <!-- CHIFFRES -->
+    <div class="kpis" *ngIf="orders.length">
+      <div class="st-card kpi"><strong>{{ openCount }}</strong><small>{{ 'orders.kpiOpen' | translate }}</small></div>
+      <div class="st-card kpi"><strong>{{ deliveringCount }}</strong><small>{{ 'orders.kpiDelivering' | translate }}</small></div>
+      <div class="st-card kpi kpi--accent"><strong>{{ monthCount }}</strong><small>{{ 'orders.kpiMonth' | translate }}</small></div>
+    </div>
+
+    <!-- FILTRES -->
+    <div class="filters" *ngIf="orders.length">
+      <div class="st-segment">
+        <button type="button" [class.active]="filter === 'all'" (click)="filter = 'all'">{{ 'orders.all' | translate }}</button>
+        <button type="button" [class.active]="filter === 'open'" (click)="filter = 'open'">{{ 'orders.open' | translate }}</button>
+        <button type="button" [class.active]="filter === 'done'" (click)="filter = 'done'">{{ 'orders.done' | translate }}</button>
+      </div>
+      <div class="st-pills" *ngIf="suppliers.length > 1">
+        <button type="button" class="st-pill" [class.active]="!supplier" (click)="supplier = ''">{{ 'orders.allSuppliers' | translate }}</button>
+        <button type="button" class="st-pill" *ngFor="let s of suppliers" [class.active]="supplier === s.id" (click)="supplier = s.id">{{ s.name }}</button>
+      </div>
+    </div>
+
+    <div class="st-banner" *ngIf="errorMsg"><ion-icon name="cloud-offline-outline"></ion-icon><div><strong>{{ errorMsg }}</strong></div></div>
+
+    <ng-container *ngIf="loading && !loaded">
+      <div class="st-card skel" *ngFor="let i of [1, 2, 3]">
+        <ion-skeleton-text animated></ion-skeleton-text><ion-skeleton-text animated></ion-skeleton-text>
+      </div>
+    </ng-container>
+
+    <div class="st-empty" *ngIf="loaded && !orders.length && !errorMsg">
+      <div class="st-empty__icon"><ion-icon name="receipt-outline"></ion-icon></div>
+      <h2>{{ 'orders.emptyTitle' | translate }}</h2>
+      <p>{{ 'orders.emptyText' | translate }}</p>
+    </div>
+    <p class="none" *ngIf="orders.length && !visible.length">{{ 'orders.noneFiltered' | translate }}</p>
+
+    <!-- LISTE -->
+    <article class="st-card order" *ngFor="let o of visible" (click)="open(o)" role="button" tabindex="0" (keyup.enter)="open(o)">
+      <div class="order__main">
+        <span class="st-status-tile" [attr.data-step]="step(o)"><ion-icon [name]="stepIcons[step(o)]"></ion-icon></span>
+        <div class="order__body">
+          <div class="order__line">
+            <strong dir="ltr">{{ o.order_ref }}</strong>
+            <strong class="order__total" dir="ltr">{{ money(o) }}</strong>
+          </div>
+          <span class="order__step" [attr.data-step]="step(o)">{{ 'orderStep.' + step(o) | translate }}</span>
+          <small>{{ o.supplier_name }} · {{ 'orders.items' | translate:{ n: o.items_count } }}</small>
+          <small>
+            {{ 'orders.placed' | translate:{ date: (o.created_at | date:'dd/MM/yyyy') } }}<ng-container *ngIf="o.desired_delivery_date"> · {{ 'orders.wanted' | translate:{ date: (o.desired_delivery_date | date:'dd/MM') } }}</ng-container>
+          </small>
+        </div>
+      </div>
+      <p class="order__reason" *ngIf="step(o) === 'refused' && o.reject_reason">
+        <ion-icon name="information-circle-outline"></ion-icon> {{ 'orders.reason' | translate:{ reason: o.reject_reason } }}
+      </p>
+    </article>
+  </div>
+</ion-content>

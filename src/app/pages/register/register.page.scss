@@ -1,2 +1,46 @@
-/* Écran d'inscription : classes .auth, .field et .btn de src/global.scss. */
-ion-spinner { width: 20px; height: 20px; color: #fff; }
+/* Inscription en trois étapes : classes .auth, .field et .btn de src/global.scss. */
+.auth { justify-content: flex-start; }
+.btn--primary ion-spinner { width: 20px; height: 20px; color: #fff; }
+
+/* ── En-tête : retour, logo, avancement ── */
+.wizard__top { display: flex; align-items: center; gap: 10px; min-height: 44px; }
+.wizard__logo { height: 36px; max-width: 170px; object-fit: contain; object-position: left center; }
+.wizard__back {
+  width: 40px; height: 40px; margin-inline-start: -8px; border: 0; border-radius: 50%;
+  background: transparent; color: var(--sc-primary); font-size: 22px;
+  display: flex; align-items: center; justify-content: center;
+}
+.wizard__count { margin-inline-start: auto; font-size: 13px; font-weight: 600; color: var(--sc-muted); }
+.wizard__bar { height: 4px; margin: 12px 0 26px; border-radius: 4px; background: var(--sc-line); overflow: hidden; }
+.wizard__bar span { display: block; height: 100%; border-radius: 4px; background: var(--sc-accent); transition: width .3s ease; }
+
+section { animation: step-in .25s ease; }
+@keyframes step-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* ── Étape 1 : tuiles de type de commerce ── */
+.tiles { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.tile {
+  display: flex; align-items: center; gap: 10px; min-height: 58px; padding: 0 14px;
+  border: 1px solid var(--sc-line); border-radius: var(--sc-radius-md); background: var(--sc-surface);
+  color: var(--sc-ink); font: inherit; font-size: 15px; font-weight: 600; text-align: start;
+  transition: border-color .15s, background .15s, color .15s, transform .1s;
+}
+.tile:active { transform: scale(.98); }
+.tile ion-icon { flex: none; font-size: 22px; color: var(--sc-primary); }
+.tile--wide { grid-column: 1 / -1; }
+.tile--on { border-color: var(--sc-primary); background: var(--sc-primary); color: #fff; }
+.tile--on ion-icon { color: var(--sc-accent); }
+
+/* ── Étape 2 : position ── */
+.locate { margin: 4px 0 20px; }
+.locate .btn ion-spinner { width: 18px; height: 18px; color: var(--sc-primary); }
+.locate__warn { color: var(--sc-danger); }
+.locate--done {
+  display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+  border-radius: var(--sc-radius-md); background: rgba(29, 184, 122, .1);
+}
+.locate--done > ion-icon { flex: none; font-size: 26px; color: var(--sc-accent); }
+.locate--done div { flex: 1; display: flex; flex-direction: column; gap: 2px; font-size: 14px; }
+.locate--done strong { color: var(--sc-ink); }
+.locate--done span { font-size: 12px; color: var(--sc-muted); }
+.locate--done button { border: 0; background: transparent; color: var(--sc-primary); font: inherit; font-size: 13px; font-weight: 700; }

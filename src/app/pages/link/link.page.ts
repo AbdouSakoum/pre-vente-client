@@ -4,6 +4,7 @@ import { LanguageService } from '../../core/services/language.service';
 import { ScannerService } from '../../core/services/scanner.service';
 import { SupplierService } from '../../core/services/supplier.service';
 import { LinkPreview } from '../../shared/models/supplier.model';
+import { initials } from '../../shared/format';
 
 /**
  * Ajout d'un fournisseur : scanner son QR code (ou coller le lien reçu), vérifier le nom
@@ -24,6 +25,7 @@ export class LinkPage {
   loading = false;
   linked = false;
   errorMsg = '';
+  readonly initials = initials;
 
   constructor(
     public scanner: ScannerService,

@@ -1,47 +1,108 @@
 <ion-content>
   <form class="auth" (ngSubmit)="submit()" novalidate>
-    <img class="auth__logo" [src]="brand.logo" [alt]="brand.appName" />
-    <h1 class="auth__title">{{ 'auth.register.title' | translate }}</h1>
-    <p class="auth__sub">{{ 'auth.register.sub' | translate }}</p>
+    <div class="wizard__top">
+      <button type="button" class="wizard__back" *ngIf="step > 1" (click)="back()" [attr.aria-label]="'common.back' | translate">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </button>
+      <img class="wizard__logo" *ngIf="step === 1" [src]="brand.logo" [alt]="brand.appName" />
+      <span class="wizard__count">{{ 'auth.register.step' | translate:{ n: step, total: steps } }}</span>
+    </div>
+    <div class="wizard__bar"><span [style.width.%]="step / steps * 100"></span></div>
 
     <div class="alert" *ngIf="errorMsg"><ion-icon name="alert-circle-outline"></ion-icon><span>{{ errorMsg }}</span></div>
 
-    <label class="field">
-      <span class="field__label">{{ 'auth.register.name' | translate }}</span>
-      <span class="field__box">
-        <input type="text" name="name" [(ngModel)]="name" maxlength="100" autocomplete="organization"
-               [placeholder]="'auth.register.namePlaceholder' | translate" />
-      </span>
-    </label>
-
-    <label class="field">
-      <span class="field__label">{{ 'auth.identifier' | translate }}</span>
-      <span class="field__box">
-        <input type="text" name="identifier" [(ngModel)]="identifier" dir="ltr" inputmode="email"
-               autocomplete="username" autocapitalize="off" spellcheck="false"
-               [placeholder]="'auth.identifierPlaceholder' | translate" />
-      </span>
-      <span class="field__hint">{{ 'auth.register.identifierHint' | translate }}</span>
-    </label>
-
-    <label class="field">
-      <span class="field__label">{{ 'auth.password' | translate }}</span>
-      <span class="field__box">
-        <input [type]="showPassword ? 'text' : 'password'" name="password" [(ngModel)]="password" dir="ltr"
-               autocomplete="new-password" />
-        <button type="button" (click)="showPassword = !showPassword" [attr.aria-label]="'auth.showPassword' | translate">
-          <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+    <!-- Étape 1 : type de commerce -->
+    <section *ngIf="step === 1">
+      <h1 class="auth__title">{{ 'auth.register.step1Title' | translate }}</h1>
+      <p class="auth__sub">{{ 'auth.register.step1Sub' | translate }}</p>
+      <div class="tiles" role="radiogroup">
+        <button type="button" class="tile" *ngFor="let c of categories" role="radio"
+                [class.tile--on]="category === c"
+                [attr.aria-checked]="category === c" (click)="pick(c)">
+          <ion-icon [name]="icons[c]"></ion-icon>
+          <span>{{ 'category.' + c | translate }}</span>
         </button>
-      </span>
-      <span class="field__hint">{{ 'auth.passwordHint' | translate:{ n: 6 } }}</span>
-    </label>
+      </div>
+      <p class="auth__links">{{ 'auth.register.hasAccount' | translate }} <a routerLink="/login">{{ 'auth.login.submit' | translate }}</a></p>
+      <div class="auth__lang"><app-lang-switch></app-lang-switch></div>
+    </section>
 
-    <button type="submit" class="btn btn--primary" [disabled]="loading">
-      <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
-      {{ (loading ? 'auth.register.loading' : 'auth.register.submit') | translate }}
-    </button>
+    <!-- Étape 2 : nom, ville, position -->
+    <section *ngIf="step === 2">
+      <h1 class="auth__title">{{ (isConsumer ? 'auth.register.step2TitleConsumer' : 'auth.register.step2Title') | translate }}</h1>
+      <p class="auth__sub">{{ 'auth.register.step2Sub' | translate }}</p>
 
-    <p class="auth__links">{{ 'auth.register.hasAccount' | translate }} <a routerLink="/login">{{ 'auth.login.submit' | translate }}</a></p>
-    <div class="auth__lang"><app-lang-switch></app-lang-switch></div>
+      <label class="field">
+        <span class="field__label">{{ (isConsumer ? 'auth.register.nameConsumer' : 'auth.register.name') | translate }}</span>
+        <span class="field__box">
+          <input type="text" name="name" [(ngModel)]="name" maxlength="100"
+                 [attr.autocomplete]="isConsumer ? 'name' : 'organization'"
+                 [placeholder]="(isConsumer ? 'auth.register.nameConsumerPlaceholder' : 'auth.register.namePlaceholder') | translate" />
+        </span>
+      </label>
+
+      <label class="field">
+        <span class="field__label">{{ 'auth.register.city' | translate }}</span>
+        <span class="field__box">
+          <input type="text" name="city" [(ngModel)]="city" maxlength="100" autocomplete="address-level2"
+                 [placeholder]="'auth.register.cityPlaceholder' | translate" />
+        </span>
+      </label>
+
+      <div class="locate" [class.locate--done]="locate === 'done'">
+        <ng-container *ngIf="locate !== 'done'; else located">
+          <button type="button" class="btn btn--ghost" (click)="useLocation()" [disabled]="locate === 'loading'">
+            <ion-spinner *ngIf="locate === 'loading'" name="crescent"></ion-spinner>
+            <ion-icon *ngIf="locate !== 'loading'" name="locate-outline"></ion-icon>
+            {{ (locate === 'loading' ? 'auth.register.locating' : 'auth.register.useLocation') | translate }}
+          </button>
+          <span class="field__hint" [class.locate__warn]="locate === 'denied' || locate === 'error'">
+            {{ (locate === 'denied' ? 'auth.register.locationDenied' : locate === 'error' ? 'auth.register.locationError' : 'auth.register.locationHint') | translate }}
+          </span>
+        </ng-container>
+        <ng-template #located>
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+          <div>
+            <strong>{{ 'auth.register.locationDone' | translate }}</strong>
+            <span>{{ 'auth.register.locationAccuracy' | translate:{ m: accuracy } }}</span>
+          </div>
+          <button type="button" (click)="clearLocation()">{{ 'auth.register.locationClear' | translate }}</button>
+        </ng-template>
+      </div>
+
+      <button type="submit" class="btn btn--primary">{{ 'common.continue' | translate }}</button>
+    </section>
+
+    <!-- Étape 3 : identifiant et mot de passe -->
+    <section *ngIf="step === 3">
+      <h1 class="auth__title">{{ 'auth.register.step3Title' | translate }}</h1>
+      <p class="auth__sub">{{ 'auth.register.step3Sub' | translate }}</p>
+
+      <label class="field">
+        <span class="field__label">{{ 'auth.identifier' | translate }}</span>
+        <span class="field__box">
+          <input type="text" name="identifier" [(ngModel)]="identifier" dir="ltr" inputmode="email"
+                 autocomplete="username" autocapitalize="off" spellcheck="false"
+                 [placeholder]="'auth.identifierPlaceholder' | translate" />
+        </span>
+      </label>
+
+      <label class="field">
+        <span class="field__label">{{ 'auth.password' | translate }}</span>
+        <span class="field__box">
+          <input [type]="showPassword ? 'text' : 'password'" name="password" [(ngModel)]="password" dir="ltr"
+                 autocomplete="new-password" />
+          <button type="button" (click)="showPassword = !showPassword" [attr.aria-label]="'auth.showPassword' | translate">
+            <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+          </button>
+        </span>
+        <span class="field__hint">{{ 'auth.passwordHint' | translate:{ n: 6 } }}</span>
+      </label>
+
+      <button type="submit" class="btn btn--primary" [disabled]="loading">
+        <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
+        {{ (loading ? 'auth.register.loading' : 'auth.register.submit') | translate }}
+      </button>
+    </section>
   </form>
 </ion-content>

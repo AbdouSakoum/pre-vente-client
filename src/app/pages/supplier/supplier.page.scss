@@ -1,0 +1,15 @@
+/* Espace fournisseur : composants .st-* de src/theme/stradi.scss. */
+.head-logo { background: var(--sc-primary-soft); color: var(--sc-primary); font-size: 14px; img { object-fit: contain; background: #fff; } }
+.seg-bar { --padding-top: 10px; --padding-bottom: 2px; }
+
+.shop { padding-top: 6px; padding-bottom: 130px; }
+.st-empty__icon.closed { background: #EEF0F4; color: #4A5263; }
+
+.skel { display: flex; gap: 12px; padding: 14px; margin-bottom: 10px; }
+.skel__thumb { width: 56px; height: 56px; margin: 0; border-radius: 14px; }
+.skel__text { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 6px;
+  ion-skeleton-text { height: 13px; margin: 0; border-radius: 6px; } ion-skeleton-text:first-child { width: 60%; } }
+
+ion-footer.cart-footer { position: fixed; left: 0; right: 0; bottom: 0; background: transparent; box-shadow: none; }
+/* En-tête : solde et commandes côte à côte. */
+.head-actions { flex: none; display: flex; gap: 8px; }

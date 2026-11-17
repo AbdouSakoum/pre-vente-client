@@ -1,0 +1,10 @@
+<span class="st-promo-tags" *ngIf="pct || variant.free_offer">
+  <span class="st-promo-tag" *ngIf="pct">
+    <ion-icon name="pricetag"></ion-icon> <bdi dir="ltr">−{{ pct }} %</bdi>
+    <small *ngIf="variant.promo?.ends_on as end">{{ 'promo.until' | translate:{ date: date(end) } }}</small>
+  </span>
+  <span class="st-promo-tag free" *ngIf="variant.free_offer as f">
+    <ion-icon name="gift-outline"></ion-icon> {{ 'promo.free' | translate:{ buy: f.buy_qty, free: f.free_qty } }}
+    <small *ngIf="f.ends_on">{{ 'promo.until' | translate:{ date: date(f.ends_on) } }}</small>
+  </span>
+</span>
