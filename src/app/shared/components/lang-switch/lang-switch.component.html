@@ -1,0 +1,4 @@
+<button type="button" class="lang" (click)="language.toggle()">
+  <ion-icon name="language-outline"></ion-icon>
+  <span [attr.lang]="language.current() === 'fr' ? 'ar' : 'fr'">{{ language.current() === 'fr' ? 'العربية' : 'Français' }}</span>
+</button>

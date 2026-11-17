@@ -1,0 +1,38 @@
+<ion-content>
+  <form class="auth" (ngSubmit)="submit()" novalidate>
+    <img class="auth__logo" [src]="brand.logo" [alt]="brand.appName" />
+    <h1 class="auth__title">{{ 'auth.login.title' | translate }}</h1>
+    <p class="auth__sub">{{ 'auth.login.sub' | translate }}</p>
+
+    <div class="alert" *ngIf="errorMsg"><ion-icon name="alert-circle-outline"></ion-icon><span>{{ errorMsg }}</span></div>
+
+    <label class="field">
+      <span class="field__label">{{ 'auth.identifier' | translate }}</span>
+      <span class="field__box">
+        <input type="text" name="identifier" [(ngModel)]="identifier" dir="ltr" inputmode="email"
+               autocomplete="username" autocapitalize="off" spellcheck="false"
+               [placeholder]="'auth.identifierPlaceholder' | translate" />
+      </span>
+    </label>
+
+    <label class="field">
+      <span class="field__label">{{ 'auth.password' | translate }}</span>
+      <span class="field__box">
+        <input [type]="showPassword ? 'text' : 'password'" name="password" [(ngModel)]="password" dir="ltr"
+               autocomplete="current-password" />
+        <button type="button" (click)="showPassword = !showPassword" [attr.aria-label]="'auth.showPassword' | translate">
+          <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+        </button>
+      </span>
+    </label>
+
+    <button type="submit" class="btn btn--primary" [disabled]="loading">
+      <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
+      {{ (loading ? 'auth.login.loading' : 'auth.login.submit') | translate }}
+    </button>
+
+    <p class="auth__links"><a routerLink="/forgot-password">{{ 'auth.login.forgot' | translate }}</a></p>
+    <p class="auth__links">{{ 'auth.login.noAccount' | translate }} <a routerLink="/register">{{ 'auth.login.create' | translate }}</a></p>
+    <div class="auth__lang"><app-lang-switch></app-lang-switch></div>
+  </form>
+</ion-content>

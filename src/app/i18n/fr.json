@@ -1,0 +1,91 @@
+{
+  "common": {
+    "loading": "Un instant…",
+    "cancel": "Annuler",
+    "back": "Retour",
+    "error": "Une erreur est survenue. Réessayez.",
+    "networkError": "Pas de connexion. Vérifiez votre réseau et réessayez."
+  },
+  "auth": {
+    "identifier": "Email ou téléphone",
+    "identifierPlaceholder": "nom@exemple.com ou 06 12 34 56 78",
+    "password": "Mot de passe",
+    "showPassword": "Afficher ou masquer le mot de passe",
+    "passwordHint": "{{n}} caractères au minimum.",
+    "passwordTooShort": "Le mot de passe doit contenir au moins {{n}} caractères.",
+    "required": "Remplissez tous les champs.",
+    "login": {
+      "title": "Connexion",
+      "sub": "Commandez chez vos fournisseurs, depuis votre téléphone.",
+      "submit": "Se connecter",
+      "loading": "Connexion…",
+      "forgot": "Mot de passe oublié ?",
+      "noAccount": "Pas encore de compte ?",
+      "create": "Créer un compte"
+    },
+    "register": {
+      "title": "Créer un compte",
+      "sub": "Un seul compte pour tous vos fournisseurs.",
+      "name": "Nom de votre commerce",
+      "namePlaceholder": "Épicerie Al Amal",
+      "identifierHint": "Il vous servira à vous connecter.",
+      "submit": "Créer mon compte",
+      "loading": "Création…",
+      "hasAccount": "Déjà un compte ?"
+    },
+    "forgot": {
+      "title": "Mot de passe oublié",
+      "sub": "Saisissez l'email ou le téléphone de votre compte.",
+      "continue": "Continuer",
+      "backToLogin": "Retour à la connexion",
+      "codeTitle": "Nouveau mot de passe",
+      "byEmail": "Si un compte existe avec cet email, un code à 6 chiffres vient d'être envoyé. Il est valable 15 minutes.",
+      "bySupplier": "Demandez un code à l'un de vos fournisseurs : il le trouve sur votre fiche client. Il est valable 30 minutes.",
+      "code": "Code à 6 chiffres",
+      "codeRequired": "Saisissez le code reçu.",
+      "newPassword": "Nouveau mot de passe",
+      "submit": "Changer le mot de passe"
+    }
+  },
+  "suppliers": {
+    "hello": "Bonjour {{name}}",
+    "title": "Mes fournisseurs",
+    "titleSingle": "Mon fournisseur",
+    "emptyTitle": "Ajoutez votre premier fournisseur",
+    "emptyText": "Demandez à votre fournisseur de vous montrer son QR code Stradi, puis scannez-le.",
+    "emptySingleTitle": "Reliez votre compte",
+    "emptySingleText": "Demandez à {{app}} de vous montrer votre QR code, puis scannez-le.",
+    "scan": "Scanner un QR code",
+    "add": "Ajouter un fournisseur",
+    "knownAs": "Votre fiche : {{name}}",
+    "soon": "La commande en ligne arrive bientôt dans cette application.",
+    "remove": "Retirer ce fournisseur",
+    "removeTitle": "Retirer {{name}} ?",
+    "removeText": "Vous ne verrez plus ce fournisseur. Pour l'ajouter à nouveau, il faudra scanner un nouveau QR code."
+  },
+  "link": {
+    "title": "Ajouter un fournisseur",
+    "scanTitle": "Scannez le QR code",
+    "scanText": "Votre fournisseur l'affiche depuis votre fiche client.",
+    "scan": "Ouvrir la caméra",
+    "manualTitle": "Vous avez reçu un lien ?",
+    "manualText": "Collez ici le lien envoyé par votre fournisseur.",
+    "cameraUnavailable": "La caméra n'est pas disponible. Collez ici le lien envoyé par votre fournisseur.",
+    "manualPlaceholder": "https://…",
+    "check": "Vérifier le lien",
+    "codeRequired": "Scannez un QR code ou collez un lien.",
+    "supplier": "Fournisseur",
+    "yourFile": "Votre fiche chez lui",
+    "confirmHint": "Vérifiez que c'est bien votre fournisseur et votre commerce avant de confirmer.",
+    "already": "Ce fournisseur est déjà dans votre liste.",
+    "confirm": "Ajouter ce fournisseur",
+    "doneTitle": "{{name}} est ajouté",
+    "doneText": "Vous le retrouvez dans votre liste de fournisseurs.",
+    "seeSuppliers": "Voir mes fournisseurs"
+  },
+  "profile": {
+    "title": "Mon compte",
+    "language": "Langue",
+    "logout": "Se déconnecter"
+  }
+}

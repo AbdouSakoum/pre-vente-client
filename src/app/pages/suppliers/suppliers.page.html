@@ -1,0 +1,68 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <img class="logo" slot="start" [src]="brand.logo" [alt]="brand.appName" />
+    <ion-buttons slot="end">
+      <ion-button (click)="profile()" [attr.aria-label]="'profile.title' | translate">
+        <ion-icon slot="icon-only" name="person-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="load($any($event))"><ion-refresher-content></ion-refresher-content></ion-refresher>
+
+  <div class="page">
+    <p class="hello">{{ 'suppliers.hello' | translate:{ name: auth.account()?.name || '' } }}</p>
+    <h1 class="title">{{ (brand.single ? 'suppliers.titleSingle' : 'suppliers.title') | translate }}</h1>
+
+    <div class="alert" *ngIf="errorMsg"><ion-icon name="alert-circle-outline"></ion-icon><span>{{ errorMsg }}</span></div>
+
+    <div class="loading" *ngIf="loading && !loaded"><ion-spinner name="crescent"></ion-spinner></div>
+
+    <!-- AUCUN FOURNISSEUR -->
+    <div class="card empty" *ngIf="loaded && !suppliers.length && !errorMsg">
+      <ion-icon name="qr-code-outline"></ion-icon>
+      <h2>{{ (brand.single ? 'suppliers.emptySingleTitle' : 'suppliers.emptyTitle') | translate }}</h2>
+      <p>{{ (brand.single ? 'suppliers.emptySingleText' : 'suppliers.emptyText') | translate:{ app: brand.appName } }}</p>
+      <button type="button" class="btn btn--primary" (click)="add()">
+        <ion-icon name="scan-outline"></ion-icon> {{ 'suppliers.scan' | translate }}
+      </button>
+    </div>
+
+    <!-- LISTE -->
+    <div class="list" [class.is-loading]="loading" *ngIf="suppliers.length">
+      <article class="card supplier" *ngFor="let s of suppliers">
+        <span class="supplier__logo">
+          <img *ngIf="s.logo_url; else letters" [src]="s.logo_url" [alt]="s.name" />
+          <ng-template #letters>{{ initials(s.name) }}</ng-template>
+        </span>
+        <span class="supplier__body">
+          <strong>{{ s.name }}</strong>
+          <small>{{ 'suppliers.knownAs' | translate:{ name: s.client_name } }}</small>
+        </span>
+        <button type="button" class="supplier__more" (click)="removing = s" [attr.aria-label]="'suppliers.remove' | translate">
+          <ion-icon name="ellipsis-vertical"></ion-icon>
+        </button>
+      </article>
+
+      <p class="soon">{{ 'suppliers.soon' | translate }}</p>
+
+      <button type="button" class="btn btn--ghost" *ngIf="canAdd" (click)="add()">
+        <ion-icon name="add-outline"></ion-icon> {{ 'suppliers.add' | translate }}
+      </button>
+    </div>
+  </div>
+
+  <!-- RETRAIT D'UN FOURNISSEUR -->
+  <div class="sheet" *ngIf="removing as r" (click)="removing = null">
+    <div class="sheet__panel" (click)="$event.stopPropagation()">
+      <h2>{{ 'suppliers.removeTitle' | translate:{ name: r.name } }}</h2>
+      <p>{{ 'suppliers.removeText' | translate }}</p>
+      <button type="button" class="btn btn--danger" [disabled]="busy" (click)="confirmRemove()">
+        {{ (busy ? 'common.loading' : 'suppliers.remove') | translate }}
+      </button>
+      <button type="button" class="btn btn--ghost" [disabled]="busy" (click)="removing = null">{{ 'common.cancel' | translate }}</button>
+    </div>
+  </div>
+</ion-content>

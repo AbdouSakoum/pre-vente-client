@@ -1,0 +1,60 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start"><ion-back-button defaultHref="/suppliers" text=""></ion-back-button></ion-buttons>
+    <ion-title>{{ 'link.title' | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="page">
+    <div class="alert" *ngIf="errorMsg"><ion-icon name="alert-circle-outline"></ion-icon><span>{{ errorMsg }}</span></div>
+
+    <!-- RATTACHEMENT FAIT -->
+    <div class="card empty" *ngIf="linked && preview as p">
+      <ion-icon class="ok" name="checkmark-circle"></ion-icon>
+      <h2>{{ 'link.doneTitle' | translate:{ name: p.supplier.name } }}</h2>
+      <p>{{ 'link.doneText' | translate }}</p>
+      <button type="button" class="btn btn--primary" (click)="done()">{{ 'link.seeSuppliers' | translate }}</button>
+    </div>
+
+    <!-- CONFIRMATION -->
+    <div class="card confirm" *ngIf="!linked && preview as p">
+      <span class="confirm__label">{{ 'link.supplier' | translate }}</span>
+      <strong class="confirm__name">{{ p.supplier.name }}</strong>
+      <span class="confirm__label">{{ 'link.yourFile' | translate }}</span>
+      <strong class="confirm__file">{{ p.client_name }}</strong>
+      <p class="confirm__hint">{{ (p.already_linked ? 'link.already' : 'link.confirmHint') | translate }}</p>
+      <button type="button" class="btn btn--accent" [disabled]="loading" (click)="confirm()">
+        <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
+        {{ (loading ? 'common.loading' : 'link.confirm') | translate }}
+      </button>
+      <button type="button" class="btn btn--ghost" [disabled]="loading" (click)="cancel()">{{ 'common.cancel' | translate }}</button>
+    </div>
+
+    <!-- SCAN OU SAISIE DU LIEN -->
+    <ng-container *ngIf="!preview">
+      <div class="card empty" *ngIf="scanner.native && !cameraUnavailable">
+        <ion-icon name="qr-code-outline"></ion-icon>
+        <h2>{{ 'link.scanTitle' | translate }}</h2>
+        <p>{{ 'link.scanText' | translate }}</p>
+        <button type="button" class="btn btn--primary" [disabled]="loading" (click)="scan()">
+          <ion-icon name="scan-outline"></ion-icon> {{ 'link.scan' | translate }}
+        </button>
+      </div>
+
+      <form class="card manual" (ngSubmit)="check()" novalidate>
+        <h2>{{ 'link.manualTitle' | translate }}</h2>
+        <p>{{ (cameraUnavailable ? 'link.cameraUnavailable' : 'link.manualText') | translate }}</p>
+        <label class="field">
+          <span class="field__box">
+            <input type="text" name="code" [(ngModel)]="code" dir="ltr" autocapitalize="off" spellcheck="false"
+                   [placeholder]="'link.manualPlaceholder' | translate" />
+          </span>
+        </label>
+        <button type="submit" class="btn btn--ghost" [disabled]="loading">
+          {{ (loading ? 'common.loading' : 'link.check') | translate }}
+        </button>
+      </form>
+    </ng-container>
+  </div>
+</ion-content>

@@ -1,0 +1,41 @@
+// Couleurs de l'application. --sc-primary et --sc-accent sont remplacées au démarrage par celles
+// de la version appliquée (BrandService) : une version personnalisée prend les couleurs du
+// distributeur sans toucher à ce fichier. Toute couleur de marque passe par ces variables.
+:root {
+  --sc-primary: #0A1F44;
+  --sc-primary-rgb: 10, 31, 68;
+  --sc-accent: #1DB87A;
+  --sc-accent-rgb: 29, 184, 122;
+
+  --sc-bg: #F3F5F9;
+  --sc-surface: #FFFFFF;
+  --sc-ink: #131A26;
+  --sc-muted: #5B6478;
+  --sc-line: #E4E8EF;
+  --sc-danger: #E5484D;
+  --sc-danger-soft: #FDECEC;
+  --sc-radius-lg: 24px;
+  --sc-radius-md: 16px;
+  --sc-shadow: 0 8px 24px rgba(11, 31, 68, .06);
+
+  --ion-color-primary: var(--sc-primary);
+  --ion-color-primary-rgb: var(--sc-primary-rgb);
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: var(--sc-primary);
+  --ion-color-primary-tint: var(--sc-primary);
+
+  --ion-color-success: var(--sc-accent);
+  --ion-color-success-rgb: var(--sc-accent-rgb);
+  --ion-color-success-contrast: #ffffff;
+  --ion-color-success-contrast-rgb: 255, 255, 255;
+  --ion-color-success-shade: var(--sc-accent);
+  --ion-color-success-tint: var(--sc-accent);
+
+  --ion-color-danger: #E5484D;
+  --ion-color-danger-rgb: 229, 72, 77;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade: #ca3f44;
+  --ion-color-danger-tint: #e85a5f;
+}

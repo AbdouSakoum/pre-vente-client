@@ -1,0 +1,11 @@
+{
+  "key": "exemple-distributeur",
+  "appId": "com.stradi.client.exemple",
+  "appName": "Exemple Distribution",
+  "supplierSlug": "demo",
+  "logo": "assets/brand/stradi-logo.png",
+  "colors": {
+    "primary": "#7A1F2B",
+    "accent": "#E0A526"
+  }
+}

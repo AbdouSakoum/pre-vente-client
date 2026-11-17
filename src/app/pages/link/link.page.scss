@@ -1,0 +1,13 @@
+.card + .card, .card + form.card { margin-top: 14px; }
+.ok { color: var(--sc-accent) !important; opacity: 1 !important; }
+ion-spinner { width: 20px; height: 20px; color: #fff; }
+
+.confirm { padding: 22px 20px; }
+.confirm__label { display: block; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--sc-muted); }
+.confirm__name { display: block; margin: 2px 0 14px; font-size: 22px; font-weight: 800; color: var(--sc-primary); }
+.confirm__file { display: block; margin: 2px 0 14px; font-size: 16px; color: var(--sc-ink); }
+.confirm__hint { margin: 0 0 18px; font-size: 14px; line-height: 1.5; color: var(--sc-muted); }
+
+.manual { padding: 20px; }
+.manual h2 { margin: 0 0 4px; font-size: 16px; font-weight: 800; color: var(--sc-primary); }
+.manual p { margin: 0 0 14px; font-size: 13px; line-height: 1.5; color: var(--sc-muted); }

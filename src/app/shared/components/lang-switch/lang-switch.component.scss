@@ -1,0 +1,6 @@
+.lang {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 14px;
+  border: 1px solid var(--sc-line); border-radius: 999px; background: var(--sc-surface);
+  color: var(--sc-primary); font: inherit; font-size: 14px; font-weight: 600;
+}
+.lang ion-icon { font-size: 18px; }

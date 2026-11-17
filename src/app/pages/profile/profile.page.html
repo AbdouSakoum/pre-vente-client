@@ -1,0 +1,27 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start"><ion-back-button defaultHref="/suppliers" text=""></ion-back-button></ion-buttons>
+    <ion-title>{{ 'profile.title' | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="page">
+    <section class="card account">
+      <ion-icon name="storefront-outline"></ion-icon>
+      <strong>{{ auth.account()?.name }}</strong>
+      <span dir="ltr">{{ identifier }}</span>
+    </section>
+
+    <section class="card row">
+      <span>{{ 'profile.language' | translate }}</span>
+      <app-lang-switch></app-lang-switch>
+    </section>
+
+    <button type="button" class="btn btn--danger" (click)="logout()">
+      <ion-icon name="log-out-outline"></ion-icon> {{ 'profile.logout' | translate }}
+    </button>
+
+    <p class="version">{{ brand.appName }} · {{ version }}</p>
+  </div>
+</ion-content>

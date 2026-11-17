@@ -1,0 +1,11 @@
+{
+  "key": "stradi",
+  "appId": "com.stradi.client",
+  "appName": "Stradi Client",
+  "supplierSlug": null,
+  "logo": "assets/brand/stradi-logo.png",
+  "colors": {
+    "primary": "#0A1F44",
+    "accent": "#1DB87A"
+  }
+}
