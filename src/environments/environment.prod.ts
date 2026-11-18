@@ -4,5 +4,5 @@ export const environment = {
   apiUrl: 'https://app.kep-on.com/api',
   // Base des photos de produits enregistrées en chemin relatif (/uploads/…).
   uploadsUrl: 'https://app.kep-on.com',
-  appVersion: '0.1.0',
+  appVersion: '0.1.2',
 };

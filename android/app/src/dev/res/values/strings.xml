@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!-- APK de test (environnement de dev) : nom distinct de la version du Play Store. -->
+<resources>
+    <string name="app_name">Connect DEV</string>
+    <string name="title_activity_main">Connect DEV</string>
+</resources>

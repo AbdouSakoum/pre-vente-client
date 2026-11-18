@@ -1,6 +1,7 @@
-# Stradi Client
+# Stradi Connect
 
-Application de commande pour les clients des distributeurs qui utilisent Stradi.
+Application de commande pour les clients des distributeurs qui utilisent Stradi (nom de travail
+jusqu'au 17 nov. 2026 : « Stradi Client » ; le dossier et l'identifiant `com.stradi.client` restent).
 Le client se connecte avec son email ou son téléphone, relie son compte à ses fournisseurs (il scanne
 leur QR code, ou le commercial scanne le sien), commande dans leur catalogue, suit ses commandes,
 ses nouveautés et son solde.
@@ -28,6 +29,20 @@ npm start        # version Stradi, http://localhost:8200 (backend local sur le p
 Design : composants `.st-*` de `src/theme/stradi.scss` (système de l'application terrain Stradi), jetons de couleur
 dans `src/theme/variables.scss` (`--sc-primary`, `--sc-accent`… recolorables pour une version distributeur).
 Arabe : textes traduits, mise en page du français conservée.
+
+## Identité Stradi Connect
+
+Icône : deux maillons dont la jonction forme la coche, en menthe `#06FFAE` sur tuile navy `#0A1F44`
+(gabarit de l'icône Stradi). Mot-symbole : « Stradi » en Plus Jakarta Sans 700, le « C » de « Connect »
+remplace le point du « i » et « Connect » continue en exposant.
+
+| Fichier | Usage |
+| --- | --- |
+| `src/assets/brand/stradi-connect-logo.svg` | logo sur fond clair (navy + émeraude), utilisé par l'application |
+| `src/assets/brand/stradi-connect-logo-white.svg` | logo sur fond sombre (blanc + menthe) |
+| `src/assets/brand/stradi-connect-icon.svg`, `-192.png`, `-512.png` | icône arrondie (web, Play Store) |
+| `src/assets/favicon.png` | favicon 64 px |
+| `resources/icon*.png`, `resources/splash*.png` | sources pour `@capacitor/assets` quand le projet Android sera créé |
 
 ## Deux versions, un seul code
 

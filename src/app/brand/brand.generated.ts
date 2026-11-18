@@ -3,9 +3,9 @@ import { BrandConfig } from './brand.model';
 
 export const BRAND: BrandConfig = {
   "key": "stradi",
-  "appName": "Stradi Client",
+  "appName": "Stradi Connect",
   "supplierSlug": null,
-  "logo": "assets/brand/stradi-logo.png",
+  "logo": "assets/brand/stradi-connect-logo.svg",
   "colors": {
     "primary": "#0A1F44",
     "accent": "#1DB87A"

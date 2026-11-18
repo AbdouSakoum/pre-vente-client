@@ -120,7 +120,14 @@
   "profile": {
     "title": "Mon compte",
     "language": "Langue",
-    "logout": "Se déconnecter"
+    "logout": "Se déconnecter",
+    "deleteAccount": "Supprimer mon compte",
+    "deleteTitle": "Supprimer définitivement votre compte ?",
+    "deleteText": "Votre compte, votre profil et vos paniers seront supprimés, et vos commandes pas encore validées seront annulées. Vos fournisseurs conservent l'historique des commandes passées. Cette action est irréversible.",
+    "deletePassword": "Mot de passe",
+    "deletePasswordHint": "Votre mot de passe, pour confirmer",
+    "deleteConfirm": "Supprimer définitivement",
+    "deleted": "Votre compte a été supprimé."
   },
   "category": {
     "grossiste": "Grossiste",

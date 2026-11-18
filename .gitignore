@@ -77,3 +77,4 @@ Thumbs.db
 
 # Signature Android (mots de passe locaux, la CI utilise les secrets GitHub)
 /android/keystore.properties
+/android/*.keystore

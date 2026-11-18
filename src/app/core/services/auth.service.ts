@@ -38,9 +38,23 @@ export class AuthService {
   logout() {
     const refreshToken = this.session.refreshToken;
     if (refreshToken) this.api.post('/auth/logout', { refresh_token: refreshToken }).subscribe({ error: () => {} });
+    this.close();
+  }
+
+  /**
+   * Supprime définitivement le compte (mot de passe redemandé), puis revient à la connexion.
+   * Le serveur révoque les sessions : rien d'autre à appeler.
+   */
+  deleteAccount(password: string): Observable<{ message: string }> {
+    return this.api.post<{ message: string }>('/account/delete', { password }).pipe(tap(() => this.close()));
+  }
+
+  /** Efface la session et les données locales du compte. */
+  private close() {
     this.session.clear();
     this.cart.reset();
     this.notifications.reset();
+    localStorage.removeItem('sc_account');
     this.account.set(null);
     this.router.navigateByUrl('/login', { replaceUrl: true });
   }

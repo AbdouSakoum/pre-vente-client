@@ -1,9 +1,9 @@
 {
   "key": "stradi",
   "appId": "com.stradi.client",
-  "appName": "Stradi Client",
+  "appName": "Stradi Connect",
   "supplierSlug": null,
-  "logo": "assets/brand/stradi-logo.png",
+  "logo": "assets/brand/stradi-connect-logo.svg",
   "colors": {
     "primary": "#0A1F44",
     "accent": "#1DB87A"

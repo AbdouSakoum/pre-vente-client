@@ -1,7 +1,7 @@
 {
   "name": "stradi-client",
   "version": "0.1.0",
-  "description": "Stradi Client : application de commande pour les clients des distributeurs",
+  "description": "Stradi Connect : application de commande pour les clients des distributeurs",
   "private": true,
   "scripts": {
     "ng": "ng",

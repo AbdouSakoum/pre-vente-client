@@ -31,6 +31,29 @@
       <ion-icon name="log-out-outline"></ion-icon> {{ 'profile.logout' | translate }}
     </button>
 
+    <button type="button" class="delete-link" (click)="askDelete()">{{ 'profile.deleteAccount' | translate }}</button>
+
     <p class="version">{{ brand.appName }} · {{ version }}</p>
+  </div>
+
+  <!-- SUPPRESSION DU COMPTE : mot de passe redemandé -->
+  <div class="sheet" *ngIf="deleting" (click)="cancelDelete()">
+    <div class="sheet__panel st-sheet" (click)="$event.stopPropagation()">
+      <div class="st-handle"></div>
+      <h2 class="st-sheet__title">{{ 'profile.deleteTitle' | translate }}</h2>
+      <p class="st-sheet__sub">{{ 'profile.deleteText' | translate }}</p>
+      <label class="field">
+        <span class="field__label">{{ 'profile.deletePassword' | translate }}</span>
+        <span class="field__box">
+          <input #pwd type="password" autocomplete="current-password" [value]="password" (input)="password = pwd.value"
+                 [placeholder]="'profile.deletePasswordHint' | translate" />
+        </span>
+      </label>
+      <p class="sheet__error" *ngIf="errorMsg">{{ errorMsg }}</p>
+      <button type="button" class="st-btn danger" [disabled]="busy || !password" (click)="confirmDelete()">
+        {{ (busy ? 'common.loading' : 'profile.deleteConfirm') | translate }}
+      </button>
+      <button type="button" class="st-btn st-btn--text" [disabled]="busy" (click)="cancelDelete()">{{ 'common.cancel' | translate }}</button>
+    </div>
   </div>
 </ion-content>
