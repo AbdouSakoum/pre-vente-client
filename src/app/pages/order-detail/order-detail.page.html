@@ -50,7 +50,7 @@
 
       <!-- ARTICLES -->
       <section class="st-card items">
-        <h2>{{ 'detail.items' | translate:{ n: d.lines.length, units: units } }}</h2>
+        <h2>{{ 'detail.products' | plural:d.lines.length }} · {{ 'sent.units' | plural:units }}</h2>
         <div class="item" *ngFor="let l of lines">
           <span class="st-thumb st-thumb--sm">
             <img *ngIf="l.image_url; else icon" [src]="media(l.image_url)" [alt]="l.product_name" />

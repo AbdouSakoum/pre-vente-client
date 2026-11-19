@@ -190,9 +190,13 @@ ion-fab.st-fab ion-fab-button {
 /* ── Feuilles d'actions et fenêtres en bas d'écran ── */
 ion-action-sheet {
   --background: #fff; --button-color: var(--sc-primary); --button-background-selected: var(--sc-primary-soft); --color: var(--sc-muted);
-  .action-sheet-group { border-radius: 20px 20px 0 0; }
+  /* Un seul panneau : seul le premier groupe est arrondi, « Annuler » s'y rattache sans encoche. */
+  .action-sheet-group { border-radius: 0; }
+  .action-sheet-group:first-child { border-radius: 22px 22px 0 0; padding-top: 6px; }
   .action-sheet-title { font-weight: 700; color: var(--sc-primary); }
-  .action-sheet-cancel { color: var(--sc-danger); font-weight: 700; }
+  .action-sheet-group-cancel { padding: 8px 16px calc(14px + var(--ion-safe-area-bottom, 0px)); }
+  .action-sheet-cancel { height: 50px; border-radius: 14px; background: var(--sc-bg); color: var(--sc-primary); font-weight: 800;
+    .action-sheet-button-inner { justify-content: center; } }
 }
 .st-sheet { padding: 10px 18px calc(22px + var(--ion-safe-area-bottom, 0px)); }
 .st-handle { width: 40px; height: 5px; margin: 0 auto 16px; border-radius: 99px; background: #DCE0E7; }

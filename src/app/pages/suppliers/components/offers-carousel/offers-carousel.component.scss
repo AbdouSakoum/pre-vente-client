@@ -1,0 +1,44 @@
+/* « Offres du moment » : bannières 2:1 (gabarit du web), défilement au doigt, la suivante dépasse au bord. */
+.offers-title { margin-top: 4px; }
+
+.slides { display: flex; gap: 10px; overflow-x: auto; margin: 0 -16px; padding: 2px 16px 8px;
+  scroll-snap-type: x mandatory; scroll-padding-inline: 16px; scrollbar-width: none; overscroll-behavior-x: contain;
+  &::-webkit-scrollbar { display: none; } }
+
+.slide { flex: none; width: calc(100% - 30px); display: flex; flex-direction: column; padding: 0; border: 0; overflow: hidden;
+  scroll-snap-align: start; scroll-snap-stop: always; border-radius: var(--sc-card-radius); background: var(--sc-surface);
+  box-shadow: var(--sc-shadow); font: inherit; text-align: start; color: var(--sc-ink); cursor: pointer;
+  &:active { transform: scale(.99); } }
+.slides.single .slide { width: 100%; }
+
+.slide__visual { position: relative; display: block; width: 100%; aspect-ratio: 2 / 1; background: var(--sc-primary); }
+.slide__img { width: 100%; height: 100%; object-fit: cover; display: block; background: #fff; }
+
+.slide__caption { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; }
+.slide__text { min-width: 0; display: flex; flex-direction: column; gap: 1px;
+  strong { font-size: 14.5px; font-weight: 800; color: var(--sc-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  small { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; color: var(--sc-muted);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ion-icon { flex: none; font-size: 13px; } } }
+.slide__time { flex: none; display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; color: var(--sc-accent-text);
+  ion-icon { font-size: 14px; }
+  &.urgent { color: var(--sc-danger-text); } }
+
+/* Bannière dessinée (promotion sans image). */
+.drawn { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 6px;
+  padding: 14px 16px; padding-inline-end: 42%; color: #fff;
+  background: radial-gradient(120% 140% at 100% 0%, rgba(var(--sc-accent-rgb), .45) 0%, rgba(var(--sc-accent-rgb), 0) 55%), var(--sc-primary); }
+.drawn__badge { padding: 3px 10px; border-radius: 999px; background: var(--sc-accent); color: #fff; font-size: 13px; font-weight: 800; }
+.drawn__name { font-size: 19px; font-weight: 800; letter-spacing: -.02em; line-height: 1.15;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.drawn__what { font-size: 12.5px; color: var(--sc-on-dark-muted); }
+.drawn__photo { position: absolute; inset-inline-end: 14px; top: 50%; width: 34%; aspect-ratio: 1; transform: translateY(-50%);
+  object-fit: contain; border-radius: 16px; background: #fff; padding: 6px; }
+
+.dots { display: flex; justify-content: center; gap: 2px; margin: 0 0 4px;
+  /* Zone tactile large, point petit. */
+  button { width: 22px; height: 22px; padding: 0; border: 0; background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer;
+    &::before { content: ''; width: 7px; height: 7px; border-radius: 999px; background: var(--sc-muted); opacity: .35;
+      transition: width .2s var(--sc-ease), opacity .2s var(--sc-ease), background .2s var(--sc-ease); }
+    &.on::before { width: 18px; background: var(--sc-primary); opacity: 1; } } }
+
+@media (prefers-reduced-motion: reduce) { .dots button::before { transition: none; } .slide:active { transform: none; } }

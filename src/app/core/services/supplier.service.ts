@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
 import { BrandService } from '../../brand/brand.service';
 import { LinkPreview, MyCode, Supplier } from '../../shared/models/supplier.model';
+import { SupplierOffer } from '../../shared/offers';
 
 /** Fournisseurs du compte et rattachement par QR code. */
 @Injectable({ providedIn: 'root' })
@@ -13,6 +14,12 @@ export class SupplierService {
   list(): Observable<Supplier[]> {
     const slug = this.brand.supplierSlug;
     return this.api.get<Supplier[]>('/suppliers' + (slug ? `?slug=${encodeURIComponent(slug)}` : ''));
+  }
+
+  /** Offres du moment de l'accueil : promotions en cours de tous les fournisseurs du compte. */
+  offers(): Observable<SupplierOffer[]> {
+    const slug = this.brand.supplierSlug;
+    return this.api.get<SupplierOffer[]>('/offers' + (slug ? `?slug=${encodeURIComponent(slug)}` : ''));
   }
 
   /** `code` : le contenu du QR code (adresse ou jeton seul). */

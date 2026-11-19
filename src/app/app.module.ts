@@ -6,6 +6,7 @@ import { RouteReuseStrategy } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { TranslateLoader, TranslatePipe, provideTranslateService } from '@ngx-translate/core';
+import { PluralPipe } from './shared/plural.pipe';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -28,6 +29,8 @@ import { UsualsComponent } from './pages/supplier/components/usuals/usuals.compo
 import { QtyControlComponent } from './pages/supplier/components/qty-control/qty-control.component';
 import { QtySheetComponent } from './pages/supplier/components/qty-sheet/qty-sheet.component';
 import { PromoTagsComponent } from './pages/supplier/components/promo-tags/promo-tags.component';
+import { AislesComponent } from './pages/supplier/components/aisles/aisles.component';
+import { OffersCarouselComponent } from './pages/suppliers/components/offers-carousel/offers-carousel.component';
 import { CartPage } from './pages/cart/cart.page';
 import { OrderSentComponent } from './pages/cart/components/order-sent/order-sent.component';
 import { NotificationsPage } from './pages/notifications/notifications.page';
@@ -39,14 +42,14 @@ import { OrderDetailPage } from './pages/order-detail/order-detail.page';
   declarations: [
     AppComponent, LangSwitchComponent,
     LoginPage, RegisterPage, ForgotPasswordPage, TabsPage, SuppliersPage, OrdersPage, LinkPage, ProfilePage, MyCodePage,
-    SupplierPage, CatalogComponent, UsualsComponent, QtyControlComponent, QtySheetComponent, PromoTagsComponent,
+    SupplierPage, CatalogComponent, UsualsComponent, QtyControlComponent, QtySheetComponent, PromoTagsComponent, AislesComponent, OffersCarouselComponent,
     CartPage, OrderSentComponent, OrderDetailPage, NotificationsPage, NotifButtonComponent, BalancePage,
   ],
   imports: [
     BrowserModule, CommonModule, FormsModule,
     IonicModule.forRoot({ mode: 'md' }),
     AppRoutingModule,
-    TranslatePipe,
+    TranslatePipe, PluralPipe,
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },

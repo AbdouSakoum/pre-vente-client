@@ -85,14 +85,19 @@
     "removeText": "Vous ne verrez plus ce fournisseur. Pour l'ajouter à nouveau, il faudra scanner un nouveau QR code.",
     "showMyCode": "Montrer mon QR code",
     "helloSub": "Que commandez-vous aujourd'hui ?",
-    "kpiCarts": "panier(s) en cours",
-    "kpiOrders": "commande(s) en cours",
     "addTitle": "Ajouter un fournisseur",
     "closed": "Ne prend pas les commandes dans l'application pour le moment",
     "cartOpen": "Panier en cours",
     "cartSummary": "{{n}} art. · {{total}}",
     "lastOrder": "Commande {{ref}}",
-    "due": "À payer"
+    "due": "À payer",
+    "ordersInProgress": {
+      "one": "{{n}} commande en cours",
+      "other": "{{n}} commandes en cours"
+    },
+    "cartAt": "Panier en cours chez {{name}}",
+    "lastOrderOn": "Commande du {{date}}",
+    "addRow": "Ajouter un fournisseur"
   },
   "link": {
     "title": "Ajouter un fournisseur",
@@ -161,7 +166,12 @@
     "seeCart": "Voir le panier",
     "call": "Appeler le fournisseur",
     "pastOrders": "Voir mes commandes passées",
-    "cartItems": "{{n}} article(s) · TTC"
+    "cartItems": {
+      "one": "{{n}} article · TTC",
+      "other": "{{n}} articles · TTC"
+    },
+    "whatsapp": "Écrire sur WhatsApp",
+    "whatsappText": "Bonjour, c'est {{name}}, votre client sur Stradi Connect."
   },
   "catalog": {
     "search": "Rechercher un produit",
@@ -205,9 +215,15 @@
     "unit": "u",
     "bulkApplied": "Prix dès {{n}} appliqué",
     "lineOut": "Passé en rupture : ne sera pas envoyé.",
-    "outTitle": "{{n}} produit(s) passé(s) en rupture",
+    "outTitle": {
+      "one": "{{n}} produit passé en rupture",
+      "other": "{{n}} produits passés en rupture"
+    },
     "outText": "Ils ne seront pas envoyés. Retirez-les, ou envoyez la commande sans eux.",
-    "skippedTitle": "{{n}} produit(s) non ajouté(s)",
+    "skippedTitle": {
+      "one": "{{n}} produit non ajouté",
+      "other": "{{n}} produits non ajoutés"
+    },
     "skippedText": "Ils ne sont plus au catalogue ou sont en rupture.",
     "tomorrow": "Demain",
     "otherDate": "Autre date",
@@ -219,7 +235,10 @@
     "savings": "Vous économisez {{amount}}",
     "nextThreshold": "Plus que {{missing}} pour −{{pct}} % sur toute la commande",
     "thresholdReached": "Remise de −{{pct}} % appliquée sur toute la commande",
-    "freeLine": "+ {{n}} offert(s)",
+    "freeLine": {
+      "one": "+ {{n}} offert",
+      "other": "+ {{n}} offerts"
+    },
     "freeLimited": "Offert limité au stock disponible",
     "listPrice": "au lieu de {{price}}"
   },
@@ -249,7 +268,10 @@
     "emptyTitle": "Aucune commande",
     "emptyText": "Vos commandes envoyées depuis l'application apparaîtront ici.",
     "noneFiltered": "Aucune commande pour ce filtre.",
-    "items": "{{n}} article(s)",
+    "items": {
+      "one": "{{n}} article",
+      "other": "{{n}} articles"
+    },
     "placed": "Passée le {{date}}",
     "wanted": "souhaitée le {{date}}",
     "reason": "Motif : {{reason}}"
@@ -259,10 +281,19 @@
     "reorderTitle": "Reprendre ma commande du {{date}}",
     "reorderMeta": "{{n}} articles · {{total}}",
     "addAll": "Tout ajouter au panier",
-    "added": "{{n}} produit(s) ajouté(s) au panier",
-    "skipped": "{{n}} indisponible(s)",
+    "added": {
+      "one": "{{n}} produit ajouté au panier",
+      "other": "{{n}} produits ajoutés au panier"
+    },
+    "skipped": {
+      "one": "{{n}} indisponible",
+      "other": "{{n}} indisponibles"
+    },
     "title": "Vos habituels",
-    "count": "{{n}} produit(s)",
+    "count": {
+      "one": "{{n}} produit",
+      "other": "{{n}} produits"
+    },
     "emptyTitle": "Pas encore d'habituels",
     "emptyText": "Vos produits habituels apparaîtront après vos premières commandes.",
     "usualQty": "habituel {{n}}"
@@ -276,7 +307,10 @@
   },
   "sent": {
     "title": "Commande envoyée !",
-    "units": "{{n}} unité(s)",
+    "units": {
+      "one": "{{n}} unité",
+      "other": "{{n}} unités"
+    },
     "payOnDelivery": "Paiement à la livraison",
     "nextTitle": "Et maintenant ?",
     "step1": "Le fournisseur vérifie les prix et le stock.",
@@ -297,17 +331,23 @@
     "payOnDelivery": "Paiement à la livraison : {{total}}",
     "payment": "Paiement",
     "onDelivery": "À la livraison",
-    "items": "{{n}} produit(s) · {{units}} unité(s)",
     "showAll": "Voir les {{n}} autres",
     "reorder": "Recommander",
     "resend": "Compléter et renvoyer",
     "free": "Offert",
-    "threshold": "Promotion « {{name}} » : −{{pct}} % sur la commande"
+    "threshold": "Promotion « {{name}} » : −{{pct}} % sur la commande",
+    "products": {
+      "one": "{{n}} produit",
+      "other": "{{n}} produits"
+    }
   },
   "promo": {
     "tag": "Promo",
     "until": "jusqu'au {{date}}",
-    "free": "{{buy}} achetés + {{free}} offert(s)",
+    "free": {
+      "one": "{{buy}} achetés + {{n}} offert",
+      "other": "{{buy}} achetés + {{n}} offerts"
+    },
     "threshold": "−{{pct}} % sur toute la commande dès {{min}}"
   },
   "notifications": {
@@ -328,7 +368,10 @@
     "title": "Mon solde",
     "dueLabel": "Reste à payer",
     "settledLabel": "Tout est payé",
-    "dueHint": "{{n}} commande(s) livrée(s) pas encore entièrement payée(s)",
+    "dueHint": {
+      "one": "{{n}} commande livrée pas encore entièrement payée",
+      "other": "{{n}} commandes livrées pas encore entièrement payées"
+    },
     "settledHint": "Aucune somme due chez ce fournisseur.",
     "call": "Appeler le fournisseur",
     "tabUnpaid": "À payer",
@@ -348,5 +391,42 @@
       "virement": "Virement",
       "other": "Paiement"
     }
+  },
+  "offers": {
+    "title": "Offres du moment",
+    "promoPrice": "Prix promo",
+    "articles": {
+      "one": "{{n}} article",
+      "other": "{{n}} articles"
+    },
+    "wholeOrder": "Sur toute la commande dès {{min}}",
+    "lastDay": "Dernier jour",
+    "oneDay": "Plus que 1 jour",
+    "days": "Plus que {{n}} jours",
+    "showing": "Articles de l'offre « {{name}} »",
+    "seeAll": "Tout voir",
+    "seeOffer": "Voir l'offre",
+    "seeArticles": "Voir les {{n}} articles",
+    "order": "Commander",
+    "thresholdMissing": "Encore {{missing}} pour en profiter",
+    "thresholdReached": "Seuil atteint : la remise s'applique",
+    "goTo": "Offre {{n}} sur {{total}}"
+  },
+  "shop": {
+    "tabs": {
+      "home": "Accueil",
+      "aisles": "Rayons",
+      "offers": "Offres",
+      "usuals": "Habituels"
+    },
+    "tabsLabel": "Sections de la boutique",
+    "orderAgain": "Commander à nouveau",
+    "products": {
+      "one": "{{n}} produit",
+      "other": "{{n}} produits"
+    },
+    "otherAisle": "Autres",
+    "noOffers": "Aucune offre en cours chez ce fournisseur.",
+    "allProducts": "Tous les produits"
   }
 }

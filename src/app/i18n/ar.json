@@ -85,14 +85,16 @@
     "removeText": "لن ترى هذا المورّد بعد الآن. لإضافته من جديد، يجب مسح رمز QR جديد.",
     "showMyCode": "إظهار رمز QR الخاص بي",
     "helloSub": "ماذا تطلب اليوم؟",
-    "kpiCarts": "سلة قيد الإعداد",
-    "kpiOrders": "طلبات جارية",
     "addTitle": "إضافة مورّد",
     "closed": "لا يستقبل الطلبات عبر التطبيق حاليًا",
     "cartOpen": "سلة قيد الإعداد",
     "cartSummary": "{{n}} قطعة · {{total}}",
     "lastOrder": "الطلب {{ref}}",
-    "due": "للأداء"
+    "due": "للأداء",
+    "ordersInProgress": "{{n}} طلبيات جارية",
+    "cartAt": "سلة جارية عند {{name}}",
+    "lastOrderOn": "طلبية {{date}}",
+    "addRow": "إضافة مورد"
   },
   "link": {
     "title": "إضافة مورّد",
@@ -161,7 +163,9 @@
     "seeCart": "عرض السلة",
     "call": "الاتصال بالمورّد",
     "pastOrders": "عرض طلباتي السابقة",
-    "cartItems": "{{n}} قطعة · شامل الضريبة"
+    "cartItems": "{{n}} قطعة · شامل الضريبة",
+    "whatsapp": "راسل عبر واتساب",
+    "whatsappText": "السلام عليكم، معك {{name}}، زبونكم على Stradi Connect."
   },
   "catalog": {
     "search": "ابحث عن منتج",
@@ -297,17 +301,17 @@
     "payOnDelivery": "الدفع عند التسليم: {{total}}",
     "payment": "الدفع",
     "onDelivery": "عند التسليم",
-    "items": "{{n}} منتج · {{units}} وحدة",
     "showAll": "عرض {{n}} الأخرى",
     "reorder": "إعادة الطلب",
     "resend": "إكمال وإعادة الإرسال",
     "free": "مجاني",
-    "threshold": "العرض «{{name}}»: −{{pct}} % على الطلبية"
+    "threshold": "العرض «{{name}}»: −{{pct}} % على الطلبية",
+    "products": "{{n}} منتج"
   },
   "promo": {
     "tag": "عرض",
     "until": "حتى {{date}}",
-    "free": "{{buy}} مشتراة + {{free}} مجانية",
+    "free": "{{buy}} مشتراة + {{n}} مجانية",
     "threshold": "−{{pct}} % على كل الطلبية ابتداءً من {{min}}"
   },
   "notifications": {
@@ -348,5 +352,36 @@
       "virement": "تحويل",
       "other": "أداء"
     }
+  },
+  "offers": {
+    "title": "عروض اللحظة",
+    "promoPrice": "سعر العرض",
+    "articles": "{{n}} منتج",
+    "wholeOrder": "على الطلب كله ابتداءً من {{min}}",
+    "lastDay": "آخر يوم",
+    "oneDay": "يوم واحد متبقٍ",
+    "days": "{{n}} أيام متبقية",
+    "showing": "منتجات العرض «{{name}}»",
+    "seeAll": "عرض الكل",
+    "seeOffer": "عرض العرض",
+    "seeArticles": "عرض {{n}} منتجات",
+    "order": "اطلب الآن",
+    "thresholdMissing": "بقي {{missing}} للاستفادة من العرض",
+    "thresholdReached": "تم بلوغ الحد: الخصم مطبق",
+    "goTo": "العرض {{n}} من {{total}}"
+  },
+  "shop": {
+    "tabs": {
+      "home": "الرئيسية",
+      "aisles": "الأقسام",
+      "offers": "العروض",
+      "usuals": "المعتاد"
+    },
+    "tabsLabel": "أقسام المتجر",
+    "orderAgain": "اطلب مرة أخرى",
+    "products": "{{n}} منتج",
+    "otherAisle": "أخرى",
+    "noOffers": "لا توجد عروض حالياً عند هذا المورد.",
+    "allProducts": "كل المنتجات"
   }
 }

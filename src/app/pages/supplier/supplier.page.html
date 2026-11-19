@@ -13,6 +13,9 @@
         </div>
       </div>
       <div class="head-actions">
+        <a class="st-icon-btn wa" *ngIf="whatsapp as wa" [href]="wa" target="_blank" rel="noopener" [attr.aria-label]="'supplier.whatsapp' | translate">
+          <ion-icon name="logo-whatsapp"></ion-icon>
+        </a>
         <a class="st-icon-btn" [routerLink]="['/supplier', linkId, 'balance']" [attr.aria-label]="'balance.title' | translate">
           <ion-icon name="wallet-outline"></ion-icon>
         </a>
@@ -23,18 +26,10 @@
     </div>
   </ion-toolbar>
 
-  <ng-container *ngIf="!closed">
-    <div class="st-search-band">
-      <ion-searchbar class="st-search" [value]="query" (ionInput)="onSearch($any($event).detail.value)" [debounce]="150"
-                     [placeholder]="'catalog.search' | translate"></ion-searchbar>
-    </div>
-    <ion-toolbar class="st-toolbar seg-bar" *ngIf="hasUsuals">
-      <div class="st-segment">
-        <button type="button" [class.active]="tab === 'usuals'" (click)="tab = 'usuals'"><ion-icon name="star-outline"></ion-icon> {{ 'catalog.usuals' | translate }}</button>
-        <button type="button" [class.active]="tab === 'all'" (click)="tab = 'all'"><ion-icon name="grid-outline"></ion-icon> {{ 'catalog.allProducts' | translate }}</button>
-      </div>
-    </ion-toolbar>
-  </ng-container>
+  <div class="st-search-band" *ngIf="!closed">
+    <ion-searchbar class="st-search" [value]="query" (ionInput)="onSearch($any($event).detail.value)" [debounce]="150"
+                   [placeholder]="'catalog.search' | translate"></ion-searchbar>
+  </div>
 </ion-header>
 
 <ion-content>
@@ -49,6 +44,7 @@
       <h2>{{ 'supplier.closedTitle' | translate }}</h2>
       <p>{{ 'supplier.closedText' | translate }}</p>
       <button type="button" class="st-btn st-btn--outline" *ngIf="supplier?.phone" (click)="call()"><ion-icon name="call-outline"></ion-icon> {{ 'supplier.call' | translate }}</button>
+      <a class="st-btn st-btn--outline" *ngIf="whatsapp as wa" [href]="wa" target="_blank" rel="noopener"><ion-icon name="logo-whatsapp"></ion-icon> {{ 'supplier.whatsapp' | translate }}</a>
       <button type="button" class="st-btn st-btn--text" (click)="openOrders()">{{ 'supplier.pastOrders' | translate }}</button>
     </div>
 
@@ -61,8 +57,54 @@
     </ng-container>
 
     <ng-container *ngIf="catalog && !closed">
-      <app-usuals *ngIf="tab === 'usuals' && usuals" [linkId]="linkId" [catalog]="catalog" [usuals]="usuals" (qty)="openQty($event)"></app-usuals>
-      <app-catalog *ngIf="tab === 'all'" [linkId]="linkId" [catalog]="catalog" [query]="query" (qty)="openQty($event)"></app-catalog>
+      <!-- RECHERCHE : tout le catalogue, quel que soit l'onglet -->
+      <app-catalog *ngIf="searching" [linkId]="linkId" [catalog]="catalog" [query]="query" (qty)="openQty($event)"></app-catalog>
+
+      <ng-container *ngIf="!searching" [ngSwitch]="tab">
+        <!-- ACCUEIL : offres, puis tous les produits (pastilles de catégories pour filtrer) -->
+        <ng-container *ngSwitchCase="'home'">
+          <app-offers-carousel [cards]="offerCards" (pick)="pickOffer($event)"></app-offers-carousel>
+          <h2 class="st-section">{{ 'shop.allProducts' | translate }} <small>{{ catalog.products.length }}</small></h2>
+          <app-catalog [linkId]="linkId" [catalog]="catalog" [query]="''" (qty)="openQty($event)"></app-catalog>
+        </ng-container>
+
+        <!-- RAYONS : la grille, puis les articles du rayon choisi -->
+        <ng-container *ngSwitchCase="'aisles'">
+          <ng-container *ngIf="aisle === null; else aisleProducts">
+            <h2 class="st-section">{{ 'shop.tabs.aisles' | translate }}</h2>
+            <app-aisles [catalog]="catalog" (pick)="openAisle($event)"></app-aisles>
+          </ng-container>
+          <ng-template #aisleProducts>
+            <button type="button" class="back-bar" (click)="aisle = null">
+              <ion-icon name="arrow-back-outline"></ion-icon> {{ 'shop.tabs.aisles' | translate }} · <strong>{{ aisleLabel(aisle!) }}</strong>
+            </button>
+            <app-catalog [linkId]="linkId" [catalog]="catalog" [query]="''" [aisle]="aisle" (qty)="openQty($event)"></app-catalog>
+          </ng-template>
+        </ng-container>
+
+        <!-- OFFRES : bannières, puis les articles en promotion -->
+        <ng-container *ngSwitchCase="'offers'">
+          <app-offers-carousel [cards]="offerCards" [showTitle]="false" (pick)="pickOffer($event)"></app-offers-carousel>
+          <div class="offer-filter" *ngIf="offer">
+            <span>{{ 'offers.showing' | translate:{ name: offer.name } }}</span>
+            <button type="button" (click)="offer = null">{{ 'offers.seeAll' | translate }}</button>
+          </div>
+          <app-catalog [linkId]="linkId" [catalog]="catalog" [query]="''" [promoOnly]="true" [offerId]="offer?.id || null" (qty)="openQty($event)"></app-catalog>
+        </ng-container>
+
+        <!-- HABITUELS : « Commander à nouveau » (dernière commande), puis les produits habituels -->
+        <ng-container *ngSwitchCase="'usuals'">
+          <h2 class="st-section" *ngIf="usuals?.last_order">{{ 'shop.orderAgain' | translate }}</h2>
+          <app-usuals *ngIf="usuals; else noHistory" [linkId]="linkId" [catalog]="catalog" [usuals]="usuals" (qty)="openQty($event)"></app-usuals>
+          <ng-template #noHistory>
+            <div class="st-empty">
+              <div class="st-empty__icon"><ion-icon name="repeat-outline"></ion-icon></div>
+              <h2>{{ 'usuals.emptyTitle' | translate }}</h2>
+              <p>{{ 'usuals.emptyText' | translate }}</p>
+            </div>
+          </ng-template>
+        </ng-container>
+      </ng-container>
     </ng-container>
   </div>
 
@@ -70,16 +112,26 @@
                  [currency]="cart.currency(linkId)" (done)="setQty($event)" (cancel)="qtyTarget = null"></app-qty-sheet>
 </ion-content>
 
-<!-- BARRE PANIER -->
-<ion-footer class="ion-no-border cart-footer" *ngIf="!closed && !qtyTarget && cart.count(linkId)">
-  <div class="st-checkout">
+<!-- BAS DE L'ÉCRAN : barre panier (dès le premier article), puis les onglets de la boutique -->
+<ion-footer class="ion-no-border shop-footer" *ngIf="!closed && !qtyTarget">
+  <div class="st-checkout" *ngIf="cart.count(linkId)">
     <div class="st-checkout__row">
       <span class="st-cart-icon"><ion-icon name="bag-handle-outline"></ion-icon><span class="st-cart-badge">{{ cart.lines(linkId).length }}</span></span>
       <span class="st-cart-text">
-        <small>{{ 'supplier.cartItems' | translate:{ n: cart.count(linkId) } }}</small>
+        <small>{{ 'supplier.cartItems' | plural:cart.count(linkId) }}</small>
         <strong dir="ltr">{{ total }}</strong>
       </span>
       <button type="button" class="st-pay" (click)="openCart()">{{ 'supplier.seeCart' | translate }} <ion-icon name="chevron-forward"></ion-icon></button>
     </div>
   </div>
+  <nav class="shop-tabs" *ngIf="catalog" [attr.aria-label]="'shop.tabsLabel' | translate">
+    <button type="button" *ngFor="let t of tabs" [class.on]="tab === t.tab && !searching" (click)="setTab(t.tab)"
+            [attr.aria-current]="tab === t.tab && !searching ? 'page' : null">
+      <span class="shop-tabs__icon">
+        <ion-icon [name]="t.icon"></ion-icon>
+        <span class="shop-tabs__badge" *ngIf="t.tab === 'offers' && promoCount">{{ promoCount > 9 ? '9+' : promoCount }}</span>
+      </span>
+      <span>{{ t.label | translate }}</span>
+    </button>
+  </nav>
 </ion-footer>

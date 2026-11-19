@@ -5,7 +5,7 @@
         <ion-back-button class="st-back" [defaultHref]="'/supplier/' + linkId" text="" icon="arrow-back-outline"></ion-back-button>
         <div class="st-head__text">
           <span class="st-title">{{ 'cart.title' | translate }}</span>
-          <span class="st-sub" *ngIf="supplier">{{ supplier.name }} · {{ 'supplier.cartItems' | translate:{ n: cart.count(linkId) } }}</span>
+          <span class="st-sub" *ngIf="supplier">{{ supplier.name }} · {{ 'supplier.cartItems' | plural:cart.count(linkId) }}</span>
         </div>
       </div>
       <button type="button" class="st-text-action" *ngIf="lines.length" (click)="empty()">{{ 'cart.empty' | translate }}</button>
@@ -30,7 +30,7 @@
     <ng-container *ngIf="lines.length">
       <div class="st-banner st-banner--info" *ngIf="skipped">
         <ion-icon name="information-circle-outline"></ion-icon>
-        <div><strong>{{ 'cart.skippedTitle' | translate:{ n: skipped } }}</strong><span>{{ 'cart.skippedText' | translate }}</span></div>
+        <div><strong>{{ 'cart.skippedTitle' | plural:skipped }}</strong><span>{{ 'cart.skippedText' | translate }}</span></div>
       </div>
       <!-- REMISE DE SEUIL : atteinte, ou montant qui manque pour la suivante -->
       <div class="st-banner st-banner--success" *ngIf="pricing?.threshold as t">
@@ -43,7 +43,7 @@
       </div>
       <div class="st-banner" *ngIf="outOfStock.length">
         <ion-icon name="warning-outline"></ion-icon>
-        <div><strong>{{ 'cart.outTitle' | translate:{ n: outOfStock.length } }}</strong><span>{{ 'cart.outText' | translate }}</span></div>
+        <div><strong>{{ 'cart.outTitle' | plural:outOfStock.length }}</strong><span>{{ 'cart.outText' | translate }}</span></div>
       </div>
 
       <article class="st-card line" *ngFor="let l of lines" [class.out]="!l.available">
@@ -62,7 +62,7 @@
             <span class="st-promo-tags" *ngIf="l.available && (l.promotion || freeFor(l))">
               <span class="st-promo-tag" *ngIf="l.promotion as p"><ion-icon name="pricetag"></ion-icon> {{ p.name }}</span>
               <span class="st-promo-tag free" *ngIf="freeFor(l) as f">
-                <ion-icon name="gift-outline"></ion-icon> {{ (f.quantity ? 'cart.freeLine' : 'cart.freeLimited') | translate:{ n: f.quantity } }}
+                <ion-icon name="gift-outline"></ion-icon> <ng-container *ngIf="f.quantity; else freeLimited">{{ 'cart.freeLine' | plural:f.quantity }}</ng-container><ng-template #freeLimited>{{ 'cart.freeLimited' | translate }}</ng-template>
               </span>
             </span>
             <span class="bulk" *ngIf="l.available && l.bulk_price !== null && l.bulk_min_qty !== null && l.quantity >= l.bulk_min_qty">

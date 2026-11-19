@@ -1,0 +1,50 @@
+<ng-container *ngIf="cards.length">
+  <h2 class="st-section offers-title" *ngIf="showTitle">{{ 'offers.title' | translate }} <small>{{ cards.length }}</small></h2>
+
+  <div class="slides" #track [class.single]="cards.length === 1" (scroll)="onScroll()">
+    <button type="button" class="slide" *ngFor="let c of cards; trackBy: trackCard" (click)="open(c)">
+
+      <span class="slide__visual">
+        <!-- Bannière du distributeur : son image, telle qu'il l'a conçue -->
+        <img class="slide__img" *ngIf="c.banner; else drawn" [src]="media(c.banner)" alt="" loading="lazy" />
+
+        <!-- Sans image : bannière dessinée -->
+        <ng-template #drawn>
+          <span class="drawn">
+            <span class="drawn__badge" [ngSwitch]="c.promo.kind">
+              <ng-container *ngSwitchCase="'percent'"><bdi dir="ltr">−{{ c.promo.discount_pct }} %</bdi></ng-container>
+              <ng-container *ngSwitchCase="'free_goods'"><bdi dir="ltr">{{ c.promo.buy_qty }} + {{ c.promo.free_qty }}</bdi></ng-container>
+              <ng-container *ngSwitchCase="'order_threshold'"><bdi dir="ltr">−{{ c.promo.discount_pct }} %</bdi></ng-container>
+              <ng-container *ngSwitchDefault>{{ 'offers.promoPrice' | translate }}</ng-container>
+            </span>
+            <strong class="drawn__name">{{ c.promo.name }}</strong>
+            <img class="drawn__photo" *ngIf="c.image" [src]="media(c.image)" alt="" loading="lazy" />
+          </span>
+        </ng-template>
+      </span>
+
+      <!-- Texte de l'offre, toujours lisible : nom, fournisseur, temps restant -->
+      <span class="slide__caption">
+        <span class="slide__text">
+          <!-- Le nom est déjà écrit sur une bannière dessinée : on donne alors ce que couvre l'offre -->
+          <strong *ngIf="c.banner; else what">{{ c.promo.name }}</strong>
+          <ng-template #what>
+            <strong>
+              <ng-container *ngIf="c.count; else whole">{{ 'offers.articles' | plural:c.count }}</ng-container>
+              <ng-template #whole>{{ 'offers.wholeOrder' | translate:{ min: money(c, c.promo.min_order_ttc) } }}</ng-template>
+            </strong>
+          </ng-template>
+          <small *ngIf="c.supplierName"><ion-icon name="storefront-outline"></ion-icon> {{ c.supplierName }}</small>
+        </span>
+        <span class="slide__time" *ngIf="c.daysLeft !== null" [class.urgent]="urgent(c)">
+          <ion-icon name="time-outline"></ion-icon> {{ remainingKey(c) | translate:{ n: c.daysLeft } }}
+        </span>
+      </span>
+    </button>
+  </div>
+
+  <div class="dots" *ngIf="cards.length > 1">
+    <button type="button" *ngFor="let c of cards; let i = index; trackBy: trackCard" [class.on]="i === active" (click)="goTo(i)"
+            [attr.aria-label]="'offers.goTo' | translate:{ n: i + 1, total: cards.length }" [attr.aria-current]="i === active ? 'true' : null"></button>
+  </div>
+</ng-container>

@@ -16,17 +16,23 @@
     <h1 class="hello">{{ 'suppliers.hello' | translate:{ name: firstName } }}</h1>
     <p class="hello-sub">{{ 'suppliers.helloSub' | translate }}</p>
 
-    <!-- RÉSUMÉ -->
-    <div class="kpis" *ngIf="suppliers.length">
-      <div class="st-card kpi">
-        <span class="kpi__icon kpi__icon--cart"><ion-icon name="bag-handle-outline"></ion-icon></span>
-        <strong>{{ openCarts }}</strong><small>{{ 'suppliers.kpiCarts' | translate }}</small>
-      </div>
-      <div class="st-card kpi">
-        <span class="kpi__icon kpi__icon--orders"><ion-icon name="receipt-outline"></ion-icon></span>
-        <strong>{{ openOrders }}</strong><small>{{ 'suppliers.kpiOrders' | translate }}</small>
-      </div>
+    <!-- À REPRENDRE : seulement ce qui attend le client, et chaque ligne mène où agir -->
+    <div class="quick" *ngIf="openOrders || cartSuppliers.length">
+      <button type="button" class="st-card quick__row" *ngIf="openOrders" (click)="openOrdersTab()">
+        <span class="quick__icon quick__icon--orders"><ion-icon name="receipt-outline"></ion-icon></span>
+        <span class="quick__text">{{ 'suppliers.ordersInProgress' | plural:openOrders }}</span>
+        <ion-icon name="chevron-forward" class="chev"></ion-icon>
+      </button>
+      <button type="button" class="st-card quick__row" *ngFor="let s of cartSuppliers" (click)="openCart(s)">
+        <span class="quick__icon quick__icon--cart"><ion-icon name="bag-handle-outline"></ion-icon></span>
+        <span class="quick__text">{{ 'suppliers.cartAt' | translate:{ name: s.name } }}</span>
+        <b dir="ltr">{{ cartTotal(s) }}</b>
+        <ion-icon name="chevron-forward" class="chev"></ion-icon>
+      </button>
     </div>
+
+    <!-- OFFRES DU MOMENT : promotions en cours chez tous les fournisseurs -->
+    <app-offers-carousel [cards]="offerCards" (pick)="openOffer($event)"></app-offers-carousel>
 
     <div class="st-banner" *ngIf="errorMsg"><ion-icon name="cloud-offline-outline"></ion-icon><div><strong>{{ errorMsg }}</strong></div></div>
 
@@ -78,7 +84,7 @@
           </div>
           <ng-template #lastOrder>
             <div class="supplier__foot" *ngIf="lastStep(s) as step">
-              <span>{{ 'suppliers.lastOrder' | translate:{ ref: s.last_order_ref } }}</span>
+              <span>{{ s.last_order_at ? ('suppliers.lastOrderOn' | translate:{ date: (s.last_order_at | date:'dd/MM') }) : ('suppliers.lastOrder' | translate:{ ref: s.last_order_ref }) }}</span>
               <span class="st-status" [attr.data-step]="step"><ion-icon [name]="stepIcons[step]"></ion-icon>{{ 'orderStep.' + step | translate }}</span>
             </div>
           </ng-template>
@@ -90,12 +96,13 @@
           <b dir="ltr">{{ due(s) }}</b><ion-icon name="chevron-forward" class="chev"></ion-icon>
         </button>
       </article>
+
+      <!-- Ajouter un fournisseur : une ligne sous la liste (un bouton flottant recouvrait les cartes) -->
+      <button type="button" class="add-row" *ngIf="canAdd" (click)="add()">
+        <span class="add-row__icon"><ion-icon name="add"></ion-icon></span> {{ 'suppliers.addRow' | translate }}
+      </button>
     </ng-container>
   </div>
-
-  <ion-fab class="st-fab" *ngIf="canAdd && suppliers.length">
-    <ion-fab-button (click)="add()" [attr.aria-label]="'suppliers.add' | translate"><ion-icon name="add"></ion-icon></ion-fab-button>
-  </ion-fab>
 
   <!-- RETRAIT D'UN FOURNISSEUR -->
   <div class="sheet" *ngIf="removing as r" (click)="removing = null">

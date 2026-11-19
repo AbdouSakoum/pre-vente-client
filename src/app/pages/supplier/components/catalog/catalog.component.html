@@ -1,12 +1,13 @@
-<div class="st-pills cats" *ngIf="categories.length > 1">
+<div class="st-pills cats" *ngIf="categories.length > 1 && aisle === null && !promoOnly && !offerId">
   <button type="button" class="st-pill" [class.active]="!category" (click)="category = null">{{ 'catalog.all' | translate }}</button>
   <button type="button" class="st-pill" *ngFor="let c of categories" [class.active]="category === c" (click)="category = c">{{ c }}</button>
 </div>
 
 <p class="price-note">{{ (catalog.price_type === 'retail' ? 'catalog.priceRetail' : 'catalog.priceWholesale') | translate }}</p>
 
-<!-- Remises de seuil en cours : « −5 % sur toute la commande dès 1 000 DH ». -->
-<div class="st-banner st-banner--promo threshold" *ngFor="let t of catalog.order_promotions || []">
+<!-- Remises de seuil en cours : « −5 % sur toute la commande dès 1 000 DH ». Rappelées ici pendant une
+     recherche, quand le bandeau « Offres du moment » est masqué. -->
+<div class="st-banner st-banner--promo threshold" *ngFor="let t of query.trim() ? (catalog.order_promotions || []) : []">
   <ion-icon name="pricetag-outline"></ion-icon>
   <div>
     <strong>{{ 'promo.threshold' | translate:{ pct: t.discount_pct, min: money(t.min_order_ttc) } }}</strong>
@@ -19,7 +20,7 @@
   <h2>{{ 'catalog.emptyTitle' | translate }}</h2>
   <p>{{ 'catalog.emptyText' | translate }}</p>
 </div>
-<p class="none" *ngIf="catalog.products.length && !products.length">{{ 'catalog.noResult' | translate }}</p>
+<p class="none" *ngIf="catalog.products.length && !products.length">{{ (promoOnly && !query.trim() ? 'shop.noOffers' : 'catalog.noResult') | translate }}</p>
 
 <article class="st-card st-card--prod prod" *ngFor="let p of products; trackBy: trackProduct">
   <header class="prod__head">

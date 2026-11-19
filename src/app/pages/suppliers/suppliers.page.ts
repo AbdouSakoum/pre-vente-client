@@ -9,11 +9,13 @@ import { BrandService } from '../../brand/brand.service';
 import { Supplier } from '../../shared/models/supplier.model';
 import { ClientOrderStep, STEP_ICONS, clientStep, isOpenStep } from '../../shared/models/order.model';
 import { formatMoney, initials, mediaUrl } from '../../shared/format';
+import { cardsFromOffers, OfferCard } from '../../shared/offers';
 
 /**
  * Accueil : « Mes fournisseurs ». Chaque carte montre le panier en cours, sinon l'état de la
- * dernière commande, ou que le fournisseur ne prend pas les commandes. Le bouton flottant ajoute
- * un fournisseur (scanner son QR code ou montrer le sien). Version personnalisée : un seul fournisseur.
+ * dernière commande, ou que le fournisseur ne prend pas les commandes. En haut, des lignes « à reprendre »
+ * (commandes en cours, paniers en attente) n'apparaissent que si elles servent. La ligne sous la liste
+ * ajoute un fournisseur (scanner son QR code ou montrer le sien). Version personnalisée : un seul fournisseur.
  */
 @Component({
   selector: 'app-suppliers',
@@ -28,6 +30,8 @@ export class SuppliersPage {
   errorMsg = '';
   /** Fournisseur dont le retrait attend une confirmation. */
   removing: Supplier | null = null;
+  /** Offres du moment, tous fournisseurs confondus (vide si la lecture échoue : l'accueil reste utilisable). */
+  offerCards: OfferCard[] = [];
   busy = false;
 
   readonly media = mediaUrl;
@@ -50,7 +54,8 @@ export class SuppliersPage {
 
   get firstName(): string { return (this.auth.account()?.name || '').split(/\s+/)[0] || ''; }
 
-  get openCarts(): number { return this.suppliers.filter(s => this.cart.count(s.link_id) > 0).length; }
+  /** Fournisseurs chez qui un panier attend : une ligne « Panier en cours chez … » chacun. */
+  get cartSuppliers(): Supplier[] { return this.suppliers.filter(s => s.ordering_open && this.cart.count(s.link_id) > 0); }
 
   get openOrders(): number { return this.suppliers.filter(s => this.lastStep(s) && isOpenStep(this.lastStep(s)!)).length; }
 
@@ -59,6 +64,10 @@ export class SuppliersPage {
 
   load(event?: { target: { complete: () => void } }) {
     this.loading = true; this.errorMsg = '';
+    this.service.offers().subscribe({
+      next: rows => { this.offerCards = cardsFromOffers(rows); this.cdr.detectChanges(); },
+      error: () => {},
+    });
     this.service.list().subscribe({
       next: rows => {
         this.suppliers = rows;
@@ -74,6 +83,15 @@ export class SuppliersPage {
   }
 
   open(s: Supplier) { this.router.navigate(['/supplier', s.link_id]); }
+
+  openCart(s: Supplier) { this.router.navigate(['/supplier', s.link_id, 'cart']); }
+
+  openOrdersTab() { this.router.navigate(['/tabs/orders']); }
+
+  /** Offre touchée sur l'accueil : l'espace du fournisseur s'ouvre sur ses articles. */
+  openOffer(card: OfferCard) {
+    if (card.linkId) this.router.navigate(['/supplier', card.linkId], { queryParams: { offer: card.promo.id } });
+  }
 
   openBalance(s: Supplier, event: Event) { event.stopPropagation(); this.router.navigate(['/supplier', s.link_id, 'balance']); }
 

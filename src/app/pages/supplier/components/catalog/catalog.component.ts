@@ -17,6 +17,12 @@ export class CatalogComponent implements OnChanges {
   @Input({ required: true }) catalog!: SupplierCatalog;
   /** Recherche saisie dans le bandeau de l'écran. */
   @Input() query = '';
+  /** Offre choisie dans le bandeau : seuls ses articles sont affichés. */
+  @Input() offerId: string | null = null;
+  /** Rayon ouvert depuis la grille des rayons ('' : articles sans catégorie) ; null : tous, avec les pastilles. */
+  @Input() aisle: string | null = null;
+  /** Onglet « Offres » : seuls les articles en promotion (prix promo ou offert). */
+  @Input() promoOnly = false;
   @Output() qty = new EventEmitter<QtyTarget>();
 
   category: string | null = null;
@@ -41,8 +47,13 @@ export class CatalogComponent implements OnChanges {
    */
   get products(): CatalogProduct[] {
     const q = searchable(this.query.trim());
+    const offer = this.offerId;
+    const aisle = this.aisle;
     const visible = this.catalog.products.filter(p =>
-      (!this.category || p.category_name === this.category)
+      (!offer || p.variants.some(v => v.promo?.id === offer || v.free_offer?.id === offer))
+      && (!this.promoOnly || p.variants.some(v => v.promo || v.free_offer))
+      && (aisle === null || (p.category_name || '') === aisle)
+      && (!this.category || p.category_name === this.category)
       && (!q || searchable([p.name, p.category_name, ...p.variants.map(v => v.name)].join(' ')).includes(q)));
     const orderable = (p: CatalogProduct) => p.variants.some(v => v.available);
     return [...visible.filter(orderable), ...visible.filter(p => !orderable(p))];

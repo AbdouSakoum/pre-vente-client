@@ -12,6 +12,8 @@ export interface Supplier {
   ordering_open: boolean;
   /** Dernière commande envoyée depuis l'application chez ce fournisseur. */
   last_order_ref: string | null;
+  /** Date d'envoi de cette commande ; absente d'un serveur plus ancien (on affiche alors son numéro). */
+  last_order_at?: string | null;
   last_order_status: string | null;
   last_order_reject_reason: string | null;
   /** Reste dû chez ce fournisseur (commandes livrées pas entièrement payées). */

@@ -25,7 +25,7 @@
         <span class="due__label">{{ (d.total_due ? 'balance.dueLabel' : 'balance.settledLabel') | translate }}</span>
         <strong class="due__amount" dir="ltr">{{ money(d.total_due) }}</strong>
         <span class="due__hint">
-          <ng-container *ngIf="d.total_due; else allPaid">{{ 'balance.dueHint' | translate:{ n: d.unpaid.length } }}</ng-container>
+          <ng-container *ngIf="d.total_due; else allPaid">{{ 'balance.dueHint' | plural:d.unpaid.length }}</ng-container>
           <ng-template #allPaid>{{ 'balance.settledHint' | translate }}</ng-template>
         </span>
         <button type="button" class="due__call" *ngIf="d.supplier.phone" (click)="call()">

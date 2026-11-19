@@ -37,6 +37,8 @@ export interface PromoBrief {
   buy_qty: number | null;
   free_qty: number | null;
   min_order_ttc: number | null;
+  /** Bannière chargée par le distributeur (carrousel « Offres du moment ») ; absente d'un serveur plus ancien. */
+  image_url?: string | null;
 }
 
 /** Prix du panier calculé par le serveur : la seule vérité avant l'envoi. */

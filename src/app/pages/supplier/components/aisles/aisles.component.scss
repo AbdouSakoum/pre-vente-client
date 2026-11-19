@@ -1,0 +1,19 @@
+/* Rayons : tuiles en grille de 3 (2 sur les très petits écrans), photo, nom, nombre de produits. */
+.aisles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 340px) { .aisles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+.aisle { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 8px; border: 0;
+  border-radius: var(--sc-card-radius); background: var(--sc-surface); box-shadow: var(--sc-shadow);
+  font: inherit; text-align: center; color: var(--sc-ink); cursor: pointer;
+  &:active { transform: scale(.98); } }
+.aisle__img { width: 64px; height: 64px; border-radius: 16px; background: var(--sc-primary-soft); overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  img { width: 100%; height: 100%; object-fit: contain; background: #fff; } }
+.aisle__letter { font-size: 24px; font-weight: 800; color: var(--sc-primary); }
+.aisle__icon { font-size: 28px; color: var(--sc-primary); }
+.aisle__name { width: 100%; font-size: 13px; font-weight: 800; line-height: 1.2; color: var(--sc-primary);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.aisle__count { font-size: 11.5px; color: var(--sc-muted); }
+
+
+@media (prefers-reduced-motion: reduce) { .aisle:active { transform: none; } }

@@ -1,0 +1,13 @@
+<div class="aisles" *ngIf="aisles.length">
+  <button type="button" class="aisle" *ngFor="let a of aisles; trackBy: track" (click)="pick.emit(a.name)">
+    <span class="aisle__img">
+      <img *ngIf="a.image; else letterTpl" [src]="media(a.image)" alt="" loading="lazy" />
+      <ng-template #letterTpl>
+        <span class="aisle__letter" *ngIf="a.name !== noCategory; else otherIcon">{{ letter(a) }}</span>
+        <ng-template #otherIcon><ion-icon name="albums-outline" class="aisle__icon"></ion-icon></ng-template>
+      </ng-template>
+    </span>
+    <strong class="aisle__name">{{ a.name === noCategory ? ('shop.otherAisle' | translate) : a.name }}</strong>
+    <small class="aisle__count">{{ 'shop.products' | plural:a.count }}</small>
+  </button>
+</div>

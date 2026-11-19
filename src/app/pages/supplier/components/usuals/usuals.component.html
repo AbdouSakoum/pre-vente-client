@@ -6,11 +6,11 @@
   <button type="button" class="st-btn st-btn--accent" (click)="addLastOrder()"><ion-icon name="add"></ion-icon> {{ 'usuals.addAll' | translate }}</button>
   <p class="reorder__result" *ngIf="result as r">
     <ion-icon name="checkmark-circle"></ion-icon>
-    {{ 'usuals.added' | translate:{ n: r.added } }}<ng-container *ngIf="r.skipped"> · {{ 'usuals.skipped' | translate:{ n: r.skipped } }}</ng-container>
+    {{ 'usuals.added' | plural:r.added }}<ng-container *ngIf="r.skipped"> · {{ 'usuals.skipped' | plural:r.skipped }}</ng-container>
   </p>
 </section>
 
-<h2 class="st-section" *ngIf="rows.length">{{ 'usuals.title' | translate }} <small>{{ 'usuals.count' | translate:{ n: rows.length } }}</small></h2>
+<h2 class="st-section" *ngIf="rows.length">{{ 'usuals.title' | translate }} <small>{{ 'usuals.count' | plural:rows.length }}</small></h2>
 
 <div class="st-empty" *ngIf="!rows.length && !usuals.last_order">
   <div class="st-empty__icon"><ion-icon name="star-outline"></ion-icon></div>

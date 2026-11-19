@@ -3,13 +3,26 @@
 .hello { margin: 6px 4px 2px; font-size: 26px; font-weight: 800; letter-spacing: -.03em; color: var(--sc-primary); }
 .hello-sub { margin: 0 4px 16px; font-size: 14px; color: var(--sc-muted); }
 
-.kpis { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: 6px; }
-.kpi { padding: 14px; display: flex; flex-direction: column; gap: 2px;
-  strong { margin-top: 8px; font-size: 26px; font-weight: 800; letter-spacing: -.03em; color: var(--sc-primary); line-height: 1; }
-  small { font-size: 12px; color: var(--sc-muted); } }
-.kpi__icon { width: 38px; height: 38px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-.kpi__icon--cart { background: var(--sc-accent-soft); color: var(--sc-accent-text); }
-.kpi__icon--orders { background: var(--sc-primary-soft); color: var(--sc-primary); }
+/* À reprendre : commandes en cours, paniers en attente. Une ligne par action, toute la ligne se touche. */
+.quick { display: flex; flex-direction: column; gap: 8px; margin-bottom: 6px; }
+.quick__row { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 56px; padding: 10px 12px; border: 0;
+  font: inherit; text-align: start; color: var(--sc-ink); cursor: pointer;
+  b { flex: none; font-size: 14px; font-weight: 800; color: var(--sc-primary); }
+  .chev { flex: none; font-size: 16px; color: var(--sc-muted); }
+  &:active { transform: scale(.99); } }
+.quick__icon { flex: none; width: 36px; height: 36px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 19px; }
+.quick__icon--cart { background: var(--sc-accent-soft); color: var(--sc-accent-text); }
+.quick__icon--orders { background: var(--sc-primary-soft); color: var(--sc-primary); }
+.quick__text { flex: 1; min-width: 0; font-size: 14px; font-weight: 700; color: var(--sc-ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+:host-context([dir='rtl']) .quick__row .chev { transform: scaleX(-1); }
+
+/* Ajouter un fournisseur : ligne en pointillés sous la liste. */
+.add-row { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; min-height: 54px; margin-top: 2px;
+  border: 1.5px dashed var(--sc-primary-border); border-radius: var(--sc-card-radius); background: transparent;
+  font: inherit; font-size: 14.5px; font-weight: 800; color: var(--sc-primary); cursor: pointer;
+  &:active { background: var(--sc-primary-soft); } }
+.add-row__icon { width: 28px; height: 28px; border-radius: 9px; background: var(--sc-primary); color: #fff;
+  display: flex; align-items: center; justify-content: center; font-size: 18px; }
 
 .skel { display: flex; gap: 12px; padding: 14px; margin-bottom: 10px; }
 .skel__thumb { width: 56px; height: 56px; margin: 0; border-radius: 14px; }

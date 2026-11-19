@@ -36,7 +36,7 @@
       <span>
         <bdi dir="ltr">{{ qty }} × {{ money(unitPrice) }}</bdi>
         <ng-container *ngIf="bulkApplies"> · {{ 'qtySheet.bulkApplied' | translate }}</ng-container>
-        <span class="free" *ngIf="freeUnits"><ion-icon name="gift-outline"></ion-icon> {{ 'cart.freeLine' | translate:{ n: freeUnits } }}</span>
+        <span class="free" *ngIf="freeUnits"><ion-icon name="gift-outline"></ion-icon> {{ 'cart.freeLine' | plural:freeUnits }}</span>
       </span>
       <strong dir="ltr">{{ total }}</strong>
     </div>
