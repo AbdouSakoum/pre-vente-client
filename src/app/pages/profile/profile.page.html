@@ -17,6 +17,41 @@
       <span dir="ltr">{{ identifier }}</span>
     </section>
 
+    <!-- POSITION DU COMMERCE : à donner une fois sur place (à l'inscription, le client peut être chez son fournisseur) -->
+    <section class="card place" [class.place--missing]="!hasLocation">
+      <div class="place__head">
+        <span class="place__icon"><ion-icon [name]="hasLocation ? 'location' : 'location-outline'"></ion-icon></span>
+        <span class="place__text">
+          <strong>{{ 'profile.place.title' | translate }}</strong>
+          <small>{{ (hasLocation ? 'profile.place.saved' : 'profile.place.missing') | translate }}</small>
+        </span>
+        <a class="place__map" *ngIf="hasLocation" [href]="mapUrl" target="_blank" rel="noopener">{{ 'profile.place.map' | translate }}</a>
+      </div>
+      <p class="place__warn" *ngIf="locateError">{{ locateError }}</p>
+      <button type="button" class="st-btn" [class.st-btn--outline]="hasLocation" [class.st-btn--primary]="!hasLocation" [disabled]="locating" (click)="useLocation()">
+        <ion-spinner *ngIf="locating" name="crescent"></ion-spinner>
+        <ion-icon *ngIf="!locating" name="locate-outline"></ion-icon>
+        {{ (locating ? 'profile.place.locating' : hasLocation ? 'profile.place.update' : 'profile.place.add') | translate }}
+      </button>
+      <small class="place__hint">{{ 'profile.place.hint' | translate }}</small>
+    </section>
+
+    <!-- FOURNISSEURS RETIRÉS : le lien tient toujours ; « Remettre » (ou un nouveau scan) les rend à la liste -->
+    <section class="card removed" *ngIf="removed.length">
+      <h2 class="removed__title">{{ 'profile.removed.title' | translate }} <small>{{ removed.length }}</small></h2>
+      <p class="removed__hint">{{ 'profile.removed.hint' | translate }}</p>
+      <div class="removed__row" *ngFor="let s of removed">
+        <span class="st-thumb removed__logo">
+          <img *ngIf="s.logo_url; else removedLetters" [src]="media(s.logo_url)" [alt]="s.name" />
+          <ng-template #removedLetters>{{ initials(s.name) }}</ng-template>
+        </span>
+        <strong>{{ s.name }}</strong>
+        <button type="button" class="removed__back" [disabled]="restoring === s.link_id" (click)="restore(s)">
+          {{ 'profile.removed.restore' | translate }}
+        </button>
+      </div>
+    </section>
+
     <section class="card row">
       <span>{{ 'profile.language' | translate }}</span>
       <app-lang-switch></app-lang-switch>
@@ -31,9 +66,10 @@
       <ion-icon name="log-out-outline"></ion-icon> {{ 'profile.logout' | translate }}
     </button>
 
-    <button type="button" class="delete-link" (click)="askDelete()">{{ 'profile.deleteAccount' | translate }}</button>
+    <p class="version">{{ brand.appName }} · {{ 'profile.version' | translate:{ v: version } }}</p>
 
-    <p class="version">{{ brand.appName }} · {{ version }}</p>
+    <!-- Exigence Google Play : la suppression du compte reste possible dans l'application, en bas et discrète. -->
+    <button type="button" class="delete-link" (click)="askDelete()">{{ 'profile.deleteAccount' | translate }}</button>
   </div>
 
   <!-- SUPPRESSION DU COMPTE : mot de passe redemandé -->

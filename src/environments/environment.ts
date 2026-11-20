@@ -4,5 +4,5 @@ export const environment = {
   apiUrl: 'http://localhost:3000/api',
   // Base des photos de produits enregistrées en chemin relatif (/uploads/…).
   uploadsUrl: 'http://localhost:3000',
-  appVersion: 'dev',
+  appVersion: '0.1.2',
 };

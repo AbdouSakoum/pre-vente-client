@@ -13,6 +13,16 @@ export interface Account {
   category: ClientCategory | null;
   city: string | null;
   address: string | null;
+  /** Position du commerce ; absente tant que le client ne l'a pas donnée. */
+  latitude?: number | null;
+  longitude?: number | null;
+}
+
+/** Réponse de PUT /account/location : `suppliers_updated` = fiches de fournisseurs mises à jour. */
+export interface LocationUpdate {
+  latitude: number;
+  longitude: number;
+  suppliers_updated: number;
 }
 
 /** Données saisies à l'inscription. */

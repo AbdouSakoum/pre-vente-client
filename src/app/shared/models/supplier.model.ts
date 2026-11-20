@@ -16,6 +16,8 @@ export interface Supplier {
   last_order_at?: string | null;
   last_order_status: string | null;
   last_order_reject_reason: string | null;
+  /** Masqué par le client : rangé sous « Fournisseurs masqués », réaffichable, lien intact. */
+  hidden?: boolean;
   /** Reste dû chez ce fournisseur (commandes livrées pas entièrement payées). */
   total_due?: number | string;
   currency?: string;

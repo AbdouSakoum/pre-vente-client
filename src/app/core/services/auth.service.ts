@@ -5,7 +5,7 @@ import { ApiService } from './api.service';
 import { SessionService } from './session.service';
 import { CartService } from './cart.service';
 import { NotificationService } from './notification.service';
-import { Account, AuthResponse, ForgotPasswordResponse, RegisterPayload } from '../../shared/models/account.model';
+import { Account, AuthResponse, ForgotPasswordResponse, LocationUpdate, RegisterPayload } from '../../shared/models/account.model';
 
 /** Compte du client : inscription, connexion, mot de passe oublié, déconnexion. */
 @Injectable({ providedIn: 'root' })
@@ -49,6 +49,23 @@ export class AuthService {
     return this.api.post<{ message: string }>('/account/delete', { password }).pipe(tap(() => this.close()));
   }
 
+  /** Relit le compte (position comprise) : celui gardé en local peut dater d'une ancienne version. */
+  reload(): Observable<{ account: Account }> {
+    return this.api.get<{ account: Account }>('/me').pipe(tap(r => this.keep(r.account)));
+  }
+
+  /** Place le commerce à la position donnée ; les fiches liées chez les fournisseurs suivent si besoin. */
+  updateLocation(latitude: number, longitude: number): Observable<LocationUpdate> {
+    return this.api.put<LocationUpdate>('/account/location', { latitude, longitude }).pipe(
+      tap(r => { const a = this.account(); if (a) this.keep({ ...a, latitude: r.latitude, longitude: r.longitude }); }),
+    );
+  }
+
+  private keep(account: Account) {
+    localStorage.setItem('sc_account', JSON.stringify(account));
+    this.account.set(account);
+  }
+
   /** Efface la session et les données locales du compte. */
   private close() {
     this.session.clear();
@@ -61,8 +78,7 @@ export class AuthService {
 
   private open(res: AuthResponse) {
     this.session.store(res);
-    localStorage.setItem('sc_account', JSON.stringify(res.account));
-    this.account.set(res.account);
+    this.keep(res.account);
   }
 
   private stored(): Account | null {

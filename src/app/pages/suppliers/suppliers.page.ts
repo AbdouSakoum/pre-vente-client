@@ -28,7 +28,7 @@ export class SuppliersPage {
   loading = false;
   loaded = false;
   errorMsg = '';
-  /** Fournisseur dont le retrait attend une confirmation. */
+  /** Fournisseur à retirer de la liste, en attente de confirmation. */
   removing: Supplier | null = null;
   /** Offres du moment, tous fournisseurs confondus (vide si la lecture échoue : l'accueil reste utilisable). */
   offerCards: OfferCard[] = [];
@@ -55,9 +55,12 @@ export class SuppliersPage {
   get firstName(): string { return (this.auth.account()?.name || '').split(/\s+/)[0] || ''; }
 
   /** Fournisseurs chez qui un panier attend : une ligne « Panier en cours chez … » chacun. */
-  get cartSuppliers(): Supplier[] { return this.suppliers.filter(s => s.ordering_open && this.cart.count(s.link_id) > 0); }
+  get cartSuppliers(): Supplier[] { return this.visible.filter(s => s.ordering_open && this.cart.count(s.link_id) > 0); }
 
-  get openOrders(): number { return this.suppliers.filter(s => this.lastStep(s) && isOpenStep(this.lastStep(s)!)).length; }
+  get openOrders(): number { return this.visible.filter(s => this.lastStep(s) && isOpenStep(this.lastStep(s)!)).length; }
+
+  /** Fournisseurs affichés ; ceux que le client a retirés sont dans Mon compte › Fournisseurs retirés. */
+  get visible(): Supplier[] { return this.suppliers.filter(s => !s.hidden); }
 
   // À chaque retour : un fournisseur a pu être ajouté, un panier rempli, une commande validée.
   ionViewWillEnter() { this.load(); }
@@ -121,10 +124,11 @@ export class SuppliersPage {
 
   askRemove(s: Supplier, event: Event) { event.stopPropagation(); this.removing = s; }
 
+  /** Retire le fournisseur de la liste (le lien reste : le client ne délie jamais). */
   confirmRemove() {
     if (!this.removing || this.busy) return;
     this.busy = true;
-    this.service.remove(this.removing.link_id).subscribe({
+    this.service.setHidden(this.removing.link_id, true).subscribe({
       next: () => { this.busy = false; this.removing = null; this.load(); },
       error: err => {
         this.busy = false; this.removing = null;

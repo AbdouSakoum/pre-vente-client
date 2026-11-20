@@ -198,6 +198,9 @@ ion-action-sheet {
   .action-sheet-cancel { height: 50px; border-radius: 14px; background: var(--sc-bg); color: var(--sc-primary); font-weight: 800;
     .action-sheet-button-inner { justify-content: center; } }
 }
+/* Fenêtre de mise à jour : nouveautés à la ligne, délai restant mis en avant. */
+.app-update-alert .alert-message { white-space: pre-line; text-align: start; }
+.app-update-alert .alert-sub-title { color: var(--sc-danger-text); font-weight: 700; }
 .st-sheet { padding: 10px 18px calc(22px + var(--ion-safe-area-bottom, 0px)); }
 .st-handle { width: 40px; height: 5px; margin: 0 auto 16px; border-radius: 99px; background: #DCE0E7; }
 .st-sheet__title { margin: 0; font-size: 19px; font-weight: 800; color: var(--sc-primary); }

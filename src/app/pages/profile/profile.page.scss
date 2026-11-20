@@ -3,10 +3,37 @@
 .account strong { font-size: 19px; font-weight: 800; color: var(--sc-primary); }
 .account span { font-size: 14px; color: var(--sc-muted); }
 
+/* Position du commerce : bloc en accent tant qu'elle manque, sobre une fois enregistrée. */
+.place { display: flex; flex-direction: column; gap: 12px; padding: 16px; margin-bottom: 14px; }
+.place--missing { box-shadow: inset 0 0 0 1.5px var(--sc-accent); }
+.place__head { display: flex; align-items: center; gap: 12px; }
+.place__icon { flex: none; width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
+  background: var(--sc-primary-soft); color: var(--sc-primary); font-size: 21px; }
+.place--missing .place__icon { background: var(--sc-accent-soft); color: var(--sc-accent-text); }
+.place__text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px;
+  strong { font-size: 15px; font-weight: 800; color: var(--sc-primary); } small { font-size: 13px; color: var(--sc-muted); line-height: 1.4; } }
+.place__map { flex: none; font-size: 13px; font-weight: 800; color: var(--sc-primary); text-decoration: underline; }
+.place__warn { margin: 0; font-size: 13px; font-weight: 600; color: var(--sc-danger-text); }
+.place__hint { font-size: 12px; color: var(--sc-muted); line-height: 1.4; text-align: center; }
+.place .st-btn ion-spinner { width: 18px; height: 18px; }
+
+/* Fournisseurs retirés : une ligne par fournisseur, « Remettre » à droite. */
+.removed { padding: 16px; margin-bottom: 14px; }
+.removed__title { margin: 0; font-size: 15px; font-weight: 800; color: var(--sc-primary);
+  small { margin-inline-start: 4px; font-size: 13px; color: var(--sc-muted); } }
+.removed__hint { margin: 4px 0 8px; font-size: 12.5px; color: var(--sc-muted); line-height: 1.4; }
+.removed__row { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-top: 1px solid var(--sc-line);
+  strong { flex: 1; min-width: 0; font-size: 14.5px; font-weight: 700; color: var(--sc-ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } }
+.removed__logo { flex: none; width: 40px; height: 40px; background: var(--sc-primary-soft); color: var(--sc-primary); font-size: 15px;
+  img { object-fit: contain; background: #fff; } }
+.removed__back { flex: none; min-height: 36px; padding: 0 14px; border: 0; border-radius: 10px;
+  background: var(--sc-primary-soft); color: var(--sc-primary); font: inherit; font-size: 13px; font-weight: 800; cursor: pointer;
+  &:disabled { opacity: .5; } }
+
 .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 16px; margin-bottom: 18px; font-size: 15px; font-weight: 600; color: var(--sc-ink); }
 /* Suppression du compte : lien discret sous la déconnexion, puis feuille de confirmation. */
-.delete-link { display: block; width: 100%; margin-top: 18px; padding: 10px; border: 0; background: transparent;
-  font: inherit; font-size: 14px; font-weight: 600; color: var(--sc-danger-text); text-decoration: underline; cursor: pointer; }
+.delete-link { display: block; width: 100%; margin-top: 4px; padding: 10px; border: 0; background: transparent;
+  font: inherit; font-size: 12px; font-weight: 500; color: var(--sc-muted); opacity: .75; cursor: pointer; }
 .sheet { position: fixed; inset: 0; z-index: 30; display: flex; align-items: flex-end; background: rgba(10, 20, 40, .45); }
 .sheet__panel { width: 100%; max-width: 560px; margin: 0 auto; background: var(--sc-surface); border-radius: 24px 24px 0 0;
   .st-sheet__sub { margin-bottom: 18px; line-height: 1.5; } }

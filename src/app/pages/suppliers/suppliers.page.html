@@ -45,7 +45,7 @@
     </ng-container>
 
     <!-- AUCUN FOURNISSEUR -->
-    <div class="st-empty" *ngIf="loaded && !suppliers.length && !errorMsg">
+    <div class="st-empty" *ngIf="loaded && !visible.length && !errorMsg">
       <div class="st-empty__icon"><ion-icon name="qr-code-outline"></ion-icon></div>
       <h2>{{ (brand.single ? 'suppliers.emptySingleTitle' : 'suppliers.emptyTitle') | translate }}</h2>
       <p>{{ (brand.single ? 'suppliers.emptySingleText' : 'suppliers.emptyText') | translate:{ app: brand.appName } }}</p>
@@ -54,10 +54,10 @@
     </div>
 
     <!-- LISTE -->
-    <ng-container *ngIf="suppliers.length">
-      <h2 class="st-section">{{ (brand.single ? 'suppliers.titleSingle' : 'suppliers.title') | translate }} <small>{{ suppliers.length }}</small></h2>
+    <ng-container *ngIf="visible.length">
+      <h2 class="st-section">{{ (brand.single ? 'suppliers.titleSingle' : 'suppliers.title') | translate }} <small>{{ visible.length }}</small></h2>
 
-      <article class="st-card supplier" *ngFor="let s of suppliers" [class.is-loading]="loading"
+      <article class="st-card supplier" *ngFor="let s of visible" [class.is-loading]="loading"
                (click)="open(s)" role="button" tabindex="0" (keyup.enter)="open(s)">
         <div class="supplier__top">
           <span class="st-thumb supplier__logo">
@@ -100,8 +100,7 @@
       <!-- Ajouter un fournisseur : une ligne sous la liste (un bouton flottant recouvrait les cartes) -->
       <button type="button" class="add-row" *ngIf="canAdd" (click)="add()">
         <span class="add-row__icon"><ion-icon name="add"></ion-icon></span> {{ 'suppliers.addRow' | translate }}
-      </button>
-    </ng-container>
+      </button>    </ng-container>
   </div>
 
   <!-- RETRAIT D'UN FOURNISSEUR -->
@@ -111,7 +110,7 @@
       <h2 class="st-sheet__title">{{ 'suppliers.removeTitle' | translate:{ name: r.name } }}</h2>
       <p class="st-sheet__sub">{{ 'suppliers.removeText' | translate }}</p>
       <button type="button" class="st-btn danger" [disabled]="busy" (click)="confirmRemove()">
-        {{ (busy ? 'common.loading' : 'suppliers.remove') | translate }}
+        {{ (busy ? 'common.loading' : 'suppliers.removeConfirm') | translate }}
       </button>
       <button type="button" class="st-btn st-btn--text" [disabled]="busy" (click)="removing = null">{{ 'common.cancel' | translate }}</button>
     </div>

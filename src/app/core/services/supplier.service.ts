@@ -36,7 +36,8 @@ export class SupplierService {
     return this.api.post<MyCode>('/my-code', {});
   }
 
-  remove(linkId: string): Observable<unknown> {
-    return this.api.delete(`/suppliers/${linkId}`);
+  /** Masque (true) ou réaffiche (false) un fournisseur : le lien n'est jamais rompu par le client. */
+  setHidden(linkId: string, hidden: boolean): Observable<unknown> {
+    return this.api.post(`/suppliers/${linkId}/${hidden ? 'hide' : 'show'}`, {});
   }
 }

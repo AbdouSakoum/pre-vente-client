@@ -47,7 +47,7 @@
       "step3Sub": "Un seul compte pour tous vos fournisseurs.",
       "useLocation": "Utiliser ma position",
       "locating": "Localisation…",
-      "locationHint": "Facultatif, mais cela facilite beaucoup la livraison.",
+      "locationHint": "Facultatif : seulement si vous êtes dans votre commerce. Sinon, ajoutez-la plus tard depuis « Mon compte ».",
       "locationDenied": "Accès à la position refusé. Vous pouvez continuer sans.",
       "locationError": "Position introuvable. Vous pouvez continuer sans.",
       "locationDone": "Position enregistrée",
@@ -81,8 +81,8 @@
     "knownAs": "Votre fiche : {{name}}",
     "soon": "Touchez un fournisseur pour voir son catalogue et commander.",
     "remove": "Retirer ce fournisseur",
-    "removeTitle": "Retirer {{name}} ?",
-    "removeText": "Vous ne verrez plus ce fournisseur. Pour l'ajouter à nouveau, il faudra scanner un nouveau QR code.",
+    "removeTitle": "Retirer {{name}} de votre liste ?",
+    "removeText": "Il disparaît de votre accueil et de vos offres. Vous le retrouvez dans « Mon compte › Fournisseurs retirés », ou il revient tout seul si vous scannez à nouveau son QR code. Le fournisseur en est informé.",
     "showMyCode": "Montrer mon QR code",
     "helloSub": "Que commandez-vous aujourd'hui ?",
     "addTitle": "Ajouter un fournisseur",
@@ -97,7 +97,8 @@
     },
     "cartAt": "Panier en cours chez {{name}}",
     "lastOrderOn": "Commande du {{date}}",
-    "addRow": "Ajouter un fournisseur"
+    "addRow": "Ajouter un fournisseur",
+    "removeConfirm": "Retirer"
   },
   "link": {
     "title": "Ajouter un fournisseur",
@@ -126,13 +127,34 @@
     "title": "Mon compte",
     "language": "Langue",
     "logout": "Se déconnecter",
-    "deleteAccount": "Supprimer mon compte",
-    "deleteTitle": "Supprimer définitivement votre compte ?",
-    "deleteText": "Votre compte, votre profil et vos paniers seront supprimés, et vos commandes pas encore validées seront annulées. Vos fournisseurs conservent l'historique des commandes passées. Cette action est irréversible.",
+    "deleteAccount": "Demander la suppression de mon compte",
+    "deleteTitle": "Demander la suppression de votre compte ?",
+    "deleteText": "Votre compte sera désactivé tout de suite : vous ne pourrez plus vous connecter. L'équipe Stradi supprime ensuite définitivement vos données, sous 30 jours. Vos fournisseurs conservent l'historique des commandes passées. Pour annuler la demande avant la suppression, contactez l'équipe Stradi.",
     "deletePassword": "Mot de passe",
     "deletePasswordHint": "Votre mot de passe, pour confirmer",
-    "deleteConfirm": "Supprimer définitivement",
-    "deleted": "Votre compte a été supprimé."
+    "deleteConfirm": "Envoyer la demande",
+    "deleted": "Demande envoyée : votre compte est désactivé.",
+    "place": {
+      "title": "Position de mon commerce",
+      "missing": "Pas encore enregistrée. Ajoutez-la une fois dans votre commerce : vos livraisons arrivent au bon endroit.",
+      "saved": "Enregistrée. Mettez-la à jour si vous avez déménagé.",
+      "map": "Voir",
+      "add": "Je suis dans mon commerce : enregistrer",
+      "update": "Mettre à jour (je suis dans mon commerce)",
+      "locating": "Localisation…",
+      "hint": "Faites-le depuis votre commerce, pas chez un fournisseur.",
+      "denied": "Accès à la position refusé : autorisez-le dans les réglages du téléphone.",
+      "error": "Position introuvable. Activez la localisation et réessayez.",
+      "savedToast": "Position de votre commerce enregistrée",
+      "savedSuppliers": "Position enregistrée, aussi mise à jour chez vos fournisseurs ({{n}})"
+    },
+    "version": "Version {{v}}",
+    "removed": {
+      "title": "Fournisseurs retirés",
+      "hint": "Remettez-les dans votre liste ici, ou scannez à nouveau leur QR code.",
+      "restore": "Remettre",
+      "restored": "{{name}} est de retour dans votre liste"
+    }
   },
   "category": {
     "grossiste": "Grossiste",
@@ -428,5 +450,16 @@
     "otherAisle": "Autres",
     "noOffers": "Aucune offre en cours chez ce fournisseur.",
     "allProducts": "Tous les produits"
+  },
+  "appUpdate": {
+    "title": "Nouvelle version {{version}}",
+    "intro": "Une nouvelle version de Stradi Connect est disponible. Mettez-la à jour pour continuer à commander dans les meilleures conditions.",
+    "daysLeft": {
+      "one": "Obligatoire dans {{n}} jour",
+      "other": "Obligatoire dans {{n}} jours"
+    },
+    "mandatory": "Mise à jour obligatoire pour continuer",
+    "later": "Plus tard",
+    "update": "Mettre à jour"
   }
 }
