@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject, tap } from 'rxjs';
 import { ApiService } from './api.service';
 import { BrandService } from '../../brand/brand.service';
 import { LinkPreview, MyCode, Supplier } from '../../shared/models/supplier.model';
@@ -8,6 +8,12 @@ import { SupplierOffer } from '../../shared/offers';
 /** Fournisseurs du compte et rattachement par QR code. */
 @Injectable({ providedIn: 'root' })
 export class SupplierService {
+  /**
+   * La liste des fournisseurs a changé (ajouté, retiré, réaffiché) : l'accueil se recharge. Le retour
+   * vers l'onglet depuis une page hors onglets (scan, mon code) ne relance pas ionViewWillEnter.
+   */
+  readonly changed$ = new Subject<void>();
+
   constructor(private api: ApiService, private brand: BrandService) {}
 
   /** « Mes fournisseurs » ; dans une version personnalisée, le seul fournisseur de l'application. */
@@ -28,7 +34,7 @@ export class SupplierService {
   }
 
   link(code: string): Observable<unknown> {
-    return this.api.post('/links', { token: code });
+    return this.api.post('/links', { token: code }).pipe(tap(() => this.changed$.next()));
   }
 
   /** Nouveau QR code du compte ; remplace le précédent. */
@@ -38,6 +44,6 @@ export class SupplierService {
 
   /** Masque (true) ou réaffiche (false) un fournisseur : le lien n'est jamais rompu par le client. */
   setHidden(linkId: string, hidden: boolean): Observable<unknown> {
-    return this.api.post(`/suppliers/${linkId}/${hidden ? 'hide' : 'show'}`, {});
+    return this.api.post(`/suppliers/${linkId}/${hidden ? 'hide' : 'show'}`, {}).pipe(tap(() => this.changed$.next()));
   }
 }

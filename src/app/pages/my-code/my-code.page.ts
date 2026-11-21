@@ -95,6 +95,7 @@ export class MyCodePage {
           if (!fresh) return;
           this.added = fresh;
           this.stop();
+          this.service.changed$.next(); // l'accueil affichera le nouveau fournisseur au retour
           this.cdr.detectChanges();
         },
         error: () => {},

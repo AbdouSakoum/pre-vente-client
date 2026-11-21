@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { ActionSheetController } from '@ionic/angular';
 import { AuthService } from '../../core/services/auth.service';
@@ -47,7 +48,10 @@ export class SuppliersPage {
     private actionSheet: ActionSheetController,
     private router: Router,
     private cdr: ChangeDetectorRef,
-  ) {}
+  ) {
+    // Fournisseur ajouté (scan, mon code), retiré ou réaffiché ailleurs : la liste se recharge.
+    this.service.changed$.pipe(takeUntilDestroyed()).subscribe(() => this.load());
+  }
 
   /** L'ajout reste proposé tant que la version personnalisée n'a pas son fournisseur. */
   get canAdd(): boolean { return !this.brand.single || !this.suppliers.length; }
@@ -129,7 +133,8 @@ export class SuppliersPage {
     if (!this.removing || this.busy) return;
     this.busy = true;
     this.service.setHidden(this.removing.link_id, true).subscribe({
-      next: () => { this.busy = false; this.removing = null; this.load(); },
+      // La liste se recharge par changed$ (émis par le service).
+      next: () => { this.busy = false; this.removing = null; },
       error: err => {
         this.busy = false; this.removing = null;
         this.errorMsg = err.error?.message || this.language.t('common.error');
