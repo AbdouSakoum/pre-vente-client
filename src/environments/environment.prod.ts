@@ -1,8 +1,8 @@
 // Production : même API que l'application terrain.
 export const environment = {
   production: true,
-  apiUrl: 'https://app.kep-on.com/api',
+  apiUrl: 'https://app.stra-di.com/api',
   // Base des photos de produits enregistrées en chemin relatif (/uploads/…).
-  uploadsUrl: 'https://app.kep-on.com',
-  appVersion: '0.1.2',
+  uploadsUrl: 'https://app.stra-di.com',
+  appVersion: '0.2.0',
 };
