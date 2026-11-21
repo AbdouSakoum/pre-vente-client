@@ -79,7 +79,7 @@ Version arabe des textes : à rédiger avant la mise en production (facultative 
 - [ ] **Déployer le site** `stra-di.com` (`/deploy site`) : Google vérifie que les deux adresses répondent.
 - [x] **Clé de signature** créée le 18 nov. 2026 (`node scripts/create-keystore.js`) : `android/stradi-connect.keystore` + `android/keystore.properties`, tous deux hors git. **À sauvegarder hors du PC** : sans eux, plus aucune mise à jour possible (sauf demande de réinitialisation à Google).
 - [x] **Premier fichier pour les tests internes** : `stradi-connect-0.1.0.aab` (code 100), branché sur le dev (`--configuration dev` + `-PallowHttp=true`).
-- [x] **Première version de production** : `stradi-connect-0.2.1.aab` (code 201, 21 nov. 2026 ; le code 200 était déjà pris), API `https://app.stra-di.com/api`. Publication à faire.
+- [x] **Première version de production** : `stradi-connect-0.2.2.aab` (code 202, 21 nov. 2026 ; bibliothèques natives compressées pour la règle des 16 Ko — 0.2.1 en tests internes), API `https://app.stra-di.com/api`. Publication à faire.
 - [ ] **Captures d'écran** (voir Visuels).
 - [ ] **Compte de test pour Google** (créé par le fondateur).
 - [ ] **Adresse de l'API** : la première version envoyée sur une piste de test pointe sur le dev (HTTP, adresse IP). La version de production doit pointer sur `https://app.stra-di.com/api` — `environment.prod.ts` indique encore `app.kep-on.com`, à décider.

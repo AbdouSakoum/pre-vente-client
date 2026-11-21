@@ -15,6 +15,9 @@ def hasReleaseKey = signingValue('KEYSTORE_PASSWORD', 'storePassword') != null
 android {
     namespace "com.stradi.client"
     compileSdk rootProject.ext.compileSdkVersion
+    // Pages mémoire de 16 Ko (Play Store) : avec AGP 8.2, les .so non compressés ne sont pas
+    // alignés sur 16 Ko dans le paquet ; compressés, l'alignement du zip ne compte plus.
+    packagingOptions { jniLibs { useLegacyPackaging true } }
     defaultConfig {
         applicationId "com.stradi.client"
         minSdkVersion rootProject.ext.minSdkVersion

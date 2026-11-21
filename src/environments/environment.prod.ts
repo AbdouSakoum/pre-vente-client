@@ -4,5 +4,5 @@ export const environment = {
   apiUrl: 'https://app.stra-di.com/api',
   // Base des photos de produits enregistrées en chemin relatif (/uploads/…).
   uploadsUrl: 'https://app.stra-di.com',
-  appVersion: '0.2.1',
+  appVersion: '0.2.2',
 };
