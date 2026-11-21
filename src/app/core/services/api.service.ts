@@ -18,6 +18,11 @@ export class ApiService {
     return this.http.get<T>(`${this.base}${path}`, { headers: this.headers() });
   }
 
+  /** Fichier (PDF) servi par l'API, avec le jeton du compte. */
+  getBlob(path: string): Observable<Blob> {
+    return this.http.get(`${this.base}${path}`, { headers: this.headers(), responseType: 'blob' });
+  }
+
   post<T>(path: string, body: unknown): Observable<T> {
     return this.http.post<T>(`${this.base}${path}`, body, { headers: this.headers() });
   }

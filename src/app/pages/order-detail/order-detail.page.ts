@@ -2,7 +2,9 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CartService } from '../../core/services/cart.service';
 import { LanguageService } from '../../core/services/language.service';
-import { OrderService } from '../../core/services/order.service';
+import { firstValueFrom } from 'rxjs';
+import { FileService } from '../../core/services/file.service';
+import { OrderDocument, OrderService } from '../../core/services/order.service';
 import { ClientOrderDetail, ClientOrderStep, STEP_ICONS, clientStep } from '../../shared/models/order.model';
 import { formatMoney, mediaUrl } from '../../shared/format';
 
@@ -25,6 +27,8 @@ export class OrderDetailPage {
   busy = false;
   errorMsg = '';
   showAll = false;
+  /** Document en cours de téléchargement : désactive les boutons des documents. */
+  downloading: OrderDocument | null = null;
 
   readonly media = mediaUrl;
   readonly stepIcons = STEP_ICONS;
@@ -33,6 +37,7 @@ export class OrderDetailPage {
   constructor(
     private orders: OrderService,
     private cart: CartService,
+    private files: FileService,
     private language: LanguageService,
     private route: ActivatedRoute,
     private router: Router,
@@ -95,9 +100,47 @@ export class OrderDetailPage {
     });
   }
 
+  /** Commande livrée sans facture émise : le client peut la demander (une seule fois). */
+  get canRequestInvoice(): boolean {
+    const o = this.detail?.order;
+    return !!o && this.step === 'delivered' && !o.invoice_number && !o.invoice_requested_at && o.invoice_requested_at !== undefined;
+  }
+
+  requestInvoice() {
+    if (!this.detail || this.busy) return;
+    this.busy = true; this.errorMsg = '';
+    this.orders.requestInvoice(this.linkId, this.detail.order.id).subscribe({
+      next: r => { this.busy = false; this.detail!.order.invoice_requested_at = r.invoice_requested_at; this.cdr.detectChanges(); },
+      error: err => this.fail(err),
+    });
+  }
+
+  /** Télécharge le bon de livraison ou la facture émise (feuille de partage sur téléphone). */
+  async download(type: OrderDocument) {
+    if (!this.detail || this.downloading) return;
+    const o = this.detail.order;
+    this.downloading = type; this.errorMsg = '';
+    try {
+      const blob = await firstValueFrom(this.orders.document(this.linkId, o.id, type));
+      const name = type === 'invoice' ? `facture-${o.invoice_number}.pdf` : `bon-livraison-${o.order_ref}.pdf`;
+      await this.files.save(blob, name);
+    } catch (err) {
+      this.fail(await this.blobError(err));
+    }
+    this.downloading = null;
+    this.cdr.detectChanges();
+  }
+
   call() {
     const phone = this.detail?.supplier.phone;
     if (phone) window.location.href = `tel:${phone.replace(/\s/g, '')}`;
+  }
+
+  /** Une erreur d'un appel « blob » arrive en Blob : on en relit le message JSON. */
+  private async blobError(err: unknown): Promise<{ status?: number; error?: { message?: string } }> {
+    const e = err as { status?: number; error?: unknown };
+    if (!(e?.error instanceof Blob)) return e as { status?: number };
+    try { return { status: e.status, error: JSON.parse(await e.error.text()) }; } catch { return { status: e.status }; }
   }
 
   private fail(err: { status?: number; error?: { message?: string } }) {

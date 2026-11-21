@@ -139,6 +139,12 @@ export interface ClientOrderDetail {
     payment_status: string;
     threshold_promotion_name: string | null;
     threshold_discount_pct: number | null;
+    /** Facture demandée au fournisseur (commande livrée) ; absent si la version du serveur est ancienne. */
+    invoice_requested_at?: string | null;
+    /** Numéro de la facture émise ; null tant qu'elle ne l'est pas. */
+    invoice_number?: string | null;
+    /** Le fournisseur prépare la facture (brouillon). */
+    invoice_draft?: boolean;
   };
   lines: OrderLineDetail[];
 }

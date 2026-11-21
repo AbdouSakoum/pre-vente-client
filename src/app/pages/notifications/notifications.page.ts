@@ -36,5 +36,6 @@ export class NotificationsPage {
 
   open(e: ClientNotification) { this.router.navigate(['/supplier', e.link_id, 'order', e.order_id]); }
 
-  trackById(_: number, e: ClientNotification) { return e.order_id + e.kind; }
+  /** Une nouveauté par commande : son dernier statut. */
+  trackById(_: number, e: ClientNotification) { return e.order_id; }
 }

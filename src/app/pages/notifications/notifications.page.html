@@ -32,7 +32,10 @@
         <em *ngIf="e.kind === 'refused' && e.reject_reason">« {{ e.reject_reason }} »</em>
       </span>
       <span class="dot" *ngIf="e.unread" [attr.aria-label]="'notifications.new' | translate"></span>
-      <ion-icon name="chevron-forward" class="chevron"></ion-icon>
+      <span role="button" class="close" [attr.aria-label]="'notifications.dismiss' | translate"
+            (click)="$event.stopPropagation(); notifications.dismiss(e)">
+        <ion-icon name="close"></ion-icon>
+      </span>
     </button>
   </div>
 </ion-content>

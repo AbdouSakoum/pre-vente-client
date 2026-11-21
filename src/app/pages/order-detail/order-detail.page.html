@@ -81,6 +81,54 @@
         <div class="items__total"><span>{{ 'cart.total' | translate }}</span><strong dir="ltr">{{ money(d.order.total_ttc) }}</strong></div>
       </section>
 
+      <!-- BON DE LIVRAISON : téléchargeable une fois la commande livrée -->
+      <section class="st-card invoice" *ngIf="step === 'delivered'">
+        <ion-icon name="receipt-outline"></ion-icon>
+        <div class="invoice__text">
+          <strong>{{ 'detail.deliveryNote.title' | translate }}</strong>
+          <small>{{ 'detail.deliveryNote.hint' | translate }}</small>
+        </div>
+        <button type="button" class="st-btn st-btn--outline invoice__btn" [disabled]="!!downloading" (click)="download('delivery-note')">
+          <ion-spinner *ngIf="downloading === 'delivery-note'" name="crescent"></ion-spinner>
+          <ion-icon *ngIf="downloading !== 'delivery-note'" name="download-outline"></ion-icon>
+          {{ 'detail.download' | translate }}
+        </button>
+      </section>
+
+      <!-- FACTURE : émise, en préparation, demandée, ou à demander (commande livrée) -->
+      <section class="st-card invoice" *ngIf="step === 'delivered' && d.order.invoice_requested_at !== undefined">
+        <ion-icon name="document-text-outline"></ion-icon>
+        <div class="invoice__text">
+          <ng-container *ngIf="d.order.invoice_number; else notIssued">
+            <strong>{{ 'detail.invoice.issued' | translate:{ number: d.order.invoice_number } }}</strong>
+            <small>{{ 'detail.invoice.issuedHint' | translate }}</small>
+          </ng-container>
+          <ng-template #notIssued>
+            <ng-container *ngIf="d.order.invoice_draft; else notDraft">
+              <strong>{{ 'detail.invoice.draft' | translate }}</strong>
+            </ng-container>
+            <ng-template #notDraft>
+              <ng-container *ngIf="d.order.invoice_requested_at; else ask">
+                <strong>{{ 'detail.invoice.requested' | translate }}</strong>
+                <small>{{ 'detail.invoice.requestedOn' | translate:{ date: (d.order.invoice_requested_at | date:'dd/MM/yyyy · HH:mm') } }}</small>
+              </ng-container>
+              <ng-template #ask>
+                <strong>{{ 'detail.invoice.askTitle' | translate }}</strong>
+                <small>{{ 'detail.invoice.askHint' | translate }}</small>
+              </ng-template>
+            </ng-template>
+          </ng-template>
+        </div>
+        <button type="button" class="st-btn st-btn--outline invoice__btn" *ngIf="d.order.invoice_number" [disabled]="!!downloading" (click)="download('invoice')">
+          <ion-spinner *ngIf="downloading === 'invoice'" name="crescent"></ion-spinner>
+          <ion-icon *ngIf="downloading !== 'invoice'" name="download-outline"></ion-icon>
+          {{ 'detail.download' | translate }}
+        </button>
+        <button type="button" class="st-btn st-btn--outline invoice__btn" *ngIf="canRequestInvoice" [disabled]="busy" (click)="requestInvoice()">
+          {{ 'detail.invoice.ask' | translate }}
+        </button>
+      </section>
+
       <button type="button" class="st-btn st-btn--accent" [disabled]="busy" (click)="reorder()">
         <ion-spinner *ngIf="busy" name="crescent"></ion-spinner><ion-icon *ngIf="!busy" name="repeat-outline"></ion-icon>
         {{ (step === 'refused' ? 'detail.resend' : 'detail.reorder') | translate }}

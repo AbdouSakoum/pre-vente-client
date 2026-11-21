@@ -47,6 +47,13 @@ export class NotificationService {
     try { await firstValueFrom(this.api.post('/notifications/seen', {})); } catch { /* repris à la prochaine ouverture */ }
   }
 
+  /** Croix : la nouveauté disparaît tout de suite ; elle revient si la commande change de statut. */
+  async dismiss(e: ClientNotification): Promise<void> {
+    this.events.update(list => list.filter(x => x.order_id !== e.order_id));
+    if (e.unread) this.unread.update(n => Math.max(0, n - 1));
+    try { await firstValueFrom(this.api.delete(`/notifications/${e.order_id}`)); } catch { await this.refresh(); }
+  }
+
   /** Déconnexion : plus de relecture, plus rien d'affiché. */
   reset() {
     if (this.timer) { clearInterval(this.timer); this.timer = null; }

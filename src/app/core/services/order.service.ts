@@ -6,6 +6,9 @@ import {
 } from '../../shared/models/order.model';
 import { SupplierBalance } from '../../shared/models/balance.model';
 
+/** Documents téléchargeables d'une commande livrée (segment de l'URL de l'API). */
+export type OrderDocument = 'delivery-note' | 'invoice';
+
 /** Catalogue d'un fournisseur et commandes ; le fournisseur est désigné par le lien du compte. */
 @Injectable({ providedIn: 'root' })
 export class OrderService {
@@ -33,6 +36,16 @@ export class OrderService {
 
   detail(linkId: string, orderId: string): Observable<ClientOrderDetail> {
     return this.api.get<ClientOrderDetail>(`/suppliers/${linkId}/orders/${orderId}`);
+  }
+
+  /** Demande la facture d'une commande livrée ; le fournisseur la voit dans sa liste des demandes. */
+  requestInvoice(linkId: string, orderId: string): Observable<{ invoice_requested_at: string }> {
+    return this.api.post<{ invoice_requested_at: string }>(`/suppliers/${linkId}/orders/${orderId}/invoice-request`, {});
+  }
+
+  /** PDF d'une commande livrée : bon de livraison, ou facture une fois émise. */
+  document(linkId: string, orderId: string, type: OrderDocument): Observable<Blob> {
+    return this.api.getBlob(`/suppliers/${linkId}/orders/${orderId}/${type}`);
   }
 
   /** Les prix sont recalculés par le serveur ; la clé rend l'envoi sans doublon. */

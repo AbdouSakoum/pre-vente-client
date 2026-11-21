@@ -361,6 +361,21 @@
     "products": {
       "one": "{{n}} produit",
       "other": "{{n}} produits"
+    },
+    "invoice": {
+      "askTitle": "Besoin d'une facture ?",
+      "askHint": "Demandez-la : votre fournisseur la prépare et elle apparaîtra ici.",
+      "ask": "Demander la facture",
+      "requested": "Facture demandée",
+      "requestedOn": "Demandée le {{date}}. Votre fournisseur a été prévenu.",
+      "draft": "Facture en préparation chez votre fournisseur",
+      "issued": "Facture {{number}}",
+      "issuedHint": "Retrouvez-la aussi dans Mon solde › Factures."
+    },
+    "download": "Télécharger",
+    "deliveryNote": {
+      "title": "Bon de livraison",
+      "hint": "Le document remis à la livraison, en PDF."
     }
   },
   "promo": {
@@ -384,7 +399,8 @@
       "refused": "Commande {{ref}} refusée",
       "delivering": "Commande {{ref}} en livraison",
       "delivered": "Commande {{ref}} livrée"
-    }
+    },
+    "dismiss": "Enlever"
   },
   "balance": {
     "title": "Mon solde",
@@ -406,7 +422,7 @@
     "deliveredOn": "Livrée le {{date}}",
     "partPaid": "{{paid}} déjà payés sur {{total}}",
     "invoice": "Facture {{number}}",
-    "invoiceHint": "Pour recevoir une facture en PDF, demandez-la à votre fournisseur.",
+    "invoiceHint": "Besoin d'une facture ? Demandez-la depuis le détail d'une commande livrée.",
     "method": {
       "especes": "Espèces",
       "cheque": "Chèque",
