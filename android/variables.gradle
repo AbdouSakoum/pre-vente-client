@@ -13,4 +13,11 @@ ext {
     androidxJunitVersion = '1.1.5'
     androidxEspressoCoreVersion = '3.5.1'
     cordovaAndroidVersion = '10.1.1'
+    // Lecteur de codes (@capacitor-mlkit/barcode-scanning) : versions compatibles avec les pages
+    // mémoire de 16 Ko, exigées par le Play Store (les défauts du module, 17.2.0 et 1.1.0, ne le sont pas).
+    mlkitBarcodeScanningVersion = '17.3.0'
+    androidxCameraCamera2Version = '1.4.2'
+    androidxCameraCoreVersion = '1.4.2'
+    androidxCameraLifecycleVersion = '1.4.2'
+    androidxCameraViewVersion = '1.4.2'
 }
