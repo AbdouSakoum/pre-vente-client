@@ -57,6 +57,16 @@
       <app-lang-switch></app-lang-switch>
     </section>
 
+    <!-- Verrou par empreinte : téléphone avec empreinte ou code ; aucun mot de passe gardé. -->
+    <section class="card row lock-row" *ngIf="lockAvailable">
+      <span class="lock-row__text">
+        <span><ion-icon name="finger-print"></ion-icon> {{ 'profile.lock.title' | translate }}</span>
+        <small>{{ 'profile.lock.hint' | translate }}</small>
+      </span>
+      <ion-toggle [checked]="lockEnabled" (ionChange)="toggleLock($any($event).detail.checked)"
+                  [attr.aria-label]="'profile.lock.title' | translate"></ion-toggle>
+    </section>
+
     <button type="button" class="card row link" routerLink="/my-code">
       <span><ion-icon name="qr-code-outline"></ion-icon> {{ 'suppliers.showMyCode' | translate }}</span>
       <ion-icon name="chevron-forward"></ion-icon>

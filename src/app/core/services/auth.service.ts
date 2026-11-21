@@ -5,6 +5,7 @@ import { ApiService } from './api.service';
 import { SessionService } from './session.service';
 import { CartService } from './cart.service';
 import { NotificationService } from './notification.service';
+import { BiometricLockService } from './biometric-lock.service';
 import { Account, AuthResponse, ForgotPasswordResponse, LocationUpdate, RegisterPayload } from '../../shared/models/account.model';
 
 /** Compte du client : inscription, connexion, mot de passe oublié, déconnexion. */
@@ -12,7 +13,7 @@ import { Account, AuthResponse, ForgotPasswordResponse, LocationUpdate, Register
 export class AuthService {
   readonly account = signal<Account | null>(this.stored());
 
-  constructor(private api: ApiService, private session: SessionService, private cart: CartService, private notifications: NotificationService, private router: Router) {}
+  constructor(private api: ApiService, private session: SessionService, private cart: CartService, private notifications: NotificationService, private lock: BiometricLockService, private router: Router) {}
 
   get isLoggedIn(): boolean { return !!this.session.token && !!this.account(); }
 
@@ -71,6 +72,8 @@ export class AuthService {
     this.session.clear();
     this.cart.reset();
     this.notifications.reset();
+    // Verrou par empreinte lié au compte : il repart désactivé à la prochaine connexion.
+    this.lock.reset();
     localStorage.removeItem('sc_account');
     this.account.set(null);
     this.router.navigateByUrl('/login', { replaceUrl: true });

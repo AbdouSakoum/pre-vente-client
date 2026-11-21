@@ -154,6 +154,16 @@
       "hint": "Remettez-les dans votre liste ici, ou scannez à nouveau leur QR code.",
       "restore": "Remettre",
       "restored": "{{name}} est de retour dans votre liste"
+    },
+    "lock": {
+      "title": "Déverrouiller avec l'empreinte",
+      "hint": "Demandée à l'ouverture de l'application. Le code du téléphone fonctionne aussi.",
+      "enabled": "Empreinte activée",
+      "failed": "Empreinte non confirmée : option non activée"
+    },
+    "logoutConfirm": {
+      "title": "Se déconnecter ?",
+      "text": "Vous devrez saisir à nouveau votre identifiant et votre mot de passe."
     }
   },
   "category": {
@@ -477,5 +487,13 @@
     "mandatory": "Mise à jour obligatoire pour continuer",
     "later": "Plus tard",
     "update": "Mettre à jour"
+  },
+  "lock": {
+    "reason": "Déverrouiller Stradi Connect",
+    "title": "Stradi Connect",
+    "subtitle": "Empreinte ou code du téléphone",
+    "text": "Application verrouillée. Utilisez votre empreinte ou le code de votre téléphone pour continuer.",
+    "unlock": "Déverrouiller",
+    "logout": "Se déconnecter"
   }
 }

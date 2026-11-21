@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { ToastController } from '@ionic/angular';
+import { AlertController, ToastController } from '@ionic/angular';
 import { AuthService } from '../../core/services/auth.service';
+import { BiometricLockService } from '../../core/services/biometric-lock.service';
 import { LanguageService } from '../../core/services/language.service';
 import { BrandService } from '../../brand/brand.service';
 import { environment } from '../../../environments/environment';
@@ -34,6 +35,9 @@ export class ProfilePage {
   /** Lecture de la position du téléphone puis enregistrement en cours. */
   locating = false;
   locateError = '';
+  /** Empreinte ou code du téléphone disponible (téléphone seulement), et option activée. */
+  lockAvailable = false;
+  lockEnabled = false;
 
   constructor(
     public auth: AuthService,
@@ -42,6 +46,8 @@ export class ProfilePage {
     private toast: ToastController,
     private suppliers: SupplierService,
     private cdr: ChangeDetectorRef,
+    private alerts: AlertController,
+    private lock: BiometricLockService,
   ) {}
 
   get identifier(): string {
@@ -53,6 +59,8 @@ export class ProfilePage {
   ionViewWillEnter() {
     this.auth.reload().subscribe({ next: () => this.cdr.detectChanges(), error: () => {} });
     this.loadRemoved();
+    this.lockEnabled = this.lock.enabled;
+    this.lock.isAvailable().then(a => { this.lockAvailable = a; this.cdr.detectChanges(); });
     if (Capacitor.isNativePlatform()) {
       App.getInfo().then(i => { this.version = baseVersion(i.version); this.cdr.detectChanges(); }).catch(() => {});
     }
@@ -98,7 +106,28 @@ export class ProfilePage {
     });
   }
 
-  logout() { this.auth.logout(); }
+  /** Déconnexion confirmée : un geste malheureux ne doit pas fermer la session. */
+  async logout() {
+    const alert = await this.alerts.create({
+      header: this.language.t('profile.logoutConfirm.title'),
+      message: this.language.t('profile.logoutConfirm.text'),
+      buttons: [
+        { text: this.language.t('common.cancel'), role: 'cancel' },
+        { text: this.language.t('profile.logout'), role: 'destructive', handler: () => this.auth.logout() },
+      ],
+    });
+    await alert.present();
+  }
+
+  /** Interrupteur « Déverrouiller avec l'empreinte » : l'empreinte est vérifiée avant d'activer. */
+  async toggleLock(on: boolean) {
+    if (!on) { this.lock.disable(); this.lockEnabled = false; return; }
+    const ok = await this.lock.enable();
+    this.lockEnabled = ok;
+    this.cdr.detectChanges();
+    const key = ok ? 'profile.lock.enabled' : 'profile.lock.failed';
+    (await this.toast.create({ message: this.language.t(key), duration: 2500, position: 'top' })).present();
+  }
 
   private loadRemoved() {
     this.suppliers.list().subscribe({

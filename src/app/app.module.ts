@@ -36,6 +36,7 @@ import { OrderSentComponent } from './pages/cart/components/order-sent/order-sen
 import { NotificationsPage } from './pages/notifications/notifications.page';
 import { BalancePage } from './pages/balance/balance.page';
 import { NotifButtonComponent } from './shared/components/notif-button/notif-button.component';
+import { LockScreenComponent } from './shared/components/lock-screen/lock-screen.component';
 import { OrderDetailPage } from './pages/order-detail/order-detail.page';
 
 @NgModule({
@@ -43,7 +44,7 @@ import { OrderDetailPage } from './pages/order-detail/order-detail.page';
     AppComponent, LangSwitchComponent,
     LoginPage, RegisterPage, ForgotPasswordPage, TabsPage, SuppliersPage, OrdersPage, LinkPage, ProfilePage, MyCodePage,
     SupplierPage, CatalogComponent, UsualsComponent, QtyControlComponent, QtySheetComponent, PromoTagsComponent, AislesComponent, OffersCarouselComponent,
-    CartPage, OrderSentComponent, OrderDetailPage, NotificationsPage, NotifButtonComponent, BalancePage,
+    CartPage, OrderSentComponent, OrderDetailPage, NotificationsPage, NotifButtonComponent, BalancePage, LockScreenComponent,
   ],
   imports: [
     BrowserModule, CommonModule, FormsModule,

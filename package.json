@@ -19,6 +19,7 @@
     "@angular/platform-browser": "20.3.24",
     "@angular/platform-browser-dynamic": "20.3.24",
     "@angular/router": "20.3.24",
+    "@aparajita/capacitor-biometric-auth": "^6.0.1",
     "@capacitor-mlkit/barcode-scanning": "^6.2.0",
     "@capacitor/android": "6.2.1",
     "@capacitor/app": "6.0.3",

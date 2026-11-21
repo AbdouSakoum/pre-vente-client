@@ -1,0 +1,11 @@
+<div class="lock" *ngIf="lock.locked()">
+  <div class="lock__body">
+    <span class="lock__icon"><ion-icon name="finger-print"></ion-icon></span>
+    <h1>{{ brand.appName }}</h1>
+    <p>{{ 'lock.text' | translate }}</p>
+    <button type="button" class="st-btn st-btn--primary" (click)="unlock()">
+      <ion-icon name="finger-print"></ion-icon> {{ 'lock.unlock' | translate }}
+    </button>
+  </div>
+  <button type="button" class="lock__logout" (click)="logout()">{{ 'lock.logout' | translate }}</button>
+</div>

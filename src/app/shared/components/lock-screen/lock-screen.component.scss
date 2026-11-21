@@ -1,0 +1,17 @@
+/* Écran verrouillé : couvre toute l'application (au-dessus des feuilles et des onglets). */
+.lock {
+  position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 32px 24px calc(24px + env(safe-area-inset-bottom)); background: var(--sc-bg, #f4f6fb); text-align: center;
+}
+.lock__body { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; width: 100%; max-width: 360px; }
+.lock__icon {
+  width: 84px; height: 84px; border-radius: 26px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;
+  background: var(--sc-primary-soft); color: var(--sc-primary); font-size: 46px;
+}
+h1 { margin: 0; font-size: 22px; font-weight: 800; color: var(--sc-primary); }
+p { margin: 0 0 18px; font-size: 14px; color: var(--sc-muted); line-height: 1.5; }
+.st-btn { width: 100%; }
+.lock__logout {
+  min-height: 44px; padding: 0 16px; border: 0; background: transparent; cursor: pointer;
+  font: inherit; font-size: 13.5px; font-weight: 700; color: var(--sc-muted);
+}
