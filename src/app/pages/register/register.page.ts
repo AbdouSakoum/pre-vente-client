@@ -5,7 +5,7 @@ import { LanguageService } from '../../core/services/language.service';
 import { BrandService } from '../../brand/brand.service';
 import { CLIENT_CATEGORIES, ClientCategory } from '../../shared/models/account.model';
 
-const MIN_PASSWORD = 6;
+const MIN_PASSWORD = 8;
 const STEPS = 3;
 
 /** Icône de chaque type de commerce (ionicons). */

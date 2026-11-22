@@ -4,7 +4,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { LanguageService } from '../../core/services/language.service';
 import { BrandService } from '../../brand/brand.service';
 
-const MIN_PASSWORD = 6;
+const MIN_PASSWORD = 8;
 
 /**
  * Mot de passe oublié, en deux étapes : l'identifiant, puis le code et le nouveau mot de passe.
