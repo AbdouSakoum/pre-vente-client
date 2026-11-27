@@ -333,6 +333,7 @@
   "qtySheet": {
     "clear": "Effacer",
     "back": "Supprimer un chiffre",
+    "decimal": "Virgule",
     "bulkApplied": "prix par quantité appliqué",
     "confirm": "Valider {{n}}",
     "remove": "Retirer du panier"
@@ -495,5 +496,17 @@
     "text": "Application verrouillée. Utilisez votre empreinte ou le code de votre téléphone pour continuer.",
     "unlock": "Déverrouiller",
     "logout": "Se déconnecter"
+  },
+  "units": {
+    "piece": "u.",
+    "carton": "ctn",
+    "pack": "pack",
+    "sac": "sac",
+    "boite": "boîte",
+    "kg": "kg",
+    "g": "g",
+    "l": "L",
+    "ml": "ml",
+    "m": "m"
   }
 }

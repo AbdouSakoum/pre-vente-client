@@ -7,6 +7,7 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { TranslateLoader, TranslatePipe, provideTranslateService } from '@ngx-translate/core';
 import { PluralPipe } from './shared/plural.pipe';
+import { QtyPipe } from './shared/qty.pipe';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -50,7 +51,7 @@ import { OrderDetailPage } from './pages/order-detail/order-detail.page';
     BrowserModule, CommonModule, FormsModule,
     IonicModule.forRoot({ mode: 'md' }),
     AppRoutingModule,
-    TranslatePipe, PluralPipe,
+    TranslatePipe, PluralPipe, QtyPipe,
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },

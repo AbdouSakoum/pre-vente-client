@@ -1,11 +1,11 @@
 <button type="button" class="st-add st-add--sm" *ngIf="!quantity; else stepper" [disabled]="!variant.available" (click)="add()"
         [attr.aria-label]="(variant.available ? 'catalog.add' : 'catalog.outOfStock') | translate">
-  <ion-icon name="add"></ion-icon><span *ngIf="step > 1">{{ step }}</span>
+  <ion-icon name="add"></ion-icon><span *ngIf="step > 1">{{ step | qty }}</span>
 </button>
 <ng-template #stepper>
   <span class="st-stepper st-stepper--sm" dir="ltr">
     <button type="button" (click)="change(-1)" [attr.aria-label]="'catalog.less' | translate"><ion-icon name="remove"></ion-icon></button>
-    <button type="button" class="st-stepper__value" (click)="openKeypad()" [attr.aria-label]="'catalog.quantity' | translate">{{ quantity }}</button>
+    <button type="button" class="st-stepper__value" (click)="openKeypad()" [attr.aria-label]="'catalog.quantity' | translate">{{ quantity | qty }}</button>
     <button type="button" (click)="change(1)" [disabled]="!variant.available" [attr.aria-label]="'catalog.more' | translate"><ion-icon name="add"></ion-icon></button>
   </span>
 </ng-template>

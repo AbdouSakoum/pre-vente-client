@@ -2,11 +2,13 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CartService } from '../../../../core/services/cart.service';
 import { CatalogProduct, CatalogVariant } from '../../../../shared/models/order.model';
 import { QtyTarget } from '../../supplier.page';
+import { roundQty } from '../../../../shared/units';
 
 /**
  * Ajout au panier d'une variante (même commande que la prise de commande terrain) :
  * bouton d'ajout tant qu'elle n'est pas au panier, puis compteur −/+ ; un toucher sur la quantité
  * ouvre le pavé de saisie. `step` : quantité ajoutée d'un geste (quantité habituelle).
+ * Les boutons −/+ avancent de 1 quelle que soit l'unité ; une quantité décimale (1,250 kg) se saisit au pavé.
  */
 @Component({
   selector: 'app-qty-control',
@@ -29,7 +31,7 @@ export class QtyControlComponent {
 
   change(delta: number) {
     if (delta > 0 && !this.variant.available) return;
-    this.cart.set(this.linkId, this.product, this.variant, this.quantity + delta);
+    this.cart.set(this.linkId, this.product, this.variant, roundQty(this.quantity + delta));
   }
 
   openKeypad() { this.keypad.emit({ product: this.product, variant: this.variant }); }

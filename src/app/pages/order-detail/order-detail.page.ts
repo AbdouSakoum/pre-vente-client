@@ -7,6 +7,7 @@ import { FileService } from '../../core/services/file.service';
 import { OrderDocument, OrderService } from '../../core/services/order.service';
 import { ClientOrderDetail, ClientOrderStep, STEP_ICONS, clientStep } from '../../shared/models/order.model';
 import { formatMoney, mediaUrl } from '../../shared/format';
+import { countUnits } from '../../shared/units';
 
 /** Étape de la frise : faite, en cours ou à venir. */
 interface TimelineStep { key: string; state: 'done' | 'current' | 'todo' | 'refused'; at: string | null; icon: string; }
@@ -46,7 +47,8 @@ export class OrderDetailPage {
 
   get step(): ClientOrderStep | null { return this.detail ? clientStep(this.detail.order) : null; }
 
-  get units(): number { return this.detail?.lines.reduce((n, l) => n + Number(l.quantity), 0) || 0; }
+  /** Articles de la commande : une ligne au poids compte pour 1. */
+  get units(): number { return countUnits(this.detail?.lines || []); }
 
   get lines() { return this.showAll ? this.detail!.lines : this.detail!.lines.slice(0, VISIBLE_LINES); }
 

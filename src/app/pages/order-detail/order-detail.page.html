@@ -57,7 +57,7 @@
             <ng-template #icon><ion-icon name="cube-outline"></ion-icon></ng-template>
           </span>
           <span class="item__id">
-            <strong><bdi dir="ltr">{{ l.quantity }} ×</bdi> {{ l.product_name }}</strong>
+            <strong><bdi dir="ltr">{{ l.quantity | qty: l.unit ?? null }} ×</bdi> {{ l.product_name }}</strong>
             <small *ngIf="!l.is_free">
               {{ l.variant_name }} ·
               <s class="st-strike" dir="ltr" *ngIf="l.list_price !== null && +l.list_price > +l.unit_price">{{ money(l.list_price) }}</s>

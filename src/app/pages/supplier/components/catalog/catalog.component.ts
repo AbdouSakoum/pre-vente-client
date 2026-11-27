@@ -4,6 +4,7 @@ import { CatalogProduct, CatalogVariant, SupplierCatalog } from '../../../../sha
 import { formatMoney, mediaUrl, searchable } from '../../../../shared/format';
 import { promoPrice, shortDate } from '../../../../shared/promo';
 import { QtyTarget } from '../../supplier.page';
+import { isDecimalUnit, roundQty } from '../../../../shared/units';
 
 /** « Tout le catalogue » : catégories, cartes produit à variantes, ajout au panier. */
 @Component({
@@ -62,7 +63,13 @@ export class CatalogComponent implements OnChanges {
   money(value: number | null): string { return formatMoney(value, this.currency); }
 
   /** Quantité de ce produit déjà au panier, toutes variantes confondues. */
-  inCart(p: CatalogProduct): number { return p.variants.reduce((n, v) => n + this.cart.quantity(this.linkId, v.id), 0); }
+  /** Articles de ce produit au panier : une variante au poids compte pour 1. */
+  inCart(p: CatalogProduct): number {
+    return roundQty(p.variants.reduce((n, v) => {
+      const q = this.cart.quantity(this.linkId, v.id);
+      return n + (q > 0 && isDecimalUnit(v.unit) ? 1 : q);
+    }, 0));
+  }
 
   trackProduct(_: number, p: CatalogProduct) { return p.id; }
   trackVariant(_: number, v: CatalogVariant) { return v.id; }

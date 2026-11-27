@@ -18,23 +18,24 @@
 
     <div class="display" dir="ltr">
       <span class="display__label">{{ 'catalog.quantity' | translate }}</span>
-      <strong>{{ value || '0' }}<i class="caret"></i></strong>
+      <strong>{{ display || '0' }}<i class="caret"></i></strong>
     </div>
 
     <div class="presets">
-      <button type="button" *ngFor="let n of presets" [class.on]="qty === n" (click)="preset(n)">{{ n }}</button>
+      <button type="button" *ngFor="let n of presets" [class.on]="qty === n" (click)="preset(n)">{{ n | qty }}</button>
     </div>
 
     <div class="keys" dir="ltr">
       <button type="button" *ngFor="let k of keys" (click)="press(k)">{{ k }}</button>
-      <button type="button" class="soft" (click)="clear()">{{ 'qtySheet.clear' | translate }}</button>
+      <button type="button" class="soft" *ngIf="!decimal" (click)="clear()">{{ 'qtySheet.clear' | translate }}</button>
+      <button type="button" *ngIf="decimal" (click)="press('.')" [attr.aria-label]="'qtySheet.decimal' | translate">,</button>
       <button type="button" (click)="press('0')">0</button>
       <button type="button" class="soft" (click)="back()" [attr.aria-label]="'qtySheet.back' | translate"><ion-icon name="backspace-outline"></ion-icon></button>
     </div>
 
     <div class="summary">
       <span>
-        <bdi dir="ltr">{{ qty }} × {{ money(unitPrice) }}</bdi>
+        <bdi dir="ltr">{{ qty | qty: target.variant.unit ?? null }} × {{ money(unitPrice) }}</bdi>
         <ng-container *ngIf="bulkApplies"> · {{ 'qtySheet.bulkApplied' | translate }}</ng-container>
         <span class="free" *ngIf="freeUnits"><ion-icon name="gift-outline"></ion-icon> {{ 'cart.freeLine' | plural:freeUnits }}</span>
       </span>
@@ -42,7 +43,7 @@
     </div>
 
     <button type="button" class="st-btn st-btn--accent" (click)="confirm()">
-      {{ (qty ? 'qtySheet.confirm' : 'qtySheet.remove') | translate:{ n: qty } }}
+      {{ (qty ? 'qtySheet.confirm' : 'qtySheet.remove') | translate:{ n: (qty | qty) } }}
     </button>
   </div>
 </div>

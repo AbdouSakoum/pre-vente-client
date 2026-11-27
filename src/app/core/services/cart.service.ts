@@ -2,6 +2,7 @@ import { Injectable, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { ApiService } from './api.service';
 import { CartPricing, CatalogProduct, CatalogVariant, PromoBrief, SupplierCatalog } from '../../shared/models/order.model';
+import { countUnits, isDecimalUnit, roundQty } from '../../shared/units';
 
 /** Ligne du panier ; prix gardés pour l'affichage, le serveur recalcule tout à l'envoi. */
 export interface CartLine {
@@ -13,6 +14,8 @@ export interface CartLine {
   bulk_price: number | null;
   bulk_min_qty: number | null;
   quantity: number;
+  /** Unité de vente (absente = pièce : quantités entières ; kg, L… : 3 décimales). */
+  unit?: string | null;
   /** Faux quand le catalogue relu indique une rupture. */
   available: boolean;
   /** Prix promo du catalogue (à l'unité) : estimation locale tant que le serveur n'a pas répondu. */
@@ -50,6 +53,9 @@ const PREFIX = 'sc_cart_';
 /** Délai avant l'envoi au serveur : une rafale de « + » ne fait qu'un enregistrement. */
 const PUSH_DELAY_MS = 700;
 const round2 = (n: number) => Math.round(n * 100) / 100;
+/** Quantité ramenée à la règle de l'unité (entière ou 3 décimales), entre 0 et 100 000. */
+const normQty = (n: number, unit: string | null | undefined) =>
+  Math.max(0, Math.min(100000, isDecimalUnit(unit) ? roundQty(Number(n) || 0) : Math.floor(Number(n) || 0)));
 
 /**
  * Un panier par fournisseur (par lien). Il est gardé sur le serveur, pour le retrouver sur un
@@ -73,7 +79,8 @@ export class CartService {
     return this.cart(linkId).lines.find(l => l.variant_id === variantId)?.quantity || 0;
   }
 
-  count(linkId: string): number { return this.cart(linkId).lines.reduce((n, l) => n + l.quantity, 0); }
+  /** Articles du panier : une ligne au poids compte pour 1. */
+  count(linkId: string): number { return countUnits(this.cart(linkId).lines); }
 
   /** Total à payer : celui du serveur (promotions, seuil) dès qu'il est à jour, sinon l'estimation locale. */
   total(linkId: string): number {
@@ -99,7 +106,8 @@ export class CartService {
    * promo du catalogue s'il est plus bas que le prix de départ (estimation), sinon le prix de départ.
    */
   unitPrice(line: Pick<CartLine, 'price' | 'bulk_price' | 'bulk_min_qty' | 'quantity' | 'promo_price' | 'net_price' | 'priced_qty'>): number {
-    if (line.net_price !== null && line.net_price !== undefined && line.priced_qty === line.quantity) return Number(line.net_price);
+    if (line.net_price !== null && line.net_price !== undefined && line.priced_qty !== undefined
+      && Math.abs(Number(line.priced_qty) - Number(line.quantity)) < 1e-9) return Number(line.net_price);
     const start = this.listPrice(line);
     const promo = line.promo_price === null || line.promo_price === undefined ? null : Number(line.promo_price);
     return promo !== null && promo < start ? promo : start;
@@ -132,8 +140,9 @@ export class CartService {
     let skipped = 0;
     for (const l of lines) {
       const found = byVariant.get(l.variant_id);
-      if (!found || !found.variant.available || l.quantity <= 0) { skipped++; continue; }
-      this.set(linkId, found.product, found.variant, Math.max(this.quantity(linkId, l.variant_id), l.quantity));
+      const qty = Number(l.quantity) || 0;
+      if (!found || !found.variant.available || qty <= 0) { skipped++; continue; }
+      this.set(linkId, found.product, found.variant, Math.max(this.quantity(linkId, l.variant_id), qty));
       added++;
     }
     return { added, skipped };
@@ -142,19 +151,20 @@ export class CartService {
   /** Fixe la quantité d'une variante ; 0 la retire du panier. */
   set(linkId: string, product: CatalogProduct, variant: CatalogVariant, quantity: number) {
     const cart = this.cart(linkId);
-    const qty = Math.max(0, Math.min(100000, Math.floor(quantity)));
+    const qty = normQty(quantity, variant.unit);
     const index = cart.lines.findIndex(l => l.variant_id === variant.id);
     if (!qty) {
       if (index >= 0) cart.lines.splice(index, 1);
     } else if (index >= 0) {
       cart.lines[index].quantity = qty;
+      cart.lines[index].unit = variant.unit ?? null;
     } else {
       cart.lines.push({
         variant_id: variant.id, product_name: product.name, variant_name: variant.name,
         image_url: variant.image_url || product.image_url, price: Number(variant.price),
         bulk_price: variant.bulk_price === null ? null : Number(variant.bulk_price),
         bulk_min_qty: variant.bulk_min_qty, quantity: qty, available: variant.available,
-        promo_price: variant.promo_price ?? null,
+        promo_price: variant.promo_price ?? null, unit: variant.unit ?? null,
       });
     }
     this.changed(linkId, cart);
@@ -164,7 +174,7 @@ export class CartService {
     const cart = this.cart(linkId);
     const line = cart.lines.find(l => l.variant_id === variantId);
     if (!line) return;
-    const qty = Math.max(0, Math.min(100000, Math.floor(quantity)));
+    const qty = normQty(quantity, line.unit);
     if (qty) line.quantity = qty; else cart.lines.splice(cart.lines.indexOf(line), 1);
     this.changed(linkId, cart);
   }
@@ -184,6 +194,7 @@ export class CartService {
       l.bulk_min_qty = v.bulk_min_qty;
       l.available = v.available;
       l.promo_price = v.promo_price ?? null;
+      l.unit = v.unit ?? null;
     }
     // Seul un retrait de ligne change le contenu à enregistrer ; les prix viennent du serveur.
     if (cart.lines.length !== before) this.changed(linkId, cart); else this.store(linkId, cart);

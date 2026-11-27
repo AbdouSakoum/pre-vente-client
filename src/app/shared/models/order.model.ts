@@ -19,6 +19,8 @@ export interface CatalogVariant {
   bulk_price: number | null;
   bulk_min_qty: number | null;
   available: boolean;
+  /** Unité de vente (absente = pièce : quantités entières ; kg, g, L, ml, m : 3 décimales). */
+  unit?: string | null;
   /** Promotions en cours (absentes quand le fournisseur n'en a aucune). Prix promo TTC à l'unité. */
   promo_price?: number | null;
   promo?: PromoBrief | null;
@@ -119,6 +121,8 @@ export interface OrderLineDetail {
   image_url: string | null;
   category_name: string | null;
   quantity: number;
+  /** Unité de vente (absente = pièce). */
+  unit?: string | null;
   unit_price: number;
   line_total: number;
   /** Prix avant remise (null sans remise), unités offertes, promotion appliquée. */

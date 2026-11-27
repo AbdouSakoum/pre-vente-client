@@ -25,7 +25,7 @@
   </span>
   <span class="usual__info">
     <strong>{{ r.product.name }}</strong>
-    <small>{{ r.variant.name }} · {{ 'usuals.usualQty' | translate:{ n: r.usualQty } }}</small>
+    <small>{{ r.variant.name }} · {{ 'usuals.usualQty' | translate:{ n: (r.usualQty | qty: r.variant.unit ?? null) } }}</small>
     <span class="usual__prices">
       <ng-container *ngIf="promo(r.variant) !== null; else plainPrice">
         <s class="st-strike" dir="ltr">{{ money(r.variant.price) }}</s>

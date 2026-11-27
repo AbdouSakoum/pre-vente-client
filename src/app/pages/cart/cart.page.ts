@@ -5,6 +5,7 @@ import { LanguageService } from '../../core/services/language.service';
 import { OrderService } from '../../core/services/order.service';
 import { CartPricing, OrderCreated, SupplierInfo } from '../../shared/models/order.model';
 import { formatMoney, localDate, mediaUrl } from '../../shared/format';
+import { roundQty } from '../../shared/units';
 
 /** Choix rapide de date : demain et les deux jours suivants. */
 interface DayChoice { value: string; label: string; day: string; }
@@ -78,7 +79,7 @@ export class CartPage {
     return this.pricing?.free.find(f => f.variant_id === line.variant_id) || null;
   }
 
-  change(line: CartLine, delta: number) { this.cart.setQuantity(this.linkId, line.variant_id, line.quantity + delta); }
+  change(line: CartLine, delta: number) { this.cart.setQuantity(this.linkId, line.variant_id, roundQty(line.quantity + delta)); }
   remove(line: CartLine) { this.cart.setQuantity(this.linkId, line.variant_id, 0); }
   removeOutOfStock() { this.cart.removeOutOfStock(this.linkId); }
   empty() { this.cart.clear(this.linkId); }
